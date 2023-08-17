@@ -1,9 +1,10 @@
 package com.example.visites.models;
 
+import java.sql.Timestamp;
 import java.util.List;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,15 +13,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 @Entity
 @Table(name = "roles")
-@Getter
-@Setter
+@Data
 public class Role {
 
     @Id
@@ -35,16 +32,14 @@ public class Role {
 
     @ManyToMany(mappedBy = "roles")
     private List<User> users;
-    
-    @Temporal(TemporalType.TIMESTAMP)
-    @CreatedDate
-    @Column(name = "created_at")
-    private java.util.Date createdAt;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @LastModifiedDate
-    @Column(name = "updated_at")
-    private java.util.Date updatedAt;
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Timestamp createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
+    private Timestamp updatedAt;
     
 	
 	public Role() {

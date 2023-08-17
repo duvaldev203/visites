@@ -1,25 +1,22 @@
 package com.example.visites.models;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 @MappedSuperclass
 @AllArgsConstructor
-@Getter
-@Setter
+@Data
 public abstract class Personne {
 
     @Id
@@ -43,18 +40,16 @@ public abstract class Personne {
 
     @Column(name = "tel")
     private String tel;
-    
-    @Temporal(TemporalType.TIMESTAMP)
-    @CreatedDate
-    @Column(name = "created_at")
-    private java.util.Date createdAt;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @LastModifiedDate
-    @Column(name = "updated_at")
-    private java.util.Date updatedAt;
-    
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Timestamp createdAt;
 
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
+    private Timestamp updatedAt;
+
+    
 	public Personne() {
 		super();
 		// TODO Auto-generated constructor stub
