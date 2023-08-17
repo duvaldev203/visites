@@ -1,9 +1,11 @@
 package com.example.visites.models;
 
+import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.List;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -13,18 +15,16 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 @Entity
 @Table(name = "bureaux")
 @AllArgsConstructor
-@Getter
-@Setter
-public class Bureau {
+@Data
+public class Bureau implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,16 +41,14 @@ public class Bureau {
     
     @OneToMany(mappedBy = "bureau", cascade = CascadeType.ALL)
     private List<User> users;
-    	    
-    @Temporal(TemporalType.TIMESTAMP)
-    @CreatedDate
-    @Column(name = "created_at")
-    private java.util.Date createdAt;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @LastModifiedDate
-    @Column(name = "updated_at")
-    private java.util.Date updatedAt;
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Timestamp createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
+    private Timestamp updatedAt;
 
 	
 	public Bureau() {
@@ -64,5 +62,5 @@ public class Bureau {
 		this.etage = etage;
 		this.porte = porte;
 	}
-
+	
 }

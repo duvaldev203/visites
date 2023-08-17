@@ -4,9 +4,11 @@ import java.sql.Date;
 import java.util.List;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
 @Table(name = "users")
+@Data
 public class User extends Personne {
 
     @Column(name = "poste")
@@ -26,8 +28,9 @@ public class User extends Personne {
 
     @ManyToMany
     @JoinTable(name = "user_role",
-    joinColumns = @JoinColumn(name = "user_id"),
-    inverseJoinColumns = @JoinColumn(name = "role_id"))
+    	joinColumns = @JoinColumn(name = "user_id"),
+    	inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
     private List<Role> roles;
     
 
@@ -37,7 +40,7 @@ public class User extends Personne {
 	}
 
 	public User(Long id, String nom, String prenom, String sexe, String email, Date dateNais, String tel, String poste, String username, String password) {
-		//super(id, nom, prenom, sexe, email, dateNais, tel);
+		super(id, nom, prenom, sexe, email, dateNais, tel);
 		this.poste = poste;
 		this.username = username;
 		this.password = password;
