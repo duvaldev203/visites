@@ -2,17 +2,18 @@ package com.example.visites.services;
 
 import java.util.List;
 
-import com.example.visites.models.Avis;
+import com.example.visites.dto.AvisRequest;
+import com.example.visites.dto.AvisResponse;
 
 public interface AvisService {
 	
-	List<Avis> index();
+	List<AvisResponse> index();
 	
-	Avis show(Long Id);
+	AvisResponse show(Long Id);
 	
-	Avis create(Avis avis);
+	AvisResponse create(AvisRequest avis);
 
-	Avis update(Avis avis, Long id);
+	AvisResponse update(AvisRequest avis, Long id);
 	
 	void delete(Long id);
 	

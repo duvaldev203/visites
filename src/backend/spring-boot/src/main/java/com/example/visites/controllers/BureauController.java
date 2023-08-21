@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.visites.models.Bureau;
+import com.example.visites.dto.BureauRequest;
+import com.example.visites.dto.BureauResponse;
 import com.example.visites.services.BureauService;
 import com.example.visites.services.BureauServiceImpl;
 
@@ -28,23 +29,23 @@ public class BureauController {
 		this.bureauService = bureauService;
 	}
 	
-	@GetMapping
-	public ResponseEntity<List<Bureau>> index(){
+	@GetMapping("/")
+	public ResponseEntity<List<BureauResponse>> index(){
 		return bureauService.index();
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Bureau> show(@PathVariable Long id) {
+	public ResponseEntity<BureauResponse> show(@PathVariable Long id) {
 		return bureauService.show(id);
 	}
 
-	@PostMapping
-	public ResponseEntity<Bureau> create(@RequestBody Bureau bureau) {
+	@PostMapping("/")
+	public ResponseEntity<BureauResponse> create(@RequestBody BureauRequest bureau) {
 		return bureauService.create(bureau);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Bureau> update(@PathVariable Long id, @RequestBody Bureau bureau) {
+	public ResponseEntity<BureauResponse> update(@PathVariable Long id, @RequestBody BureauRequest bureau) {
 		return bureauService.update(bureau, id);
 	}
 	

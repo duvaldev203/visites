@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.visites.models.User;
+import com.example.visites.dto.UserRequest;
+import com.example.visites.dto.UserResponse;
 import com.example.visites.services.UserService;
 import com.example.visites.services.UserServiceImpl;
 
@@ -27,24 +28,23 @@ public class UserController {
 		this.userService = userService;
 	}
 	
-	@GetMapping
-	public List<User> index(){
-		
+	@GetMapping("/")
+	public List<UserResponse> index(){
 		return userService.index();
 	}
 	
 	@GetMapping("/{id}")
-	public User show(@PathVariable Long id) {
+	public UserResponse show(@PathVariable Long id) {
 		return userService.show(id);
 	}
 
-	@PostMapping
-	public User create(@RequestBody User user) {
+	@PostMapping("/")
+	public UserResponse create(@RequestBody UserRequest user) {
 		return userService.create(user);
 	}
 
 	@PutMapping("/{id}")
-	public User update(@PathVariable Long id, @RequestBody User user) {
+	public UserResponse update(@PathVariable Long id, @RequestBody UserRequest user) {
 		return userService.update(user, id);
 	}
 	

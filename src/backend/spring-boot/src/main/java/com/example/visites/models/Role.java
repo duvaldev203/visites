@@ -1,5 +1,6 @@
 package com.example.visites.models;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -18,9 +19,11 @@ import lombok.Data;
 @Entity
 @Table(name = "roles")
 @Data
-public class Role {
+public class Role implements Serializable {
 
-    @Id
+    private static final long serialVersionUID = 1L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

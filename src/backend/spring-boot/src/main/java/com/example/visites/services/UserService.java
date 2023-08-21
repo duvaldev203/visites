@@ -2,17 +2,18 @@ package com.example.visites.services;
 
 import java.util.List;
 
-import com.example.visites.models.User;
+import com.example.visites.dto.UserRequest;
+import com.example.visites.dto.UserResponse;
 
 public interface UserService {
 	
-	List<User> index();
+	List<UserResponse> index();
 	
-	User show(Long Id);
+	UserResponse show(Long Id);
 	
-	User create(User user);
+	UserResponse create(UserRequest user);
 
-	User update(User user, Long id);
+	UserResponse update(UserRequest user, Long id);
 	
 	void delete(Long id);
 	

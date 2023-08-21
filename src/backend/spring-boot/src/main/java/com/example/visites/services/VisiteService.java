@@ -2,17 +2,18 @@ package com.example.visites.services;
 
 import java.util.List;
 
-import com.example.visites.models.Visite;
+import com.example.visites.dto.VisiteRequest;
+import com.example.visites.dto.VisiteResponse;
 
 public interface VisiteService {
 	
-	List<Visite> index();
+	List<VisiteResponse> index();
 	
-	Visite show(Long Id);
+	VisiteResponse show(Long Id);
 	
-	Visite create(Visite visite);
+	VisiteResponse create(VisiteRequest visite);
 
-	Visite update(Visite visite, Long id);
+	VisiteResponse update(VisiteRequest visite, Long id);
 	
 	void delete(Long id);
 

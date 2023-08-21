@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.visites.models.Role;
+import com.example.visites.dto.RoleRequest;
+import com.example.visites.dto.RoleResponse;
 import com.example.visites.services.RoleService;
 import com.example.visites.services.RoleServiceImpl;
 
@@ -27,24 +28,23 @@ public class RoleController {
 		this.roleService = roleService;
 	}
 	
-	@GetMapping
-	public List<Role> index(){
-		
+	@GetMapping("/")
+	public List<RoleResponse> index(){
 		return roleService.index();
 	}
 	
 	@GetMapping("/{id}")
-	public Role show(@PathVariable Long id) {
+	public RoleResponse show(@PathVariable Long id) {
 		return roleService.show(id);
 	}
 
-	@PostMapping
-	public Role create(@RequestBody Role role) {
+	@PostMapping("/")
+	public RoleResponse create(@RequestBody RoleRequest role) {
 		return roleService.create(role);
 	}
 
 	@PutMapping("/{id}")
-	public Role update(@PathVariable Long id, @RequestBody Role role) {
+	public RoleResponse update(@PathVariable Long id, @RequestBody RoleRequest role) {
 		return roleService.update(role, id);
 	}
 	

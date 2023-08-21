@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.visites.models.Visite;
+import com.example.visites.dto.VisiteRequest;
+import com.example.visites.dto.VisiteResponse;
 import com.example.visites.services.VisiteService;
 import com.example.visites.services.VisiteServiceImpl;
 
@@ -27,24 +28,23 @@ public class VisiteController {
 		this.visiteService = visiteService;
 	}
 	
-	@GetMapping
-	public List<Visite> index(){
-		
+	@GetMapping("/")
+	public List<VisiteResponse> index(){
 		return visiteService.index();
 	}
 	
 	@GetMapping("/{id}")
-	public Visite show(@PathVariable Long id) {
+	public VisiteResponse show(@PathVariable Long id) {
 		return visiteService.show(id);
 	}
 
-	@PostMapping
-	public Visite create(@RequestBody Visite visite) {
+	@PostMapping("/")
+	public VisiteResponse create(@RequestBody VisiteRequest visite) {
 		return visiteService.create(visite);
 	}
 
 	@PutMapping("/{id}")
-	public Visite update(@PathVariable Long id, @RequestBody Visite visite) {
+	public VisiteResponse update(@PathVariable Long id, @RequestBody VisiteRequest visite) {
 		return visiteService.update(visite, id);
 	}
 	

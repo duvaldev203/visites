@@ -8,14 +8,18 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "visiteurs")
-@Data
+@Setter
+@Getter
 public class Visiteur extends Personne {
 
-    @Column(name = "profession")
+    private static final long serialVersionUID = 1L;
+
+	@Column(name = "profession")
     private String profession;
 
     @OneToMany(mappedBy = "visiteur", cascade = CascadeType.ALL)
