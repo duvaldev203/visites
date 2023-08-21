@@ -4,14 +4,18 @@ import java.sql.Date;
 import java.util.List;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "users")
-@Data
+@Getter
+@Setter
 public class User extends Personne {
 
-    @Column(name = "poste")
+    private static final long serialVersionUID = 1L;
+
+	@Column(name = "poste")
     private String poste;
 
     @Column(name = "username")

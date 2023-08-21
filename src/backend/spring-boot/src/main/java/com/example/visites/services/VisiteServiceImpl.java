@@ -2,10 +2,14 @@ package com.example.visites.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.visites.dto.VisiteRequest;
+import com.example.visites.dto.VisiteResponse;
 import com.example.visites.models.Visite;
 import com.example.visites.repositories.VisiteRepository;
 
@@ -14,44 +18,44 @@ import jakarta.persistence.EntityNotFoundException;
 @Service
 public class VisiteServiceImpl implements VisiteService {
 	
-	public final VisiteRepository visiteRepository;
+	private final VisiteRepository visiteRepository;
+	private ModelMapper modelMapper;
 
 	@Autowired
-	public VisiteServiceImpl(VisiteRepository visiteRepository) {
+	public VisiteServiceImpl(VisiteRepository visiteRepository, ModelMapper modelMapper) {
 		this.visiteRepository = visiteRepository;
+		this.modelMapper = modelMapper;
 	}
 	@Override
-	public List<Visite> index() {
-		return visiteRepository.findAll();
+	public List<VisiteResponse> index() {
+		return visiteRepository.findAll()
+				.stream().map(el->modelMapper.map(el, VisiteResponse.class))
+				.collect(Collectors.toList());
 	}
 
 	@Override
-	public Visite show(Long Id) {
+	public VisiteResponse show(Long Id) {
 		Optional<Visite> visite = visiteRepository.findById(Id);
 		if (visite.isPresent())
-			return visite.get();
+			return modelMapper.map(visite, VisiteResponse.class);
 		throw new EntityNotFoundException("La visite n'a pas ete trouve !!!");
 	}
 
 	@Override
-	public Visite create(Visite visite) {
-		visiteRepository.save(visite);
-		return visite;
+	public VisiteResponse create(VisiteRequest visite) {
+		Visite newVisite = modelMapper.map(visite, Visite.class);
+		Visite saved = visiteRepository.save(newVisite);
+		return modelMapper.map(saved, VisiteResponse.class);
 	}
 
 	@Override
-	public Visite update(Visite visite, Long id) {
+	public VisiteResponse update(VisiteRequest visite, Long id) {
 		Optional<Visite> optVisite = visiteRepository.findById(id);
 		if (optVisite.isPresent()) {
-			Visite oldVisite = optVisite.get();
-			oldVisite.setMotif(visite.getMotif());
-			oldVisite.setDateVisite(visite.getDateVisite());
-			oldVisite.setHeureDebut(visite.getHeureDebut());
-			oldVisite.setHeureFin(visite.getHeureFin());
-			oldVisite.setType(visite.getType());
-			oldVisite.setVisiteur(visite.getVisiteur());
-			oldVisite.setUser(visite.getUser());
-			return visiteRepository.save(oldVisite);
+			Visite oldVisite = modelMapper.map(visite, Visite.class);
+			oldVisite.setId(id);
+			Visite updated = visiteRepository.save(oldVisite);
+			return modelMapper.map(updated, VisiteResponse.class);
 		}
 		throw new EntityNotFoundException("La visite a modifier n'a pas ete trouvee !!!");
 	}

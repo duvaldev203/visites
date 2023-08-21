@@ -2,17 +2,18 @@ package com.example.visites.services;
 
 import java.util.List;
 
-import com.example.visites.models.Visiteur;
+import com.example.visites.dto.VisiteurRequest;
+import com.example.visites.dto.VisiteurResponse;
 
 public interface VisiteurService {
 
-	List<Visiteur> index();
+	List<VisiteurResponse> index();
 	
-	Visiteur show(Long Id);
+	VisiteurResponse show(Long Id);
 	
-	Visiteur create(Visiteur visiteur);
+	VisiteurResponse create(VisiteurRequest visiteur);
 
-	Visiteur update(Visiteur visiteur, Long id);
+	VisiteurResponse update(VisiteurRequest visiteur, Long id);
 	
 	void delete(Long id);
 

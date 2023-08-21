@@ -1,5 +1,6 @@
 package com.example.visites.models;
 
+import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Timestamp;
 
@@ -17,9 +18,11 @@ import lombok.Data;
 @MappedSuperclass
 @AllArgsConstructor
 @Data
-public abstract class Personne {
+public abstract class Personne implements Serializable {
 
-    @Id
+    private static final long serialVersionUID = 1L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

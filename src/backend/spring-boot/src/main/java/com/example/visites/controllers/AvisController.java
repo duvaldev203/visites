@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.visites.models.Avis;
+import com.example.visites.dto.AvisRequest;
+import com.example.visites.dto.AvisResponse;
 import com.example.visites.services.AvisService;
 import com.example.visites.services.AvisServiceImpl;
 
@@ -27,24 +28,23 @@ public class AvisController {
 		this.avisService = avisService;
 	}
 	
-	@GetMapping
-	public List<Avis> index(){
-		
+	@GetMapping("/")
+	public List<AvisResponse> index(){
 		return avisService.index();
 	}
 	
 	@GetMapping("/{id}")
-	public Avis show(@PathVariable Long id) {
+	public AvisResponse show(@PathVariable Long id) {
 		return avisService.show(id);
 	}
 
-	@PostMapping
-	public Avis create(@RequestBody Avis avis) {
+	@PostMapping("/")
+	public AvisResponse create(@RequestBody AvisRequest avis) {
 		return avisService.create(avis);
 	}
 
 	@PutMapping("/{id}")
-	public Avis update(@PathVariable Long id, @RequestBody Avis avis) {
+	public AvisResponse update(@PathVariable Long id, @RequestBody AvisRequest avis) {
 		return avisService.update(avis, id);
 	}
 	

@@ -1,5 +1,6 @@
 package com.example.visites.models;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -21,9 +22,11 @@ import lombok.Data;
 @Entity
 @Table(name = "visites")
 @Data
-public class Visite {
+public class Visite implements Serializable {
 
-    @Id
+    private static final long serialVersionUID = 1L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -42,14 +45,14 @@ public class Visite {
     @Column(name = "type")
     private String type;
     
+    @OneToOne(mappedBy = "visite", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, orphanRemoval = true)
+    private Avis avis;
+    
     @ManyToOne
     private User user;
 
     @ManyToOne
     private Visiteur visiteur;
-
-    @OneToOne(mappedBy = "visite", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Avis avis;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

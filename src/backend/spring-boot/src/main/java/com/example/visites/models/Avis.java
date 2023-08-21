@@ -1,5 +1,6 @@
 package com.example.visites.models;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -20,7 +21,9 @@ import lombok.Data;
 @Table(name = "avis")
 @AllArgsConstructor
 @Data
-public class Avis {
+public class Avis implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

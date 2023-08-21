@@ -2,18 +2,19 @@ package com.example.visites.services;
 
 import java.util.List;
 
-import com.example.visites.models.Role;
+import com.example.visites.dto.RoleRequest;
+import com.example.visites.dto.RoleResponse;
 
 public interface RoleService {
 
 	
-	List<Role> index();
+	List<RoleResponse> index();
 	
-	Role show(Long Id);
+	RoleResponse show(Long Id);
 	
-	Role create(Role role);
+	RoleResponse create(RoleRequest role);
 
-	Role update(Role role, Long id);
+	RoleResponse update(RoleRequest role, Long id);
 	
 	void delete(Long id);
 

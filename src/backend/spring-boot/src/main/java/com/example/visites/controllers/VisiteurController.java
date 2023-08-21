@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.visites.models.Visiteur;
+import com.example.visites.dto.VisiteurRequest;
+import com.example.visites.dto.VisiteurResponse;
 import com.example.visites.services.VisiteurService;
 import com.example.visites.services.VisiteurServiceImpl;
 
@@ -27,24 +28,23 @@ public class VisiteurController {
 		this.visiteurService = visiteurService;
 	}
 	
-	@GetMapping
-	public List<Visiteur> index(){
-		
+	@GetMapping("/")
+	public List<VisiteurResponse> index(){
 		return visiteurService.index();
 	}
 	
 	@GetMapping("/{id}")
-	public Visiteur show(@PathVariable Long id) {
+	public VisiteurResponse show(@PathVariable Long id) {
 		return visiteurService.show(id);
 	}
 
-	@PostMapping
-	public Visiteur create(@RequestBody Visiteur visiteur) {
+	@PostMapping("/")
+	public VisiteurResponse create(@RequestBody VisiteurRequest visiteur) {
 		return visiteurService.create(visiteur);
 	}
 
 	@PutMapping("/{id}")
-	public Visiteur update(@PathVariable Long id, @RequestBody Visiteur visiteur) {
+	public VisiteurResponse update(@PathVariable Long id, @RequestBody VisiteurRequest visiteur) {
 		return visiteurService.update(visiteur, id);
 	}
 	
