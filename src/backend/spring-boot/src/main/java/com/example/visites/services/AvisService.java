@@ -4,17 +4,18 @@ import java.util.List;
 
 import com.example.visites.dto.AvisRequest;
 import com.example.visites.dto.AvisResponse;
+import org.springframework.http.ResponseEntity;
 
 public interface AvisService {
 	
-	List<AvisResponse> index();
+	ResponseEntity<List<AvisResponse>> index();
 	
-	AvisResponse show(Long Id);
+	ResponseEntity<AvisResponse> show(Long Id);
 	
-	AvisResponse create(AvisRequest avis);
+	ResponseEntity<AvisResponse> create(AvisRequest avis);
 
-	AvisResponse update(AvisRequest avis, Long id);
+	ResponseEntity<AvisResponse> update(AvisRequest avis, Long id);
 	
-	void delete(Long id);
+	ResponseEntity<?> delete(Long id);
 	
 }

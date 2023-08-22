@@ -3,6 +3,7 @@ package com.example.visites.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,29 +30,29 @@ public class VisiteController {
 	}
 	
 	@GetMapping("/")
-	public List<VisiteResponse> index(){
+	public ResponseEntity<List<VisiteResponse>> index(){
 		return visiteService.index();
 	}
 	
 	@GetMapping("/{id}")
-	public VisiteResponse show(@PathVariable Long id) {
+	public ResponseEntity<VisiteResponse> show(@PathVariable Long id) {
 		return visiteService.show(id);
 	}
 
 	@PostMapping("/")
-	public VisiteResponse create(@RequestBody VisiteRequest visite) {
+	public ResponseEntity<VisiteResponse> create(@RequestBody VisiteRequest visite) {
 		return visiteService.create(visite);
 	}
 
 	@PutMapping("/{id}")
-	public VisiteResponse update(@PathVariable Long id, @RequestBody VisiteRequest visite) {
+	public ResponseEntity<VisiteResponse> update(@PathVariable Long id, @RequestBody VisiteRequest visite) {
 		return visiteService.update(visite, id);
 	}
 	
 
 	@DeleteMapping("/{id}")
-	public void delete(@PathVariable Long id) {
-		visiteService.delete(id);
+	public ResponseEntity<?> delete(@PathVariable Long id) {
+		return visiteService.delete(id);
 	}
-	
+
 }

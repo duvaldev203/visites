@@ -5,6 +5,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.visites.dto.AvisRequest;
@@ -21,48 +23,50 @@ import lombok.AllArgsConstructor;
 public class AvisServiceImpl implements AvisService {
 	
 	private final AvisRepository avisRepository;
-	private ModelMapper modelMapper;
+	private final ModelMapper modelMapper;
 
 	@Override
-	public List<AvisResponse> index() {
-		return avisRepository.findAll()
+	public ResponseEntity<List<AvisResponse>> index() {
+		List<AvisResponse> avis = avisRepository.findAll()
 				.stream().map(el->modelMapper.map(el, AvisResponse.class))
 				.collect(Collectors.toList());
+		return new ResponseEntity<>(avis, HttpStatus.OK);
 	}
 
 	@Override
-	public AvisResponse show(Long Id) {
+	public ResponseEntity<AvisResponse> show(Long Id) {
 		Optional<Avis> avis = avisRepository.findById(Id);
 		if (avis.isPresent())
-			return modelMapper.map(avis.get(), AvisResponse.class);
+			return new ResponseEntity<>(modelMapper.map(avis.get(), AvisResponse.class), HttpStatus.FOUND);
 		throw new EntityNotFoundException("L'avis n'a pas ete trouve");
 	}
 
 	@Override
-	public AvisResponse create(AvisRequest avis) {
+	public ResponseEntity<AvisResponse> create(AvisRequest avis) {
 		Avis avisEntite = modelMapper.map(avis, Avis.class);
 		Optional<Avis> opt = avisRepository.findByVisiteId(avisEntite.getVisite().getId());
 		if (opt.isPresent())
 			throw new EntityExistsException("La visite que vous avez selectione est associe a un avis !!!");
-		Avis saved = avisRepository.save(avisEntite);
-		return modelMapper.map(saved, AvisResponse.class);
+		AvisResponse saved = modelMapper.map(avisRepository.save(avisEntite), AvisResponse.class);
+		return new ResponseEntity<>(saved, HttpStatus.CREATED);
 	}
 
 	@Override
-	public AvisResponse update(AvisRequest avis, Long id) {
+	public ResponseEntity<AvisResponse> update(AvisRequest avis, Long id) {
 		Optional<Avis> optAvis = avisRepository.findById(id);
 		if (optAvis.isPresent()) {
 			Avis oldAvis = modelMapper.map(avis, Avis.class);	
 			oldAvis.setId(id);
-			Avis updated = avisRepository.save(oldAvis);
-			return modelMapper.map(updated, AvisResponse.class);
+			AvisResponse updated = modelMapper.map(avisRepository.save(oldAvis), AvisResponse.class);
+			return new ResponseEntity<>(updated, HttpStatus.ACCEPTED);
 		}
 		throw new EntityNotFoundException("L'avis a modifier n'a pas ete trouve !!!");
 	}
 
 	@Override
-	public void delete(Long id) {
+	public ResponseEntity<?> delete(Long id) {
 		avisRepository.deleteById(id);
+		return ResponseEntity.noContent().build();
 	}
 
 }

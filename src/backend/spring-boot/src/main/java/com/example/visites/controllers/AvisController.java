@@ -3,6 +3,7 @@ package com.example.visites.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,29 +30,29 @@ public class AvisController {
 	}
 	
 	@GetMapping("/")
-	public List<AvisResponse> index(){
+	public ResponseEntity<List<AvisResponse>> index(){
 		return avisService.index();
 	}
 	
 	@GetMapping("/{id}")
-	public AvisResponse show(@PathVariable Long id) {
+	public ResponseEntity<AvisResponse> show(@PathVariable Long id) {
 		return avisService.show(id);
 	}
 
 	@PostMapping("/")
-	public AvisResponse create(@RequestBody AvisRequest avis) {
+	public ResponseEntity<AvisResponse> create(@RequestBody AvisRequest avis) {
 		return avisService.create(avis);
 	}
 
 	@PutMapping("/{id}")
-	public AvisResponse update(@PathVariable Long id, @RequestBody AvisRequest avis) {
+	public ResponseEntity<AvisResponse> update(@PathVariable Long id, @RequestBody AvisRequest avis) {
 		return avisService.update(avis, id);
 	}
 	
 
 	@DeleteMapping("/{id}")
-	public void delete(@PathVariable Long id) {
-		avisService.delete(id);
-	}
+	public ResponseEntity<?> delete(@PathVariable Long id) {
+		return avisService.delete(id);
+    }
 	
 }

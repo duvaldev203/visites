@@ -4,17 +4,18 @@ import java.util.List;
 
 import com.example.visites.dto.UserRequest;
 import com.example.visites.dto.UserResponse;
+import org.springframework.http.ResponseEntity;
 
 public interface UserService {
 	
-	List<UserResponse> index();
+	ResponseEntity<List<UserResponse>> index();
 	
-	UserResponse show(Long Id);
+	ResponseEntity<UserResponse> show(Long Id);
 	
-	UserResponse create(UserRequest user);
+	ResponseEntity<UserResponse> create(UserRequest user);
 
-	UserResponse update(UserRequest user, Long id);
+	ResponseEntity<UserResponse> update(UserRequest user, Long id);
 	
-	void delete(Long id);
+	ResponseEntity<?> delete(Long id);
 	
 }
