@@ -2,9 +2,9 @@ package com.example.visites.services;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.example.visites.exceptions.ResourceNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,8 +16,6 @@ import com.example.visites.dto.UserResponse;
 import com.example.visites.models.Role;
 import com.example.visites.models.User;
 import com.example.visites.repositories.UserRepository;
-
-import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -41,11 +39,10 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public ResponseEntity<UserResponse> show(Long Id) {
-		Optional<User> user = userRepository.findById(Id);
-		if (user.isPresent())
-			return new ResponseEntity<>(modelMapper.map(user.get(), UserResponse.class), HttpStatus.FOUND);
-		throw new EntityNotFoundException("L'utilisateur n'a pas ete trouve !!!");
+	public ResponseEntity<UserResponse> show(Long id) {
+		User user = userRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("L'User", "d'Id", id));
+		return new ResponseEntity<>(modelMapper.map(user, UserResponse.class), HttpStatus.FOUND);
 	}
 
 	@Override
@@ -63,19 +60,19 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public ResponseEntity<UserResponse> update(UserRequest user, Long id) {
-		Optional<User> optUser = userRepository.findById(id);
-		if (optUser.isPresent()) {
-			User oldUser = modelMapper.map(optUser, User.class);
-			oldUser.setId(id);
-			UserResponse updated = modelMapper.map(userRepository.save(oldUser), UserResponse.class);
-			return new ResponseEntity<>(updated, HttpStatus.ACCEPTED);
-		}
-		throw new EntityNotFoundException("L'utilisateur a modifier n'a pas ete trouve !!!");
+		userRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("L'User que vous voulez modifier ", "d'Id", id));
+		User oldUser = modelMapper.map(user, User.class);
+		oldUser.setId(id);
+		UserResponse updated = modelMapper.map(userRepository.save(oldUser), UserResponse.class);
+		return new ResponseEntity<>(updated, HttpStatus.ACCEPTED);
 	}
 
 	@Override
 	public ResponseEntity<?> delete(Long id) {
-		userRepository.deleteById(id);
+		User user = userRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("L'User que vous voulez supprimer ", "d'Id", id));
+		userRepository.delete(user);
 		return ResponseEntity.noContent().build();
 	}
 

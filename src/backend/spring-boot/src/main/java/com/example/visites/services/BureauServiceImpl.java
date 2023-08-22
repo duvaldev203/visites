@@ -1,9 +1,9 @@
 package com.example.visites.services;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.example.visites.exceptions.ResourceNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,8 +14,6 @@ import com.example.visites.dto.BureauRequest;
 import com.example.visites.dto.BureauResponse;
 import com.example.visites.models.Bureau;
 import com.example.visites.repositories.BureauRepository;
-
-import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class BureauServiceImpl implements BureauService {
@@ -39,10 +37,9 @@ public class BureauServiceImpl implements BureauService {
 
 	@Override
     public ResponseEntity<BureauResponse> show(Long id) {
-    	Optional<Bureau> bureau = bureauRepository.findById(id);
-    	if (bureau.isPresent())
-    		return new ResponseEntity<>(modelMapper.map(bureau.get(), BureauResponse.class), HttpStatus.FOUND);
-    	throw new EntityNotFoundException("Le bureau n'a pas ete trouve !!!");
+    	Bureau bureau = bureauRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Le Bureau", "d'Id", id));
+		return new ResponseEntity<>(modelMapper.map(bureau, BureauResponse.class), HttpStatus.FOUND);
     }
 	
 	@Override
@@ -54,19 +51,19 @@ public class BureauServiceImpl implements BureauService {
 
 	@Override
     public ResponseEntity<BureauResponse> update(BureauRequest bureau, Long id) {
-    	Optional<Bureau> optBureau = bureauRepository.findById(id);
-    	if (optBureau.isPresent()) {
-    		Bureau oldBureau = modelMapper.map(bureau, Bureau.class);
-    		oldBureau.setId(id);
-    		BureauResponse updated = modelMapper.map(bureauRepository.save(oldBureau), BureauResponse.class);
-    		return new ResponseEntity<>(updated, HttpStatus.ACCEPTED);
-    	}    	
-    	throw new EntityNotFoundException("Le bureau a modifier n'a pas ete trouve !!!");
+    	bureauRepository.findById(id)
+			.orElseThrow(() -> new ResourceNotFoundException("Le Bureau que vous voulez modifier", "d'Id", id));
+		Bureau oldBureau = modelMapper.map(bureau, Bureau.class);
+   		oldBureau.setId(id);
+   		BureauResponse updated = modelMapper.map(bureauRepository.save(oldBureau), BureauResponse.class);
+   		return new ResponseEntity<>(updated, HttpStatus.ACCEPTED);
     }
 
 	@Override
     public ResponseEntity<?> delete(Long id) {
-    	bureauRepository.deleteById(id);
+		Bureau optBureau = bureauRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Le Bureau que vous voulez supprimer ", "d'Id", id));
+    	bureauRepository.delete(optBureau);
     	return ResponseEntity.noContent().build();
     }
     
