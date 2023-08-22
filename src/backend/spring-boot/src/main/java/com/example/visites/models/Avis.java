@@ -1,8 +1,12 @@
 package com.example.visites.models;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -23,13 +27,16 @@ import lombok.Data;
 @Data
 public class Avis implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@Column(name = "libelle")
+	@NotNull(message = "Le champ libelle est obligatoire")
+	@Size(min = 5, max = 100, message = "libelle : La taille de ce champ doit etre comprise entre 10 et 100 caracteres !!!")
 	private String libelle;
 	
     @CreationTimestamp

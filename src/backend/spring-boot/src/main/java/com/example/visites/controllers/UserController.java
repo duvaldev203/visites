@@ -2,6 +2,7 @@ package com.example.visites.controllers;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,12 +41,12 @@ public class UserController {
 	}
 
 	@PostMapping("/")
-	public ResponseEntity<UserResponse> create(@RequestBody UserRequest user) {
+	public ResponseEntity<UserResponse> create(@Valid @RequestBody UserRequest user) {
 		return userService.create(user);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<UserResponse> update(@PathVariable Long id, @RequestBody UserRequest user) {
+	public ResponseEntity<UserResponse> update(@PathVariable Long id, @Valid @RequestBody UserRequest user) {
 		return userService.update(user, id);
 	}
 	
