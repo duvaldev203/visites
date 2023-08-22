@@ -1,9 +1,12 @@
 package com.example.visites.models;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -24,6 +27,7 @@ import lombok.Data;
 @Data
 public class Bureau implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -31,12 +35,18 @@ public class Bureau implements Serializable {
 	private Long id;
 	
 	@Column(name = "batiment")
+	@NotBlank(message = "batiment : Ce champ ne doit pas etre vide")
+	@NotNull(message = "batiment : Ce champ est obligatoire")
 	private String batiment;
-	
+
 	@Column(name = "etage")
+	@NotBlank(message = "etage : Ce champ ne doit pas etre vide")
+	@NotNull(message = "etage : Ce champ est obligatoire")
 	private String etage;
 	
 	@Column(name = "porte")
+	@NotBlank(message = "porte : Ce champ ne doit pas etre vide")
+	@NotNull(message = "porte : Ce champ est obligatoire")
 	private String porte;
     
     @OneToMany(mappedBy = "bureau", cascade = CascadeType.ALL)

@@ -2,6 +2,7 @@ package com.example.visites.controllers;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,12 +41,12 @@ public class BureauController {
 	}
 
 	@PostMapping("/")
-	public ResponseEntity<BureauResponse> create(@RequestBody BureauRequest bureau) {
+	public ResponseEntity<BureauResponse> create(@Valid @RequestBody BureauRequest bureau) {
 		return bureauService.create(bureau);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<BureauResponse> update(@PathVariable Long id, @RequestBody BureauRequest bureau) {
+	public ResponseEntity<BureauResponse> update(@PathVariable Long id, @Valid @RequestBody BureauRequest bureau) {
 		return bureauService.update(bureau, id);
 	}
 	

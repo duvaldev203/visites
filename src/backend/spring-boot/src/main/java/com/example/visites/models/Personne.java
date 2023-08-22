@@ -1,9 +1,14 @@
 package com.example.visites.models;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Timestamp;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -20,6 +25,7 @@ import lombok.Data;
 @Data
 public abstract class Personne implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
 	@Id
@@ -27,21 +33,32 @@ public abstract class Personne implements Serializable {
     private Long id;
 
     @Column(name = "nom")
+    @NotNull(message = "nom : Ce champ est obligatoire")
+    @Size(max = 50, message = "nom : La taille max de ce champ doit etre 50")
     private String nom;
 
     @Column(name = "prenom")
+    @NotNull(message = "prenom : Ce champ est obligatoire")
+    @Size(max = 50, message = "prenom : La taille max de ce champ doit etre 50")
     private String prenom;
 
     @Column(name = "sexe")
+    @NotNull(message = "sexe : Ce champ est obligatoire")
+    @Pattern(regexp = "^(masculin|féminin)$", message = "Le sexe doit être 'masculin' ou 'féminin'")
     private String sexe;
 
     @Column(name = "email")
+    @NotNull(message = "email : Ce champ est obligatoire")
+    @Email(message = "email invalide")
     private String email;
 
     @Column(name = "date_nais")
+    @NotNull(message = "dateNais : Ce champ est obligatoire")
     private Date dateNais;
 
     @Column(name = "tel")
+    @NotNull(message = "tel : Ce champ est obligatoire")
+    @Pattern(regexp = "^(\\+237|237)?[2368]\\d{8}$", message = "Numéro de téléphone invalide")
     private String tel;
 
     @CreationTimestamp

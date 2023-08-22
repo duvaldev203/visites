@@ -2,6 +2,7 @@ package com.example.visites.controllers;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,12 +41,12 @@ public class RoleController {
 	}
 
 	@PostMapping("/")
-	public ResponseEntity<RoleResponse> create(@RequestBody RoleRequest role) {
+	public ResponseEntity<RoleResponse> create(@Valid @RequestBody RoleRequest role) {
 		return roleService.create(role);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<RoleResponse> update(@PathVariable Long id, @RequestBody RoleRequest role) {
+	public ResponseEntity<RoleResponse> update(@PathVariable Long id, @Valid @RequestBody RoleRequest role) {
 		return roleService.update(role, id);
 	}
 	

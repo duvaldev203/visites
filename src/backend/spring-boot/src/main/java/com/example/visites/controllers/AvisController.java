@@ -2,6 +2,7 @@ package com.example.visites.controllers;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,12 +41,12 @@ public class AvisController {
 	}
 
 	@PostMapping("/")
-	public ResponseEntity<AvisResponse> create(@RequestBody AvisRequest avis) {
+	public ResponseEntity<AvisResponse> create(@Valid @RequestBody AvisRequest avis) {
 		return avisService.create(avis);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<AvisResponse> update(@PathVariable Long id, @RequestBody AvisRequest avis) {
+	public ResponseEntity<AvisResponse> update(@PathVariable Long id, @Valid @RequestBody AvisRequest avis) {
 		return avisService.update(avis, id);
 	}
 	

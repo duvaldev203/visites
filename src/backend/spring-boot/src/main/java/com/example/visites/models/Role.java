@@ -1,9 +1,13 @@
 package com.example.visites.models;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -21,6 +25,7 @@ import lombok.Data;
 @Data
 public class Role implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
 	@Id
@@ -28,9 +33,13 @@ public class Role implements Serializable {
     private Long id;
 
     @Column(name = "nom")
+    @NotNull(message = "nom : Ce champ est obligatoire")
+    @Size(min = 5, max = 15, message = "la taille de ce champ doit etre comprise entre 5 et 15")
     private String nom;
 
     @Column(name = "description")
+    @Nullable
+    @Size(min = 10, max = 100)
     private String description;
 
     @ManyToMany(mappedBy = "roles")
