@@ -5,6 +5,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.visites.dto.RoleRequest;
@@ -18,7 +20,7 @@ import jakarta.persistence.EntityNotFoundException;
 public class RoleServiceImpl implements RoleService {
 
 	private final RoleRepository roleRepository;
-	private ModelMapper modelMapper;
+	private final ModelMapper modelMapper;
 	
 	public RoleServiceImpl(RoleRepository roleRepository, ModelMapper modelMapper) {
 		this.roleRepository = roleRepository;
@@ -26,40 +28,45 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
-	public List<RoleResponse> index() {
-		return roleRepository.findAll().stream().map(el->modelMapper.map(el, RoleResponse.class)).collect(Collectors.toList());
+	public ResponseEntity<List<RoleResponse>> index() {
+		List<RoleResponse> roles = roleRepository.findAll()
+				.stream().map(el->modelMapper.map(el, RoleResponse.class))
+				.collect(Collectors.toList());
+		return new ResponseEntity<>(roles, HttpStatus.OK);
 	}
 
 	@Override
-	public RoleResponse show(Long Id) {
+	public ResponseEntity<RoleResponse> show(Long Id) {
 		Optional<Role> role = roleRepository.findById(Id);
 		if (role.isPresent())
-			return modelMapper.map(role.get(), RoleResponse.class);
+			return new ResponseEntity<>(modelMapper.map(role.get(), RoleResponse.class),
+					HttpStatus.FOUND);
 		throw new EntityNotFoundException("Le role n'a pas ete trouve !!!");
 	}
 
 	@Override
-	public RoleResponse create(RoleRequest role) {
+	public ResponseEntity<RoleResponse> create(RoleRequest role) {
 		Role newRole = modelMapper.map(role, Role.class);
-		Role updated = roleRepository.save(newRole);
-		return modelMapper.map(updated, RoleResponse.class);
+		RoleResponse saved = modelMapper.map(roleRepository.save(newRole), RoleResponse.class);
+		return new ResponseEntity<>(saved, HttpStatus.CREATED);
 	}
 
 	@Override
-	public RoleResponse update(RoleRequest role, Long id) {
+	public ResponseEntity<RoleResponse> update(RoleRequest role, Long id) {
 		Optional<Role> optRole = roleRepository.findById(id);
 		if (optRole.isPresent()) {
 			Role oldRole = modelMapper.map(optRole, Role.class);
 			oldRole.setId(id);
-			Role updated = roleRepository.save(oldRole);
-			return modelMapper.map(updated, RoleResponse.class);
+			RoleResponse updated = modelMapper.map(roleRepository.save(oldRole), RoleResponse.class);
+			return new ResponseEntity<>(updated, HttpStatus.ACCEPTED);
 		}
 		throw new EntityNotFoundException("Le role a modifier n'a pas ete trouve !!!");
 	}
 
 	@Override
-	public void delete(Long id) {
+	public ResponseEntity<?> delete(Long id) {
 		roleRepository.deleteById(id);
+		return ResponseEntity.noContent().build();
 	}
 	
 	

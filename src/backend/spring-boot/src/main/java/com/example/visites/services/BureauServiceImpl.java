@@ -21,7 +21,7 @@ import jakarta.persistence.EntityNotFoundException;
 public class BureauServiceImpl implements BureauService {
     
 	private final BureauRepository bureauRepository;
-	private ModelMapper modelMapper;
+	private final ModelMapper modelMapper;
 
 	@Autowired
 	public BureauServiceImpl(BureauRepository bureauRepository, ModelMapper modelMapper) {
@@ -58,7 +58,7 @@ public class BureauServiceImpl implements BureauService {
     	if (optBureau.isPresent()) {
     		Bureau oldBureau = modelMapper.map(bureau, Bureau.class);
     		oldBureau.setId(id);
-    		BureauResponse updated = modelMapper.map(oldBureau, BureauResponse.class);
+    		BureauResponse updated = modelMapper.map(bureauRepository.save(oldBureau), BureauResponse.class);
     		return new ResponseEntity<>(updated, HttpStatus.ACCEPTED);
     	}    	
     	throw new EntityNotFoundException("Le bureau a modifier n'a pas ete trouve !!!");

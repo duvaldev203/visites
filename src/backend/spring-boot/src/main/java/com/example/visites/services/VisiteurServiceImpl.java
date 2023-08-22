@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.visites.dto.VisiteurRequest;
@@ -19,7 +21,7 @@ import jakarta.persistence.EntityNotFoundException;
 public class VisiteurServiceImpl implements VisiteurService {
 
 	private final VisiteurRepository visiteurRepository;
-	private ModelMapper modelMapper;
+	private final ModelMapper modelMapper;
 
 	@Autowired
 	public VisiteurServiceImpl(VisiteurRepository visiteurRepository, ModelMapper modelMapper) {
@@ -28,42 +30,44 @@ public class VisiteurServiceImpl implements VisiteurService {
 	}
 
 	@Override
-	public List<VisiteurResponse> index() {
-		return visiteurRepository.findAll()
+	public ResponseEntity<List<VisiteurResponse>> index() {
+		List<VisiteurResponse> visiteurs = visiteurRepository.findAll()
 				.stream().map(el->modelMapper.map(el, VisiteurResponse.class))
 				.collect(Collectors.toList());
+		return new ResponseEntity<>(visiteurs, HttpStatus.OK);
 	}
 
 	@Override
-	public VisiteurResponse show(Long Id) {
+	public ResponseEntity<VisiteurResponse> show(Long Id) {
 		Optional<Visiteur> visiteur = visiteurRepository.findById(Id);
 		if (visiteur.isPresent())
-			return modelMapper.map(visiteur, VisiteurResponse.class);
+			return new ResponseEntity<>(modelMapper.map(visiteur, VisiteurResponse.class), HttpStatus.FOUND);
 		throw new EntityNotFoundException("Le visiteur n'a pas ete trouve !!!");
 	}
 
 	@Override
-	public VisiteurResponse create(VisiteurRequest visiteur) {
+	public ResponseEntity<VisiteurResponse> create(VisiteurRequest visiteur) {
 		Visiteur newVisiteur = modelMapper.map(visiteur, Visiteur.class);
-		Visiteur saved = visiteurRepository.save(newVisiteur);
-		return modelMapper.map(saved, VisiteurResponse.class);
+		VisiteurResponse saved = modelMapper.map(visiteurRepository.save(newVisiteur), VisiteurResponse.class);
+		return new ResponseEntity<>(saved, HttpStatus.CREATED);
 	}
 
 	@Override
-	public VisiteurResponse update(VisiteurRequest visiteur, Long id) {
+	public ResponseEntity<VisiteurResponse> update(VisiteurRequest visiteur, Long id) {
 		Optional<Visiteur> optVisiteur = visiteurRepository.findById(id);
 		if (optVisiteur.isPresent()) {
 			Visiteur oldVisiteur = modelMapper.map(optVisiteur, Visiteur.class);
 			oldVisiteur.setId(id);
-			Visiteur updated = visiteurRepository.save(oldVisiteur);
-			return modelMapper.map(updated, VisiteurResponse.class);
+			VisiteurResponse updated = modelMapper.map(visiteurRepository.save(oldVisiteur), VisiteurResponse.class);
+			return new ResponseEntity<>(updated, HttpStatus.ACCEPTED);
 		}
 		throw new EntityNotFoundException("Le visiteur a modifier n'a pas ete trouvee !!!");
 	}
 
 	@Override
-	public void delete(Long id) {
+	public ResponseEntity<?> delete(Long id) {
 		visiteurRepository.deleteById(id);
+		return ResponseEntity.noContent().build();
 	}
 
 }

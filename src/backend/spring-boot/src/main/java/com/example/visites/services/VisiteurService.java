@@ -4,17 +4,18 @@ import java.util.List;
 
 import com.example.visites.dto.VisiteurRequest;
 import com.example.visites.dto.VisiteurResponse;
+import org.springframework.http.ResponseEntity;
 
 public interface VisiteurService {
 
-	List<VisiteurResponse> index();
-	
-	VisiteurResponse show(Long Id);
-	
-	VisiteurResponse create(VisiteurRequest visiteur);
+	ResponseEntity<List<VisiteurResponse>> index();
 
-	VisiteurResponse update(VisiteurRequest visiteur, Long id);
-	
-	void delete(Long id);
+	ResponseEntity<VisiteurResponse> show(Long Id);
+
+	ResponseEntity<VisiteurResponse> create(VisiteurRequest visiteur);
+
+	ResponseEntity<VisiteurResponse> update(VisiteurRequest visiteur, Long id);
+
+	ResponseEntity<?> delete(Long id);
 
 }

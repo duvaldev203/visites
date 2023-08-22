@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.visites.dto.UserRequest;
@@ -21,7 +23,7 @@ import jakarta.persistence.EntityNotFoundException;
 public class UserServiceImpl implements UserService {
 	
 	private final UserRepository userRepository;
-	private ModelMapper modelMapper;
+	private final ModelMapper modelMapper;
 	
 	@Autowired
 	public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper) {
@@ -31,22 +33,23 @@ public class UserServiceImpl implements UserService {
 	
 
 	@Override
-	public List<UserResponse> index() {
-		return userRepository.findAll()
+	public ResponseEntity<List<UserResponse>> index() {
+		List<UserResponse> users = userRepository.findAll()
 				.stream().map(el->modelMapper.map(el, UserResponse.class))
 				.collect(Collectors.toList());
+		return  new ResponseEntity<>(users, HttpStatus.OK);
 	}
 
 	@Override
-	public UserResponse show(Long Id) {
+	public ResponseEntity<UserResponse> show(Long Id) {
 		Optional<User> user = userRepository.findById(Id);
 		if (user.isPresent())
-			return modelMapper.map(user.get(), UserResponse.class);
+			return new ResponseEntity<>(modelMapper.map(user.get(), UserResponse.class), HttpStatus.FOUND);
 		throw new EntityNotFoundException("L'utilisateur n'a pas ete trouve !!!");
 	}
 
 	@Override
-	public UserResponse create(UserRequest user) {
+	public ResponseEntity<UserResponse> create(UserRequest user) {
 		System.out.println(user);
 		User newUser = modelMapper.map(user, User.class);
 		List<Role> roles = new ArrayList<>();
@@ -54,25 +57,26 @@ public class UserServiceImpl implements UserService {
 			roles.add(role);
 		}
 		newUser.setRoles(roles);
-		User saved = userRepository.save(newUser);
-		return modelMapper.map(saved, UserResponse.class);
+		UserResponse saved = modelMapper.map(userRepository.save(newUser), UserResponse.class);
+		return new ResponseEntity<>(saved, HttpStatus.CREATED);
 	}
 
 	@Override
-	public UserResponse update(UserRequest user, Long id) {
+	public ResponseEntity<UserResponse> update(UserRequest user, Long id) {
 		Optional<User> optUser = userRepository.findById(id);
 		if (optUser.isPresent()) {
 			User oldUser = modelMapper.map(optUser, User.class);
 			oldUser.setId(id);
-			User updated = userRepository.save(oldUser);
-			return modelMapper.map(updated, UserResponse.class);
+			UserResponse updated = modelMapper.map(userRepository.save(oldUser), UserResponse.class);
+			return new ResponseEntity<>(updated, HttpStatus.ACCEPTED);
 		}
 		throw new EntityNotFoundException("L'utilisateur a modifier n'a pas ete trouve !!!");
 	}
 
 	@Override
-	public void delete(Long id) {
+	public ResponseEntity<?> delete(Long id) {
 		userRepository.deleteById(id);
+		return ResponseEntity.noContent().build();
 	}
 
 }
