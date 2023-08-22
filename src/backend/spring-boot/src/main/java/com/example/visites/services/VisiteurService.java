@@ -10,7 +10,7 @@ public interface VisiteurService {
 
 	ResponseEntity<List<VisiteurResponse>> index();
 
-	ResponseEntity<VisiteurResponse> show(Long Id);
+	ResponseEntity<VisiteurResponse> show(Long id);
 
 	ResponseEntity<VisiteurResponse> create(VisiteurRequest visiteur);
 

@@ -10,7 +10,7 @@ public interface AvisService {
 	
 	ResponseEntity<List<AvisResponse>> index();
 	
-	ResponseEntity<AvisResponse> show(Long Id);
+	ResponseEntity<AvisResponse> show(Long id);
 	
 	ResponseEntity<AvisResponse> create(AvisRequest avis);
 

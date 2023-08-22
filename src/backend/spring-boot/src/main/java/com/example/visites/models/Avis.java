@@ -4,7 +4,6 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.CreationTimestamp;

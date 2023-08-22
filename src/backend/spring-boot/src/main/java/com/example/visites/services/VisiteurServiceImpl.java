@@ -1,9 +1,9 @@
 package com.example.visites.services;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.example.visites.exceptions.ResourceNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,8 +14,6 @@ import com.example.visites.dto.VisiteurRequest;
 import com.example.visites.dto.VisiteurResponse;
 import com.example.visites.models.Visiteur;
 import com.example.visites.repositories.VisiteurRepository;
-
-import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class VisiteurServiceImpl implements VisiteurService {
@@ -38,11 +36,10 @@ public class VisiteurServiceImpl implements VisiteurService {
 	}
 
 	@Override
-	public ResponseEntity<VisiteurResponse> show(Long Id) {
-		Optional<Visiteur> visiteur = visiteurRepository.findById(Id);
-		if (visiteur.isPresent())
-			return new ResponseEntity<>(modelMapper.map(visiteur, VisiteurResponse.class), HttpStatus.FOUND);
-		throw new EntityNotFoundException("Le visiteur n'a pas ete trouve !!!");
+	public ResponseEntity<VisiteurResponse> show(Long id) {
+		Visiteur visiteur = visiteurRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Le Visiteur", "d'Id", id));
+		return new ResponseEntity<>(modelMapper.map(visiteur, VisiteurResponse.class), HttpStatus.FOUND);
 	}
 
 	@Override
@@ -54,19 +51,19 @@ public class VisiteurServiceImpl implements VisiteurService {
 
 	@Override
 	public ResponseEntity<VisiteurResponse> update(VisiteurRequest visiteur, Long id) {
-		Optional<Visiteur> optVisiteur = visiteurRepository.findById(id);
-		if (optVisiteur.isPresent()) {
-			Visiteur oldVisiteur = modelMapper.map(optVisiteur, Visiteur.class);
-			oldVisiteur.setId(id);
-			VisiteurResponse updated = modelMapper.map(visiteurRepository.save(oldVisiteur), VisiteurResponse.class);
-			return new ResponseEntity<>(updated, HttpStatus.ACCEPTED);
-		}
-		throw new EntityNotFoundException("Le visiteur a modifier n'a pas ete trouvee !!!");
+		visiteurRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Le Visiteur que vous voulez modifier ", "d'Id", id));
+		Visiteur oldVisiteur = modelMapper.map(visiteur, Visiteur.class);
+		oldVisiteur.setId(id);
+		VisiteurResponse updated = modelMapper.map(visiteurRepository.save(oldVisiteur), VisiteurResponse.class);
+		return new ResponseEntity<>(updated, HttpStatus.ACCEPTED);
 	}
 
 	@Override
 	public ResponseEntity<?> delete(Long id) {
-		visiteurRepository.deleteById(id);
+		Visiteur visiteur = visiteurRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Le Visiteur", "d'Id", id));
+		visiteurRepository.delete(visiteur);
 		return ResponseEntity.noContent().build();
 	}
 
