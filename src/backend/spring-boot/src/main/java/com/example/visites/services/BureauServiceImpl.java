@@ -1,8 +1,10 @@
 package com.example.visites.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.example.visites.exceptions.APIException;
 import com.example.visites.exceptions.ResourceNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,5 +68,29 @@ public class BureauServiceImpl implements BureauService {
     	bureauRepository.delete(optBureau);
     	return ResponseEntity.noContent().build();
     }
-    
+
+	@Override
+	public ResponseEntity<List<BureauResponse>> records(String batiment, String etage, String porte) {
+		List<Bureau> bureaux = new ArrayList<>();
+		if (batiment != null && etage != null && porte != null) {
+			bureaux = bureauRepository.findByBatimentContainingAndEtageContainingAndPorteContaining(batiment, porte, etage);
+		} else if (batiment != null && etage != null) {
+			bureaux = bureauRepository.findByBatimentContainingAndEtageContaining(batiment, etage);
+		}else if (batiment != null && porte != null) {
+			bureaux = bureauRepository.findByBatimentContainingAndPorteContaining(batiment, porte);
+		}else if (etage != null && porte != null) {
+			bureaux = bureauRepository.findByEtageContainingAndPorteContaining(etage, porte);
+		}else if (batiment != null) {
+			bureaux = bureauRepository.findByBatimentContaining(batiment);
+		}else if (etage != null) {
+			bureaux = bureauRepository.findByEtageContaining(etage);
+		}else if (porte != null) {
+			bureaux = bureauRepository.findByPorteContaining(porte);
+		}else
+			throw new APIException("Le bureau que vous cherchez n'existe pas !!!");
+		List<BureauResponse> resp = bureaux.stream().map(el->modelMapper.map(el, BureauResponse.class))
+				.collect(Collectors.toList());
+		return new ResponseEntity<>(resp, HttpStatus.MULTIPLE_CHOICES);
+	}
+
 }

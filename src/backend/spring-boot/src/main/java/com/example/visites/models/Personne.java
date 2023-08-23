@@ -47,7 +47,7 @@ public abstract class Personne implements Serializable {
     @Pattern(regexp = "^(masculin|féminin)$", message = "Le sexe doit être 'masculin' ou 'féminin'")
     private String sexe;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     @NotNull(message = "email : Ce champ est obligatoire")
     @Email(message = "email invalide")
     private String email;

@@ -55,5 +55,10 @@ public class UserController {
 	public ResponseEntity<?> delete(@PathVariable Long id) {
 		 return userService.delete(id);
 	}
+
+	@GetMapping("/records/{search}")
+	public ResponseEntity<List<UserResponse>> records(@PathVariable String search){
+		return userService.records(search);
+	}
 	
 }

@@ -17,5 +17,6 @@ public interface UserService {
 	ResponseEntity<UserResponse> update(UserRequest user, Long id);
 	
 	ResponseEntity<?> delete(Long id);
-	
+
+    ResponseEntity<List<UserResponse>> records(String search);
 }

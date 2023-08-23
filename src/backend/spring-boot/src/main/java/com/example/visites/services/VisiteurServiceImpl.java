@@ -67,4 +67,12 @@ public class VisiteurServiceImpl implements VisiteurService {
 		return ResponseEntity.noContent().build();
 	}
 
+	@Override
+	public ResponseEntity<List<VisiteurResponse>> records(String search) {
+		List<Visiteur> visiteurs = visiteurRepository.findByNomContainingOrPrenomContainingOrEmailContainingOrTelContaining(search, search, search, search);
+		List<VisiteurResponse> resp = visiteurs.stream().map(el->modelMapper.map(el, VisiteurResponse.class))
+				.collect(Collectors.toList());
+		return new ResponseEntity<>(resp, HttpStatus.MULTIPLE_CHOICES);
+	}
+
 }

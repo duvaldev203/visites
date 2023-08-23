@@ -18,4 +18,7 @@ public interface VisiteService {
 	
 	ResponseEntity<?> delete(Long id);
 
+    ResponseEntity<List<VisiteResponse>> records(String search);
+
+    ResponseEntity<List<VisiteResponse>> sort(String motif);
 }
