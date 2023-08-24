@@ -21,7 +21,9 @@ import com.example.visites.repositories.UserRepository;
 public class UserServiceImpl implements UserService {
 	
 	private final UserRepository userRepository;
+
 	private final ModelMapper modelMapper;
+
 	
 	@Autowired
 	public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper) {
@@ -74,6 +76,14 @@ public class UserServiceImpl implements UserService {
 				.orElseThrow(() -> new ResourceNotFoundException("L'User que vous voulez supprimer ", "d'Id", id));
 		userRepository.delete(user);
 		return ResponseEntity.noContent().build();
+	}
+
+	@Override
+	public ResponseEntity<List<UserResponse>> records(String search) {
+		List<User> users = userRepository.findByNomContainingOrPrenomContainingOrUsernameContainingOrEmailContainingOrTelContaining(search, search, search, search, search);
+		List<UserResponse> resp = users.stream().map(el->modelMapper.map(el, UserResponse.class))
+				.collect(Collectors.toList());
+		return new ResponseEntity<>(resp, HttpStatus.MULTIPLE_CHOICES);
 	}
 
 }

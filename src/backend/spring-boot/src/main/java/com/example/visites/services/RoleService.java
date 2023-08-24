@@ -19,4 +19,5 @@ public interface RoleService {
 	
 	ResponseEntity<?> delete(Long id);
 
+	ResponseEntity<List<RoleResponse>> records(String name);
 }

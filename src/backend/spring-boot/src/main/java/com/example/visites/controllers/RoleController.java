@@ -56,4 +56,10 @@ public class RoleController {
 		return roleService.delete(id);
 	}
 
+	@GetMapping("/records/{nom}")
+	public ResponseEntity<List<RoleResponse>> records(@PathVariable String nom){
+		nom = nom.toUpperCase();
+		return roleService.records(nom);
+	}
+
 }

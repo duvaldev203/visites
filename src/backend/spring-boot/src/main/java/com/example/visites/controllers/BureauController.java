@@ -55,4 +55,20 @@ public class BureauController {
 	public ResponseEntity<?> delete(@PathVariable Long id) {
 		return bureauService.delete(id);
 	}
+
+	@GetMapping("/records/{search}")
+	public ResponseEntity<List<BureauResponse>> records(@PathVariable String search){
+		String[] items = search.split(" ");
+		String batiment = null;
+		String etage = null;
+		String porte = null;
+		if (items.length > 0)
+			batiment = items[0];
+		if (items.length > 1)
+			etage = items[1];
+		if (items.length > 2)
+			porte = items[2];
+
+		return bureauService.records(batiment, porte, etage);
+	}
 }

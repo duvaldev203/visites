@@ -65,6 +65,14 @@ public class RoleServiceImpl implements RoleService {
 		roleRepository.delete(role);
 		return ResponseEntity.noContent().build();
 	}
-	
-	
+
+	@Override
+	public ResponseEntity<List<RoleResponse>> records(String name) {
+		List<Role> roles = roleRepository.findByNomContaining(name);
+		List<RoleResponse> resp = roles.stream().map(el->modelMapper.map(el, RoleResponse.class))
+				.toList();
+		return new ResponseEntity<>(resp, HttpStatus.MULTIPLE_CHOICES);
+	}
+
+
 }

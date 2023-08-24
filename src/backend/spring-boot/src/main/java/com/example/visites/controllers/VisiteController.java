@@ -56,4 +56,14 @@ public class VisiteController {
 		return visiteService.delete(id);
 	}
 
+	@GetMapping("/records/{search}")
+	public  ResponseEntity<List<VisiteResponse>> records(@PathVariable String search){
+		return visiteService.records(search);
+	}
+
+	@GetMapping("/sort/{motif}")
+	public ResponseEntity<List<VisiteResponse>> sort(@PathVariable String motif){
+		return visiteService.sort(motif);
+	}
+
 }

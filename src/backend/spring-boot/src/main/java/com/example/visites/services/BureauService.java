@@ -18,5 +18,6 @@ public interface BureauService {
 	ResponseEntity<BureauResponse> update(BureauRequest bureau, Long id);
 	
 	ResponseEntity<?> delete(Long id);
-	
+
+	ResponseEntity<List<BureauResponse>> records(String batiment, String etage, String porte);
 }

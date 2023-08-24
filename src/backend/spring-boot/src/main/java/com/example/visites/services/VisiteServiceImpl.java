@@ -65,5 +65,22 @@ public class VisiteServiceImpl implements VisiteService {
 		visiteRepository.delete(visite);
 		return ResponseEntity.noContent().build();
 	}
-	
+
+	@Override
+	public ResponseEntity<List<VisiteResponse>> records(String search) {
+		List<Visite> visites = visiteRepository.findByMotifContaining(search);
+		List<VisiteResponse> resp = visites.stream().map(el->modelMapper.map(el, VisiteResponse.class))
+				.collect(Collectors.toList());
+		return new ResponseEntity<>(resp, HttpStatus.MULTIPLE_CHOICES);
+	}
+
+	@Override
+	public ResponseEntity<List<VisiteResponse>> sort(String motif) {
+		List<Visite> visites = visiteRepository.findByMotifContaining(motif);
+		visites.removeIf(v -> v.getAvis() != null);
+		List<VisiteResponse> resp = visites.stream().map(el->modelMapper.map(el, VisiteResponse.class))
+				.toList();
+		return  new ResponseEntity<>(resp, HttpStatus.MULTIPLE_CHOICES);
+	}
+
 }

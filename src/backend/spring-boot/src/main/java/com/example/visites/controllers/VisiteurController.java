@@ -55,5 +55,10 @@ public class VisiteurController {
 	public ResponseEntity<?> delete(@PathVariable Long id) {
 		return visiteurService.delete(id);
 	}
+
+	@GetMapping("/records/{search}")
+	public ResponseEntity<List<VisiteurResponse>> records(@PathVariable String search){
+		return visiteurService.records(search);
+	}
 	
 }
