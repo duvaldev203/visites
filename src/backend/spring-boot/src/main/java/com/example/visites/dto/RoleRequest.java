@@ -12,6 +12,4 @@ import lombok.NoArgsConstructor;
 public class RoleRequest {
 	private String nom;
 	private String description;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
 }

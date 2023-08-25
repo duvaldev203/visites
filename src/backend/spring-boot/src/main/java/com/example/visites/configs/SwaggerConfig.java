@@ -1,5 +1,10 @@
 package com.example.visites.configs;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,6 +15,21 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 
 @Configuration
+@OpenAPIDefinition(
+        security = {
+                @SecurityRequirement(
+                        name = "bearerAuth"
+                )
+        }
+)
+@SecurityScheme(
+        name = "bearerAuth",
+        description = "JWT Auth Token",
+        scheme = "bearer",
+        type = SecuritySchemeType.HTTP,
+        bearerFormat = "JWT",
+        in = SecuritySchemeIn.HEADER
+)
 public class SwaggerConfig {
 
     @Bean
@@ -20,8 +40,9 @@ public class SwaggerConfig {
                         .contact(new Contact().name("Donfack Duval").email("donfackduval@gmail.com"))
                         .license(new License().name("License").url("/")))
                 .externalDocs(new ExternalDocumentation().description("Tracking App Documentation")
-                        .url("http://localhost:9080/api/word23" +
-                                "swagger-ui/index.html"));
+                        .url("swagger-ui/index.html")
+                );
+
     }
 
 }
