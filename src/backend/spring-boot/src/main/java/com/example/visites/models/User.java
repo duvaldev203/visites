@@ -4,9 +4,11 @@ import java.io.Serial;
 import java.sql.Date;
 import java.util.List;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,9 +33,17 @@ public class User extends Personne {
     @NotNull(message = "username : Ce champ est obligatoire")
     private String username;
 
-    @NotNull(message = "password : Ce champ est obligatoire")
-    @Size(min = 8, max = 15, message = "password : La taille de ce champ doit etre compris entre 8 et 15")
-    @Column(name = "password")
+    /*
+    * ^ début de chaîne
+    * (?=.*[0-9]) doit contenir au moins un chiffre
+    * (?=.*[a-z]) doit contenir au moins une lettre minuscule
+    * (?=.*[A-Z]) doit contenir au moins une lettre majuscule
+    * (?=.*[@#$%^&+=\\-_!]) doit contenir au moins un caractère spécial
+    * (?=\\S+$) ne doit pas contenir d'espaces
+    * .{8,} doit avoir au moins 8 caractères
+    * $ fin de chaîne
+    * @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=\\-_!])(?=\\S+$).{8,}$", message = "Mot de passe faible")
+    */
     private String password;
     
     @ManyToOne

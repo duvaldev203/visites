@@ -2,13 +2,17 @@ package com.example.visites.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
+import com.example.visites.configs.AppConstants;
+import com.example.visites.exceptions.APIException;
 import com.example.visites.exceptions.ResourceNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.visites.dto.UserRequest;
@@ -22,12 +26,15 @@ public class UserServiceImpl implements UserService {
 	
 	private final UserRepository userRepository;
 
+	private final PasswordEncoder passwordEncoder;
+
 	private final ModelMapper modelMapper;
 
-	
+
 	@Autowired
-	public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper) {
+	public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper) {
 		this.userRepository = userRepository;
+		this.passwordEncoder = passwordEncoder;
 		this.modelMapper = modelMapper;
 	}
 	
@@ -55,6 +62,17 @@ public class UserServiceImpl implements UserService {
 		for (Role role : newUser.getRoles()) {
 			roles.add(role);
 		}
+		String password;
+		if (newUser.getPassword() == null)
+			password = ramdomPassword();
+		else {
+			password = newUser.getPassword();
+			if (!(password.matches(AppConstants.PASSWORD_REGEX)))
+				throw new APIException("Le mot de passe doit avoir min 8 carateres et contenir au moins : " +
+						"Un chiffre , une lettre majuscule, une lettre miniscule, un caractere special, pas d'espace");
+		}
+		System.out.printf(password);
+		newUser.setPassword(passwordEncoder.encode(password));
 		newUser.setRoles(roles);
 		UserResponse saved = modelMapper.map(userRepository.save(newUser), UserResponse.class);
 		return new ResponseEntity<>(saved, HttpStatus.CREATED);
@@ -86,4 +104,13 @@ public class UserServiceImpl implements UserService {
 		return new ResponseEntity<>(resp, HttpStatus.MULTIPLE_CHOICES);
 	}
 
+	public String ramdomPassword(){
+		StringBuilder passwordBuilder = new StringBuilder(10);
+		Random random = new Random();
+		for (int i = 0; i < 10; i++) {
+			int index = random.nextInt(AppConstants.CHARACTERS_ALLOWED_FOR_PASSWORD.length());
+			passwordBuilder.append(AppConstants.CHARACTERS_ALLOWED_FOR_PASSWORD.charAt(index));
+		}
+		return passwordBuilder.toString();
+	}
 }

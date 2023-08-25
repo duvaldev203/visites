@@ -34,7 +34,7 @@ public class Role implements Serializable {
 
     @Column(name = "nom")
     @NotNull(message = "nom : Ce champ est obligatoire")
-    @Size(min = 5, max = 15, message = "la taille de ce champ doit etre comprise entre 5 et 15")
+    @Size(max = 15, message = "nom : la taille max de ce champ doit etre 15")
     private String nom;
 
     @Column(name = "description")
