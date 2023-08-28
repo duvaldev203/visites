@@ -21,4 +21,6 @@ public interface VisiteService {
     ResponseEntity<List<VisiteResponse>> records(String search);
 
     ResponseEntity<List<VisiteResponse>> sort(String motif);
+
+	ResponseEntity<List<VisiteResponse>> getVisiteByEmployeId(Long employeId);
 }

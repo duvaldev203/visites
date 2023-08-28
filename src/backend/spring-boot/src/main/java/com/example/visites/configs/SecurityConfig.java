@@ -16,7 +16,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -39,12 +38,12 @@ public class SecurityConfig {
 						.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				)
 			.authorizeHttpRequests(authorize -> authorize
-					.requestMatchers(HttpMethod.POST, AppConstants.PUBLIC_POST_URLS).permitAll()
-					.requestMatchers(HttpMethod.GET, AppConstants.PUBLIC_GET_URLS).permitAll()
-					.anyRequest().authenticated())
-			.exceptionHandling(exception->exception.authenticationEntryPoint(
-					((request, response, authException) ->
-							response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"))
+							.requestMatchers(HttpMethod.POST, AppConstants.PUBLIC_POST_URLS).permitAll()
+							.requestMatchers(HttpMethod.GET, AppConstants.PUBLIC_GET_URLS).permitAll()
+							.anyRequest().authenticated())
+						.exceptionHandling(exception->exception.authenticationEntryPoint(
+										((request, response, authException) ->
+														response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"))
 			)).sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 		
 		http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

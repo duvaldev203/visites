@@ -1,4 +1,3 @@
-
 package com.example.visites.configs;
 
 import com.example.visites.dto.UserRequest;
@@ -18,7 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -44,10 +42,15 @@ public class SeedDataConfig implements CommandLineRunner {
 		    adminRole.setNom("ADMIN");
 		    adminRole.setDescription("Administrateur");
 
-		    Role userRole = new Role();
-		    userRole.setId(AppConstants.USER_ID);
-		    userRole.setNom("USER");
-		    userRole.setDescription("Utilisateur");
+			  Role userRole = new Role();
+			  userRole.setId(AppConstants.USER_ID);
+			  userRole.setNom("USER");
+			  userRole.setDescription("Utilisateur");
+
+			  Role recepRole = new Role();
+			  recepRole.setId(AppConstants.USER_ID);
+			  recepRole.setNom("RECEP");
+			  recepRole.setDescription("Receptioniste");
 
 		    List<Role> roles = List.of(adminRole, userRole);
 
@@ -82,7 +85,7 @@ public class SeedDataConfig implements CommandLineRunner {
 			EmailDetails emailWithLink = new EmailDetails("donfackduval@gmail.com", "Salutation",
 							"Hello my friend and Congratulation to your integration of messaging service in the app !!!",
 							"localhost:8080/api/swagger-ui/index.html", "Cliquer ici pour acceder a la documentation swagger du projet");
-			emailService.sendEmailWithLinks(emailWithLink);
+//			emailService.sendEmailWithLinks(emailWithLink);
 		} catch (Exception e) {
 		  e.printStackTrace();
 		}
