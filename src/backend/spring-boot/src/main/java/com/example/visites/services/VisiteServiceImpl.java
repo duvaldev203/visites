@@ -83,4 +83,10 @@ public class VisiteServiceImpl implements VisiteService {
 		return  new ResponseEntity<>(resp, HttpStatus.MULTIPLE_CHOICES);
 	}
 
+	@Override
+	public ResponseEntity<List<VisiteResponse>> getVisiteByEmployeId(Long employeId) {
+		List<Visite> visites = visiteRepository.findByUserId(employeId);
+		return null;
+	}
+
 }

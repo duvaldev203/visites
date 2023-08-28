@@ -1,7 +1,6 @@
 package com.example.visites.dto;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,6 +17,4 @@ public class VisiteurRequest {
     private Date dateNais;
     private String tel;
     private String profession;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
 }

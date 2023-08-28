@@ -1,8 +1,7 @@
 package com.example.visites.dto;
 
-import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,10 +14,8 @@ public class VisiteRequest {
     private String motif;
     private LocalTime heureDebut;
     private LocalTime heureFin;
-    private LocalDate dateVisite;
+    private Date dateVisite;
     private String type;
     private UserResponse user;
     private VisiteurResponse visiteur;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
 }

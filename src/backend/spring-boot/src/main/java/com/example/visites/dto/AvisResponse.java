@@ -13,6 +13,6 @@ public class AvisResponse {
 	private Long id;
 	private String libelle; 
 	private VisiteResponse visite;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
+  private Timestamp createdAt;
+	private Timestamp updatedAt;
 }

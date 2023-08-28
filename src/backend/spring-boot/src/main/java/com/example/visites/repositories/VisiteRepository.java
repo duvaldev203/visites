@@ -11,4 +11,6 @@ import java.util.List;
 public interface VisiteRepository extends JpaRepository<Visite, Long> {
 
     List<Visite> findByMotifContaining(String search);
+
+	List<Visite> findByUserId(Long employeId);
 }

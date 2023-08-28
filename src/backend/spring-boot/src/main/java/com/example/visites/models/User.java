@@ -52,7 +52,7 @@ public class User extends Personne {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Visite> visites;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
     	joinColumns = @JoinColumn(name = "user_id"),
     	inverseJoinColumns = @JoinColumn(name = "role_id")

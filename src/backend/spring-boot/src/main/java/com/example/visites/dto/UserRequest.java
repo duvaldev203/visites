@@ -1,7 +1,6 @@
 package com.example.visites.dto;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -23,6 +22,4 @@ public class UserRequest {
     private String password;
     private BureauResponse bureau;
     private List<RoleResponse> roles;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
 }
