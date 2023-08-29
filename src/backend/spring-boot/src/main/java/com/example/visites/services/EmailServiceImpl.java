@@ -26,6 +26,7 @@ public class EmailServiceImpl implements EmailService {
 	  mail.setText(emailDetails.getMessage());
 
 	  mailSender.send(mail);
+		System.out.println("mail send successfully to :" + emailDetails.getDestination());
 	}
 
 	@Override
@@ -39,6 +40,6 @@ public class EmailServiceImpl implements EmailService {
 		helper.setText("<br><br>");
 		helper.setText("<html><body><a href='" + details.getLink() + "'>" + details.getLinkDescription() + "</body></html>", true);
 
-	  mailSender.send(message);
+		mailSender.send(message);
 	}
 }

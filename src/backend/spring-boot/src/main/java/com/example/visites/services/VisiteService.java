@@ -23,4 +23,6 @@ public interface VisiteService {
     ResponseEntity<List<VisiteResponse>> sort(String motif);
 
 	ResponseEntity<List<VisiteResponse>> getVisiteByEmployeId(Long employeId);
+
+	ResponseEntity<VisiteResponse> createOrdinary(VisiteRequest visite);
 }
