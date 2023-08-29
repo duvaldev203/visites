@@ -44,13 +44,13 @@ public class VisiteController {
 	}
 
 	@PostMapping("/")
-	@PreAuthorize("hasAnyAuthority('ADMIN', 'RECEP')")
+	@PreAuthorize("hasAnyAuthority('ADMIN', 'RECEP', 'USER')")
 	public ResponseEntity<VisiteResponse> create(@Valid @RequestBody VisiteRequest visite) {
 		return visiteService.create(visite);
 	}
 
 	@PutMapping("/{id}")
-	@PreAuthorize("hasAnyAuthority('ADMIN', 'RECEP')")
+	@PreAuthorize("hasAnyAuthority('ADMIN', 'RECEP', 'USER')")
 	public ResponseEntity<VisiteResponse> update(@PathVariable Long id, @Valid @RequestBody VisiteRequest visite) {
 		return visiteService.update(visite, id);
 	}
@@ -75,6 +75,12 @@ public class VisiteController {
 	@PreAuthorize("hasAnyAuthority('ADMIN', 'RECEP', 'USER')")
 	public ResponseEntity<List<VisiteResponse>> getVisiteByEmployeId(Long employeId) {
 		return visiteService.getVisiteByEmployeId(employeId);
+	}
+
+	@PostMapping("/ordinaire")
+	@PreAuthorize("hasAnyAuthority('ADMIN', 'RECEP')")
+	public ResponseEntity<VisiteResponse> createOrdinary(@RequestBody VisiteRequest visite){
+		return visiteService.createOrdinary(visite);
 	}
 
 }
