@@ -5,7 +5,7 @@ import com.example.visites.dto.SignInRequest;
 import com.example.visites.dto.UserRequest;
 import com.example.visites.dto.UserResponse;
 import com.example.visites.exceptions.UserNotFoundException;
-import com.example.visites.security.JWTUtil;
+import com.example.visites.manager.JWTUtil;
 import com.example.visites.services.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;

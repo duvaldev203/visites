@@ -20,6 +20,7 @@ public class UserRequest {
     private String poste;
     private String username;
     private String password;
+    private ProfileResponse profile;
     private BureauResponse bureau;
     private List<RoleResponse> roles;
 }

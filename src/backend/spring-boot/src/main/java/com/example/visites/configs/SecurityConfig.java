@@ -1,6 +1,6 @@
 package com.example.visites.configs;
 
-import com.example.visites.security.JWTFilter;
+import com.example.visites.manager.JWTFilter;
 import com.example.visites.services.UserDetailsServiceImpl;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -9,4 +9,8 @@ public class AppConstants {
     public static final String CHARACTERS_ALLOWED_FOR_PASSWORD = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@-*+_?";
 
     public static final String PASSWORD_REGEX = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=\\-_!])(?=\\S+$).{8,}$";
+
+    public static final String DEFAULT_PATH = "pictures";
+
+    public static final String DEFAULT_IMAGE = "pictures/default.png";
 }

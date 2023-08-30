@@ -45,8 +45,12 @@ public class User extends Personne {
     * @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=\\-_!])(?=\\S+$).{8,}$", message = "Mot de passe faible")
     */
     private String password;
-    
-    @ManyToOne
+
+		@OneToOne
+		@JoinColumn(name = "profile_id")
+		private Profile profile;
+
+	@ManyToOne
     private Bureau bureau;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
