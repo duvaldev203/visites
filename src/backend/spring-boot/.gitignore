@@ -33,5 +33,5 @@ build/
 .vscode/
 
 ### Images files ##
-pictures/*.png
+pictures/*
 !pictures/default.png
