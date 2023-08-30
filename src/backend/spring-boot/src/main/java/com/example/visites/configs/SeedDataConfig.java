@@ -2,9 +2,11 @@ package com.example.visites.configs;
 
 import com.example.visites.dto.UserRequest;
 import com.example.visites.models.EmailDetails;
+import com.example.visites.models.Profile;
 import com.example.visites.models.Role;
 import com.example.visites.models.User;
 import com.example.visites.repositories.BureauRepository;
+import com.example.visites.repositories.ProfileRepository;
 import com.example.visites.repositories.RoleRepository;
 import com.example.visites.repositories.UserRepository;
 import com.example.visites.services.EmailService;
@@ -25,17 +27,22 @@ import java.util.List;
 public class SeedDataConfig implements CommandLineRunner {
 
 	private final BureauRepository bureauRepository;
+	private final ProfileRepository profileRepository;
 	private final RoleRepository roleRepository;
 	private final UserRepository userRepository;
 	private final ModelMapper modelMapper;
 	private final PasswordEncoder passwordEncoder;
 	private final UserService userService;
-	private final EmailService emailService;
 
 	@Override
 	public void run(String... args) throws Exception {
 
 		try {
+			if (profileRepository.count() == 0){
+				Profile profile = new Profile();
+				profile.setNomImg("default.png");
+				profileRepository.save(profile);
+			}
 		  if (roleRepository.count() < 2) {
 		    Role adminRole = new Role();
 		    adminRole.setId(AppConstants.ADMIN_ID);
@@ -70,6 +77,8 @@ public class SeedDataConfig implements CommandLineRunner {
 		    admin.setPassword("password");
 		    admin.setUsername("admin");
 		    admin.setTel("+237671234567");
+				if (profileRepository.count() > 0)
+					admin.setProfile(profileRepository.findByNomImg("default.png"));
 		    if (bureauRepository.count() > 0)
 		        admin.setBureau(bureauRepository.findAll().get(0));
 		    if (roleRepository.count() > 0)
