@@ -9,7 +9,6 @@ import com.example.visites.repositories.BureauRepository;
 import com.example.visites.repositories.ProfileRepository;
 import com.example.visites.repositories.RoleRepository;
 import com.example.visites.repositories.UserRepository;
-import com.example.visites.services.EmailService;
 import com.example.visites.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

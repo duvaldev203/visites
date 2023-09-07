@@ -56,7 +56,7 @@ const Header = (props: {
           </button>
           {/* <!-- Hamburger Toggle BTN --> */}
 
-          <Link className="block flex-shrink-0 lg:hidden" to="/">
+          <Link className={`block flex-shrink-0 lg:hidden w-1/3`} to="/">
             <img src={Logo} alt="Logo" />
           </Link>
         </div>
@@ -90,7 +90,7 @@ const Header = (props: {
 
               <input
                 type="text"
-                placeholder="Type to search..."
+                placeholder="Rechercher..."
                 className="w-full bg-transparent pr-4 pl-9 focus:outline-none"
               />
             </div>
