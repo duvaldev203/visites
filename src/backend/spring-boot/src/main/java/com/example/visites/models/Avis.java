@@ -43,7 +43,7 @@ public class Avis implements Serializable {
     private Timestamp createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at", nullable = false, updatable = true)
     private Timestamp updatedAt;
 
     @OneToOne

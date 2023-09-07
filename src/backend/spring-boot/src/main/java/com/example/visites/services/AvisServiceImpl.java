@@ -16,7 +16,6 @@ import com.example.visites.dto.AvisResponse;
 import com.example.visites.models.Avis;
 import com.example.visites.repositories.AvisRepository;
 
-import jakarta.persistence.EntityExistsException;
 import lombok.AllArgsConstructor;
 
 @Service

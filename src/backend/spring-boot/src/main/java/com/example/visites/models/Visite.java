@@ -6,7 +6,6 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -75,7 +74,7 @@ public class Visite implements Serializable {
     private Timestamp createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at", nullable = false, updatable = true)
     private Timestamp updatedAt;
     
     
