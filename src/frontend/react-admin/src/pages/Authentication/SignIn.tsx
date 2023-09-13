@@ -3,7 +3,7 @@ import LogoDark from '../../images/logo/logo-dark.svg';
 import Logo from '../../images/logo/logo.svg';
 
 import { useEffect, useState } from 'react';
-import { AuthControllerApi} from '../../generated';
+import { AuthControllerApi, SignResponse, UserResponse} from '../../generated';
 import { SignInRequest } from '../../generated';
 import Indicator from './components/Indicator';
 
@@ -31,7 +31,7 @@ const SignIn: React.FC<SignInProps> = () => {
   const [isError, setIsError] = useState(false); // état pour les champs 
   const [isLogedIn, setIsLogedIn] = useState(false);
   const [access_token, setAcessToken] = useState('');
-  const [store_user, setAaccessUser] = useState('');
+  const [store_user, setAaccessUser] = useState<UserResponse>({});
 
   const isFormInvalid = !email || !password;
 
@@ -66,8 +66,9 @@ const SignIn: React.FC<SignInProps> = () => {
       setIsLoading(false);
       if(response && response.data) {
         const token = response.data.token ? response.data.token.toString() : "";
-        const user = response.data.user?.id ? response.data.user.id?.toString() : "";
-        console.log("Token : ", token, ", User : ", user); // extraction du token de la réponse
+        console.log(typeof response.data.user);
+        const user:UserResponse = response.data.user ? response.data.user : {};
+        console.log("Token : ", token, ", User : ", typeof user); // extraction du token de la réponse
 
         setAcessToken(token)
         setAaccessUser(user)

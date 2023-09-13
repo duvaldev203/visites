@@ -41,9 +41,9 @@ public class SecurityConfig {
 							.requestMatchers(HttpMethod.POST, AppConstants.PUBLIC_POST_URLS).permitAll()
 							.requestMatchers(HttpMethod.GET, AppConstants.PUBLIC_GET_URLS).permitAll()
 							.anyRequest().authenticated())
-						.exceptionHandling(exception->exception.authenticationEntryPoint(
-										((request, response, authException) ->
-														response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"))
+			.exceptionHandling(exception->exception.authenticationEntryPoint(
+							((request, response, authException) ->
+											response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"))
 			)).sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 		
 		http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

@@ -1,8 +1,11 @@
 import Breadcrumb from '../components/Breadcrumb';
+import { USER_LOCAL_STORAGE_KEY } from '../constants/LOCAL_STORAGE';
+import { UserResponse } from '../generated';
+import { BASE_PATH } from '../generated/base';
 import CoverOne from '../images/cover/cover-01.png';
-import userSix from '../images/user/user-06.png';
 
 const Profile = () => {
+  const user: UserResponse = JSON.parse(localStorage.getItem(USER_LOCAL_STORAGE_KEY)!);
   return (
     <>
       <Breadcrumb pageName="Profile" />
@@ -15,7 +18,7 @@ const Profile = () => {
             className="h-full w-full rounded-tl-sm rounded-tr-sm object-cover object-center"
           />
           <div className="absolute bottom-1 right-1 z-10 xsm:bottom-4 xsm:right-4">
-            <label
+            {/* <label
               htmlFor="cover"
               className="flex cursor-pointer items-center justify-center gap-2 rounded bg-primary py-1 px-2 text-sm font-medium text-white hover:bg-opacity-80 xsm:px-4"
             >
@@ -44,14 +47,14 @@ const Profile = () => {
                 </svg>
               </span>
               <span>Edit</span>
-            </label>
+            </label> */}
           </div>
         </div>
         <div className="px-4 pb-6 text-center lg:pb-8 xl:pb-11.5">
           <div className="relative z-30 mx-auto -mt-22 h-30 w-full max-w-30 rounded-full bg-white/20 p-1 backdrop-blur sm:h-44 sm:max-w-44 sm:p-3">
             <div className="relative drop-shadow-2">
-              <img src={userSix} alt="profile" />
-              <label
+              <img src={BASE_PATH + '/users/profile/' + user.profile?.id} alt="User Profile" />
+              {/* <label
                 htmlFor="profile"
                 className="absolute bottom-0 right-0 flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-full bg-primary text-white hover:bg-opacity-90 sm:bottom-2 sm:right-2"
               >
@@ -82,26 +85,26 @@ const Profile = () => {
                   id="profile"
                   className="sr-only"
                 />
-              </label>
+              </label> */}
             </div>
           </div>
           <div className="mt-4">
             <h3 className="mb-1.5 text-2xl font-semibold text-black dark:text-white">
-              Danish Heilium
+              {user.nom} {user.prenom}
             </h3>
-            <p className="font-medium">Ui/Ux Designer</p>
-            <div className="mx-auto mt-4.5 mb-5.5 grid max-w-94 grid-cols-3 rounded-md border border-stroke py-2.5 shadow-1 dark:border-strokedark dark:bg-[#37404F]">
+            <p className="font-medium">{user.poste}</p>
+            <div className="mx-auto mt-4.5 mb-5.5 grid max-w-125 grid-cols-3 rounded-md border border-stroke py-2.5 shadow-1 dark:border-strokedark dark:bg-[#37404F]">
               <div className="flex flex-col items-center justify-center gap-1 border-r border-stroke px-4 dark:border-strokedark xsm:flex-row">
                 <span className="font-semibold text-black dark:text-white">
                   259
                 </span>
-                <span className="text-sm">Posts</span>
+                <span className="text-sm">Visites</span>
               </div>
               <div className="flex flex-col items-center justify-center gap-1 border-r border-stroke px-4 dark:border-strokedark xsm:flex-row">
                 <span className="font-semibold text-black dark:text-white">
-                  129K
+                  129
                 </span>
-                <span className="text-sm">Followers</span>
+                <span className="text-sm w-full">Rendez-Vous</span>
               </div>
               <div className="flex flex-col items-center justify-center gap-1 px-4 xsm:flex-row">
                 <span className="font-semibold text-black dark:text-white">
@@ -113,7 +116,7 @@ const Profile = () => {
 
             <div className="mx-auto max-w-180">
               <h4 className="font-semibold text-black dark:text-white">
-                About Me
+                A Propos
               </h4>
               <p className="mt-4.5">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit.

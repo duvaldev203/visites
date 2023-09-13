@@ -16,12 +16,9 @@ import { Configuration } from '../configuration';
 // Some imports not used depending on template conditions
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '../base';
-import { ProfileIdBody } from '../models';
 import { ProfileResponse } from '../models';
 import { UserRequest } from '../models';
 import { UserResponse } from '../models';
-import { UsersIdBody } from '../models';
-import { UsersProfileBody } from '../models';
 /**
  * UserControllerApi - axios parameter creator
  * @export
@@ -31,14 +28,14 @@ export const UserControllerApiAxiosParamCreator = function (configuration?: Conf
         /**
          * 
          * @param {number} id 
-         * @param {ProfileIdBody} [body] 
+         * @param {Blob} [image] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        changeProfile: async (id: number, body?: ProfileIdBody, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        changeProfileForm: async (id: number, image?: Blob, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling changeProfile.');
+                throw new RequiredError('id','Required parameter id was null or undefined when calling changeProfileForm.');
             }
             const localVarPath = `/users/profile/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
@@ -51,6 +48,7 @@ export const UserControllerApiAxiosParamCreator = function (configuration?: Conf
             const localVarRequestOptions :AxiosRequestConfig = { method: 'PUT', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+            const localVarFormParams = new FormData();
 
             // authentication bearerAuth required
             // http bearer authentication required
@@ -61,8 +59,12 @@ export const UserControllerApiAxiosParamCreator = function (configuration?: Conf
                 localVarHeaderParameter["Authorization"] = "Bearer " + accessToken;
             }
 
-            localVarHeaderParameter['Content-Type'] = 'application/json';
 
+            if (image !== undefined) { 
+                localVarFormParams.append('image', image as any);
+            }
+
+            localVarHeaderParameter['Content-Type'] = 'multipart/form-data';
             const query = new URLSearchParams(localVarUrlObj.search);
             for (const key in localVarQueryParameter) {
                 query.set(key, localVarQueryParameter[key]);
@@ -73,8 +75,7 @@ export const UserControllerApiAxiosParamCreator = function (configuration?: Conf
             localVarUrlObj.search = (new URLSearchParams(query)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const needsSerialization = (typeof body !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(body !== undefined ? body : {}) : (body || "");
+            localVarRequestOptions.data = localVarFormParams;
 
             return {
                 url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
@@ -320,11 +321,11 @@ export const UserControllerApiAxiosParamCreator = function (configuration?: Conf
         },
         /**
          * 
-         * @param {UsersProfileBody} [body] 
+         * @param {Blob} [image] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        saveImage: async (body?: UsersProfileBody, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        saveImageForm: async (image?: Blob, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/users/profile`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -335,6 +336,7 @@ export const UserControllerApiAxiosParamCreator = function (configuration?: Conf
             const localVarRequestOptions :AxiosRequestConfig = { method: 'POST', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+            const localVarFormParams = new FormData();
 
             // authentication bearerAuth required
             // http bearer authentication required
@@ -345,8 +347,12 @@ export const UserControllerApiAxiosParamCreator = function (configuration?: Conf
                 localVarHeaderParameter["Authorization"] = "Bearer " + accessToken;
             }
 
-            localVarHeaderParameter['Content-Type'] = 'application/json';
 
+            if (image !== undefined) { 
+                localVarFormParams.append('image', image as any);
+            }
+
+            localVarHeaderParameter['Content-Type'] = 'multipart/form-data';
             const query = new URLSearchParams(localVarUrlObj.search);
             for (const key in localVarQueryParameter) {
                 query.set(key, localVarQueryParameter[key]);
@@ -357,8 +363,7 @@ export const UserControllerApiAxiosParamCreator = function (configuration?: Conf
             localVarUrlObj.search = (new URLSearchParams(query)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const needsSerialization = (typeof body !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(body !== undefined ? body : {}) : (body || "");
+            localVarRequestOptions.data = localVarFormParams;
 
             return {
                 url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
@@ -415,12 +420,12 @@ export const UserControllerApiAxiosParamCreator = function (configuration?: Conf
         },
         /**
          * 
-         * @param {UsersIdBody} body 
+         * @param {UserRequest} body 
          * @param {number} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        update2: async (body: UsersIdBody, id: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        update2: async (body: UserRequest, id: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'body' is not null or undefined
             if (body === null || body === undefined) {
                 throw new RequiredError('body','Required parameter body was null or undefined when calling update2.');
@@ -482,12 +487,12 @@ export const UserControllerApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} id 
-         * @param {ProfileIdBody} [body] 
+         * @param {Blob} [image] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async changeProfile(id: number, body?: ProfileIdBody, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<ProfileResponse>>> {
-            const localVarAxiosArgs = await UserControllerApiAxiosParamCreator(configuration).changeProfile(id, body, options);
+        async changeProfileForm(id: number, image?: Blob, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<ProfileResponse>>> {
+            const localVarAxiosArgs = await UserControllerApiAxiosParamCreator(configuration).changeProfileForm(id, image, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -559,12 +564,12 @@ export const UserControllerApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {UsersProfileBody} [body] 
+         * @param {Blob} [image] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async saveImage(body?: UsersProfileBody, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<ProfileResponse>>> {
-            const localVarAxiosArgs = await UserControllerApiAxiosParamCreator(configuration).saveImage(body, options);
+        async saveImageForm(image?: Blob, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<ProfileResponse>>> {
+            const localVarAxiosArgs = await UserControllerApiAxiosParamCreator(configuration).saveImageForm(image, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -585,12 +590,12 @@ export const UserControllerApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {UsersIdBody} body 
+         * @param {UserRequest} body 
          * @param {number} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async update2(body: UsersIdBody, id: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<UserResponse>>> {
+        async update2(body: UserRequest, id: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<UserResponse>>> {
             const localVarAxiosArgs = await UserControllerApiAxiosParamCreator(configuration).update2(body, id, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
@@ -609,12 +614,12 @@ export const UserControllerApiFactory = function (configuration?: Configuration,
         /**
          * 
          * @param {number} id 
-         * @param {ProfileIdBody} [body] 
+         * @param {Blob} [image] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async changeProfile(id: number, body?: ProfileIdBody, options?: AxiosRequestConfig): Promise<AxiosResponse<ProfileResponse>> {
-            return UserControllerApiFp(configuration).changeProfile(id, body, options).then((request) => request(axios, basePath));
+        async changeProfileForm(id: number, image?: Blob, options?: AxiosRequestConfig): Promise<AxiosResponse<ProfileResponse>> {
+            return UserControllerApiFp(configuration).changeProfileForm(id, image, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -662,12 +667,12 @@ export const UserControllerApiFactory = function (configuration?: Configuration,
         },
         /**
          * 
-         * @param {UsersProfileBody} [body] 
+         * @param {Blob} [image] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async saveImage(body?: UsersProfileBody, options?: AxiosRequestConfig): Promise<AxiosResponse<ProfileResponse>> {
-            return UserControllerApiFp(configuration).saveImage(body, options).then((request) => request(axios, basePath));
+        async saveImageForm(image?: Blob, options?: AxiosRequestConfig): Promise<AxiosResponse<ProfileResponse>> {
+            return UserControllerApiFp(configuration).saveImageForm(image, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -680,12 +685,12 @@ export const UserControllerApiFactory = function (configuration?: Configuration,
         },
         /**
          * 
-         * @param {UsersIdBody} body 
+         * @param {UserRequest} body 
          * @param {number} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async update2(body: UsersIdBody, id: number, options?: AxiosRequestConfig): Promise<AxiosResponse<UserResponse>> {
+        async update2(body: UserRequest, id: number, options?: AxiosRequestConfig): Promise<AxiosResponse<UserResponse>> {
             return UserControllerApiFp(configuration).update2(body, id, options).then((request) => request(axios, basePath));
         },
     };
@@ -701,13 +706,13 @@ export class UserControllerApi extends BaseAPI {
     /**
      * 
      * @param {number} id 
-     * @param {ProfileIdBody} [body] 
+     * @param {Blob} [image] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserControllerApi
      */
-    public async changeProfile(id: number, body?: ProfileIdBody, options?: AxiosRequestConfig) : Promise<AxiosResponse<ProfileResponse>> {
-        return UserControllerApiFp(this.configuration).changeProfile(id, body, options).then((request) => request(this.axios, this.basePath));
+    public async changeProfileForm(id: number, image?: Blob, options?: AxiosRequestConfig) : Promise<AxiosResponse<ProfileResponse>> {
+        return UserControllerApiFp(this.configuration).changeProfileForm(id, image, options).then((request) => request(this.axios, this.basePath));
     }
     /**
      * 
@@ -760,13 +765,13 @@ export class UserControllerApi extends BaseAPI {
     }
     /**
      * 
-     * @param {UsersProfileBody} [body] 
+     * @param {Blob} [image] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserControllerApi
      */
-    public async saveImage(body?: UsersProfileBody, options?: AxiosRequestConfig) : Promise<AxiosResponse<ProfileResponse>> {
-        return UserControllerApiFp(this.configuration).saveImage(body, options).then((request) => request(this.axios, this.basePath));
+    public async saveImageForm(image?: Blob, options?: AxiosRequestConfig) : Promise<AxiosResponse<ProfileResponse>> {
+        return UserControllerApiFp(this.configuration).saveImageForm(image, options).then((request) => request(this.axios, this.basePath));
     }
     /**
      * 
@@ -780,13 +785,13 @@ export class UserControllerApi extends BaseAPI {
     }
     /**
      * 
-     * @param {UsersIdBody} body 
+     * @param {UserRequest} body 
      * @param {number} id 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserControllerApi
      */
-    public async update2(body: UsersIdBody, id: number, options?: AxiosRequestConfig) : Promise<AxiosResponse<UserResponse>> {
+    public async update2(body: UserRequest, id: number, options?: AxiosRequestConfig) : Promise<AxiosResponse<UserResponse>> {
         return UserControllerApiFp(this.configuration).update2(body, id, options).then((request) => request(this.axios, this.basePath));
     }
 }
