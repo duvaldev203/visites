@@ -1,11 +1,8 @@
 package com.example.visites.controllers;
 
-import java.io.IOException;
 import java.util.List;
 
 import com.example.visites.dto.ProfileResponse;
-import com.example.visites.exceptions.APIException;
-import com.example.visites.models.Profile;
 import com.example.visites.services.ProfileService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/users")
-@PreAuthorize("hasAuthority('ADMIN')")
 public class UserController {
 
 	private final UserService userService;
@@ -44,6 +40,7 @@ public class UserController {
 	}
 
 	@PostMapping("/")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public ResponseEntity<UserResponse> create(@Valid @RequestBody UserRequest user) {
 		//Attribution de l'image par defaut
 		user.setProfile(profileService.setDefaultProfile(user.getEmail()).getBody());
@@ -51,11 +48,7 @@ public class UserController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<UserResponse> update(@PathVariable Long id, @Valid @RequestBody UserRequest user, @RequestParam("image")MultipartFile image) {
-		if (!image.isEmpty()) {
-			ProfileResponse profile = profileService.saveProfile(image).getBody();
-			user.setProfile(profile);
-		}
+	public ResponseEntity<UserResponse> update(@PathVariable Long id, @Valid @RequestBody UserRequest user) {
 		return userService.update(user, id);
 	}
 	
@@ -70,7 +63,7 @@ public class UserController {
 		return userService.records(search);
 	}
 
-	@PostMapping("/profile")
+	@PostMapping(value = "/profile", consumes = {"multipart/form-data"})
 	public ResponseEntity<ProfileResponse> saveImage(@RequestParam("image") MultipartFile image){
 		return profileService.saveProfile(image);
 	}
@@ -80,7 +73,7 @@ public class UserController {
 		return profileService.getProfileImage(profileId);
 	}
 
-	@PutMapping("profile/{id}")
+	@PutMapping(value = "profile/{id}", consumes = {"multipart/form-data"})
 	public ResponseEntity<ProfileResponse> changeProfile(@PathVariable Long id, @RequestParam("image") MultipartFile image){
 		return profileService.changeProfileImage(id, image);
 	}

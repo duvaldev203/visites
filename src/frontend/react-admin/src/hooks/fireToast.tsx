@@ -64,7 +64,7 @@ const createToast=(title: string, msg: string, type: number)=>{toast.custom((t) 
 //     console.log(data);
 //     dataJSON=data;
 //   })
-const fireToast = () => {
+const fireToast = (e : any) => {
 const alertSettings=localStorage.getItem("alertSettings");
 if (alertSettings){
   for (const alertSetting of JSON.parse(alertSettings)) {

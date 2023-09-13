@@ -24,9 +24,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collections;
-import java.util.Map;
-
 @RestController
 @RequestMapping
 @SecurityRequirement(name = "Tracking Application")
@@ -53,7 +50,7 @@ public class AuthController {
 	@PostMapping("/register")
 	public ResponseEntity<SignResponse> register(@Valid @RequestBody UserRequest user) throws UserNotFoundException {
 
-		UserResponse userResponse = modelMapper.map(userService.create(user), UserResponse.class);
+		modelMapper.map(userService.create(user), UserResponse.class);
 
 		SignInRequest login = new SignInRequest(
 				user.getEmail(), user.getPassword()

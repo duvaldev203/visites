@@ -1,13 +1,37 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux'
 
-import UserOne from '../images/user/user-01.png';
+import { UserResponse } from '../generated';
+
+import {
+  IS_LOGGED_LOCAL_STORAGE_KEY,
+  TOKEN_LOCAL_STORAGE_KEY,
+  USER_LOCAL_STORAGE_KEY,
+} from '../constants/LOCAL_STORAGE'
+
+import { setIsLOggedAction } from '../redux/Actions/LoggedInAction';
+import { BASE_PATH } from '../generated/base';
 
 const DropdownUser = () => {
+  const navigate = useNavigate();
+
+  const handleLogOut = () => {
+    localStorage.removeItem(USER_LOCAL_STORAGE_KEY);
+    localStorage.removeItem(TOKEN_LOCAL_STORAGE_KEY);
+    localStorage.removeItem(IS_LOGGED_LOCAL_STORAGE_KEY);
+    dispatch(setIsLOggedAction(false));
+    setTimeout(() => { navigate("/auth/signin");},2000)
+  };
+
+  const dispatch = useDispatch();
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const trigger = useRef<any>(null);
   const dropdown = useRef<any>(null);
+
+  const user : UserResponse = JSON.parse(localStorage.getItem(USER_LOCAL_STORAGE_KEY) || '{}');
 
   // close on click outside
   useEffect(() => {
@@ -45,13 +69,13 @@ const DropdownUser = () => {
       >
         <span className="hidden text-right lg:block">
           <span className="block text-sm font-medium text-black dark:text-white">
-            Thomas Anree
+            {user.username}
           </span>
-          <span className="block text-xs">UX Designer</span>
+          <span className="block text-xs">{user.poste}</span>
         </span>
 
-        <span className="h-12 w-12 rounded-full">
-          <img src={UserOne} alt="User" />
+        <span className="h-12 w-12 rounded-full justify-center text-center">
+          <img className='h-12 rounded-full justify-center text-center' src={BASE_PATH + '/users/profile/' + user.profile?.id} alt="User Profile" />
         </span>
 
         <svg
@@ -105,7 +129,7 @@ const DropdownUser = () => {
                   fill=""
                 />
               </svg>
-              My Profile
+              Profile
             </Link>
           </li>
           <li>
@@ -126,7 +150,7 @@ const DropdownUser = () => {
                   fill=""
                 />
               </svg>
-              My Contacts
+              Mes Contacts
             </Link>
           </li>
           <li>
@@ -151,11 +175,12 @@ const DropdownUser = () => {
                   fill=""
                 />
               </svg>
-              Account Settings
+              Parametres
             </Link>
           </li>
         </ul>
-        <button className="flex items-center gap-3.5 py-4 px-6 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base">
+        <button className="flex items-center gap-3.5 py-4 px-6 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+        onClick={handleLogOut}>
           <svg
             className="fill-current"
             width="22"

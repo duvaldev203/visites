@@ -11,7 +11,6 @@ export * from './sign-in-request';
 export * from './sign-response';
 export * from './user-request';
 export * from './user-response';
-export * from './users-id-body';
 export * from './users-profile-body';
 export * from './visite-request';
 export * from './visite-response';
