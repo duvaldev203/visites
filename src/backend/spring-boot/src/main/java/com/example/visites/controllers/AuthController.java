@@ -74,7 +74,7 @@ public class AuthController {
 
 		String token = jwtUtil.generateToken(request.getEmail());
 
-		User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new ResourceNotFoundException("L'User", "d'Email", request.getEmail()));
+		User user = userRepository.findByEmailOrUsername(request.getEmail(), request.getEmail()).orElseThrow(() -> new ResourceNotFoundException("L'User", "d'Email", request.getEmail()));
 		UserResponse userResponse = modelMapper.map(user, UserResponse.class);
 
 		SignResponse resp = new SignResponse(userResponse, token);

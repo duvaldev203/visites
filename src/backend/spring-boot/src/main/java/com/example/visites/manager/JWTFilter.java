@@ -36,13 +36,12 @@ public class JWTFilter extends OncePerRequestFilter {
 		if (authHeader != null && !authHeader.isBlank() && authHeader.startsWith("Bearer ")) {
 			String jwt = authHeader.substring(7);
 
-			if (jwt == null || jwt.isBlank()) {
+			if (jwt.isEmpty() || jwt.isBlank()) {
 				System.out.println("Ne Contient pas le token");
 				response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invlaid JWT token in Bearer Header");
 			} else {
 				try {
 					String email = jwtUtil.validateTokenAndRetrieveSubject(jwt);
-					System.out.println("Email : " + email);
 
 					UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
@@ -53,21 +52,11 @@ public class JWTFilter extends OncePerRequestFilter {
 						SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 					}
 				} catch (AccessDeniedException e) {
-					System.out.println("Le token a expire");
-					// throw new APIException("Invalid Jwt Token");
-					response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-					response.getWriter().write("Le token a expire");
-					// response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT Token");
-				}catch(TokenExpiredException e) {
+					System.out.println("Non autorise");
+				} catch (TokenExpiredException e) {
 					System.out.println("Expired token");
-					//response.sendError(HttpServletResponse.SC_FORBIDDEN, "Le token a expire");
-					response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-					response.getWriter().write("Le token a expire");
-				}catch(JWTVerificationException e) {
+				} catch (JWTVerificationException e) {
 					System.out.println("Erreur de validation token ");
-					//response.sendError(HttpServletResponse.SC_FORBIDDEN, "Erreur de validation du token");
-					response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-					response.getWriter().write("Erreur de validation du Token");
 				}
 			}
 		}

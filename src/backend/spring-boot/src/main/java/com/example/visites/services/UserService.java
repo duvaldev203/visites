@@ -2,6 +2,7 @@ package com.example.visites.services;
 
 import java.util.List;
 
+import com.example.visites.dto.PasswordRequest;
 import com.example.visites.dto.UserRequest;
 import com.example.visites.dto.UserResponse;
 import org.springframework.http.ResponseEntity;
@@ -18,5 +19,7 @@ public interface UserService {
 	
 	ResponseEntity<?> delete(Long id);
 
-    ResponseEntity<List<UserResponse>> records(String search);
+	ResponseEntity<List<UserResponse>> records(String search);
+
+	ResponseEntity<UserResponse> modifyPassword(Long id, PasswordRequest request);
 }

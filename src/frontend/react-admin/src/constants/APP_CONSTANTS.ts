@@ -4,3 +4,10 @@ export const SEXE: {name: string, value: string}[] = [
 ]
 
 export const UPLOAD_IMAGE = "UPLOAD_IMAGE";
+
+export enum MODAL_MODE {
+    create = "CREATE",
+    update = "UPDATE",
+    view = "VIEW",
+}
+

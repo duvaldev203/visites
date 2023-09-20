@@ -3,7 +3,7 @@ import LogoDark from '../../images/logo/logo-dark.svg';
 import Logo from '../../images/logo/logo.svg';
 
 import { useEffect, useState } from 'react';
-import { AuthControllerApi, SignResponse, UserResponse} from '../../generated';
+import { AuthControllerApi, UserResponse} from '../../generated';
 import { SignInRequest } from '../../generated';
 import Indicator from './components/Indicator';
 
@@ -41,8 +41,8 @@ const SignIn: React.FC<SignInProps> = () => {
       localStorage.setItem(TOKEN_LOCAL_STORAGE_KEY, access_token);
       localStorage.setItem(USER_LOCAL_STORAGE_KEY, JSON.stringify(store_user));
       localStorage.setItem(IS_LOGGED_LOCAL_STORAGE_KEY, ''+isLogedIn);
-      dispatch(setTokenAction(access_token)); // on propage le token dans redux
-      dispatch(setIsLOggedAction(true)); // on force le parent à se mettre à jour
+      dispatch(setTokenAction(access_token));
+      dispatch(setIsLOggedAction(true));
       console.log("IS Loggin UseEffect");
       navigate('/');
     }
@@ -66,9 +66,7 @@ const SignIn: React.FC<SignInProps> = () => {
       setIsLoading(false);
       if(response && response.data) {
         const token = response.data.token ? response.data.token.toString() : "";
-        console.log(typeof response.data.user);
         const user:UserResponse = response.data.user ? response.data.user : {};
-        console.log("Token : ", token, ", User : ", typeof user); // extraction du token de la réponse
 
         setAcessToken(token)
         setAaccessUser(user)
