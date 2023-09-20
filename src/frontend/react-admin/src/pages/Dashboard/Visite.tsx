@@ -8,10 +8,11 @@ import ChartTwo from '../../components/ChartTwo.tsx';
 import ChatCard from '../../components/ChatCard.tsx';
 import MapOne from '../../components/MapOne.tsx';
 import TableOne from '../../components/TableOne.tsx';
+import DefaultLayout from '../../layout/DefaultLayout.tsx';
 
-const ECommerce = () => {
+const Visitech = () => {
   return (
-    <>
+    <DefaultLayout>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
         <CardOne />
         <CardTwo />
@@ -29,8 +30,8 @@ const ECommerce = () => {
         </div>
         <ChatCard />
       </div>
-    </>
+    </DefaultLayout>
   );
 };
 
-export default ECommerce;
+export default Visitech;

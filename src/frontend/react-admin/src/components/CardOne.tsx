@@ -26,7 +26,7 @@ const CardOne = () => {
           <h4 className="text-title-md font-bold text-black dark:text-white">
             $3.456K
           </h4>
-          <span className="text-sm font-medium">Total views</span>
+          <span className="text-sm font-medium">Total Employes</span>
         </div>
 
         <span className="flex items-center gap-1 text-sm font-medium text-meta-3">

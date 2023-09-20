@@ -6,6 +6,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 import com.example.visites.configs.AppConstants;
+import com.example.visites.dto.PasswordRequest;
 import com.example.visites.exceptions.APIException;
 import com.example.visites.exceptions.ResourceNotFoundException;
 import org.modelmapper.ModelMapper;
@@ -89,6 +90,20 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public ResponseEntity<UserResponse> modifyPassword(Long id, PasswordRequest request) {
+		User oldUser = userRepository.findById(id)
+						.orElseThrow(() -> new ResourceNotFoundException("L'User que vous voulez modifier ", "d'Id", id));
+		if (passwordEncoder.matches(request.getOldPassword(), oldUser.getPassword())) {
+			savePassword(oldUser, request.getNewPassword());
+			UserResponse modified = modelMapper.map(userRepository.save(oldUser), UserResponse.class);
+			return new ResponseEntity<>(modified, HttpStatus.ACCEPTED);
+		} else {
+			throw new APIException("Votre ancien mot de passe ne correspond pas au mot de passe que vous avez entre");
+		}
+	}
+
+
+	@Override
 	public ResponseEntity<?> delete(Long id) {
 		User user = userRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("L'User que vous voulez supprimer ", "d'Id", id));
@@ -112,5 +127,11 @@ public class UserServiceImpl implements UserService {
 			passwordBuilder.append(AppConstants.CHARACTERS_ALLOWED_FOR_PASSWORD.charAt(index));
 		}
 		return passwordBuilder.toString();
+	}
+	public  void savePassword(User user, String password){
+		if (!(password.matches(AppConstants.PASSWORD_REGEX)))
+			throw new APIException("Le mot de passe doit avoir min 8 carateres et contenir au moins : " +
+							"Un chiffre , une lettre majuscule, une lettre minuscule, un caractere special, pas d'espace");
+		user.setPassword(passwordEncoder.encode(password));
 	}
 }

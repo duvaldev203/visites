@@ -2,6 +2,7 @@ package com.example.visites.controllers;
 
 import java.util.List;
 
+import com.example.visites.dto.PasswordRequest;
 import com.example.visites.dto.ProfileResponse;
 import com.example.visites.services.ProfileService;
 import jakarta.validation.Valid;
@@ -51,7 +52,11 @@ public class UserController {
 	public ResponseEntity<UserResponse> update(@PathVariable Long id, @Valid @RequestBody UserRequest user) {
 		return userService.update(user, id);
 	}
-	
+
+	@PutMapping("/password/{id}")
+	public ResponseEntity<UserResponse> modifyPassword(@PathVariable Long id, @Valid @RequestBody PasswordRequest request){
+		return  userService.modifyPassword(id, request);
+	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delete(@PathVariable Long id) {

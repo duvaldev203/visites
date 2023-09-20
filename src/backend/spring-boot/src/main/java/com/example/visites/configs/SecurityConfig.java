@@ -2,7 +2,6 @@ package com.example.visites.configs;
 
 import com.example.visites.manager.JWTFilter;
 import com.example.visites.services.UserDetailsServiceImpl;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,6 +29,9 @@ public class SecurityConfig {
 	@Autowired
 	private UserDetailsServiceImpl userDetailsServiceImpl;
 
+	//@Autowired
+	//private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http
@@ -41,17 +43,13 @@ public class SecurityConfig {
 							.requestMatchers(HttpMethod.POST, AppConstants.PUBLIC_POST_URLS).permitAll()
 							.requestMatchers(HttpMethod.GET, AppConstants.PUBLIC_GET_URLS).permitAll()
 							.anyRequest().authenticated())
-			.exceptionHandling(exception->exception.authenticationEntryPoint(
-							((request, response, authException) ->
-											response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"))
-			)).sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-		
+						//.exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
+			.sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 		http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 		
 		http.authenticationProvider(daoAuthenticationProvider());
 		
 		return http.build();
-
 	}
 
 	@Bean

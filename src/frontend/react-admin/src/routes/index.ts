@@ -9,6 +9,7 @@ const Settings = lazy(() => import('../pages/Settings'));
 const Tables = lazy(() => import('../pages/Tables'));
 const Alerts = lazy(() => import('../pages/UiElements/Alerts'));
 const Buttons = lazy(() => import('../pages/UiElements/Buttons'));
+const Bureau = lazy(() => import('../pages/Bureau/Bureau'));
 
 const coreRoutes = [
   {
@@ -56,6 +57,14 @@ const coreRoutes = [
     title: 'Buttons',
     component: Buttons,
   },
+
+  {/* Site Components */},
+  {
+    path: '/bureau',
+    title: 'Bureau',
+    component: Bureau,
+  },
+
 ];
 
 const routes = [...coreRoutes];

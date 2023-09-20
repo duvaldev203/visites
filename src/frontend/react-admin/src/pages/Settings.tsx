@@ -1,8 +1,8 @@
 import Breadcrumb from '../components/Breadcrumb';
 
-import { ProfileIdBody, UserControllerApi, UserRequest, UserResponse } from '../generated';
+import { PasswordRequest, UserControllerApi, UserRequest, UserResponse } from '../generated';
 
-import { useState,useEffect, ChangeEvent } from "react";
+import { useState, ChangeEvent } from "react";
 
 import {
   TOKEN_LOCAL_STORAGE_KEY,
@@ -10,15 +10,16 @@ import {
 } from '../constants/LOCAL_STORAGE'
 
 import { ReduxProps } from '../redux/configureStore';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { SEXE } from '../constants/APP_CONSTANTS';
+import DefaultLayout from '../layout/DefaultLayout';
 
 const Settings = () => {
   const user : UserResponse = JSON.parse(localStorage.getItem(USER_LOCAL_STORAGE_KEY) || '{}');
   const token: string = localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY)!;
 
   const state = useSelector((state:ReduxProps) => state);
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const [formValues, setFormValues] = useState({
     nom: user.nom ? user.nom : '',
@@ -36,8 +37,14 @@ const Settings = () => {
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
 
   const [isPersonalError, setIsPersonalError] = useState(false);
+  const [isPersonalErrorMessage, setIsPersonalErrorMessage] = useState('');
+
   const [isErrorProfile, setIsErrorProfile] = useState(false);
+  const [isProfileErrorMessage, setIsProfileErrorMessage] = useState('');
+
   const [isErrorPass, setIsErrorPass] = useState(false);  
+  const [isErrorPassword, setIsErrorPassword] = useState(false);
+  const [isErrorPasswordMessage, setIsErrorPasswordMessage] = useState('');
 
   //composante de modification des informations personnelles
   const handleInputChange = (
@@ -69,6 +76,12 @@ const Settings = () => {
       console.log(response.data)
     })
     .catch((err) => {
+      setIsPersonalError(true);
+      if ( err.status === 43 ) {
+        setIsPersonalErrorMessage('Probleme de token');
+      } else {
+        setIsPersonalErrorMessage('Echec de modification de vos informations personnelles');
+      }
       console.error("erreur : ", err);
     });
   }
@@ -97,6 +110,12 @@ const Settings = () => {
       localStorage.setItem(USER_LOCAL_STORAGE_KEY, JSON.stringify(newUser));
     })
     .catch((err) => {
+      setIsErrorProfile(true);
+      if( err.status === 403 ) {
+        setIsProfileErrorMessage('Votre Token est incorrect');
+      } else {
+        setIsProfileErrorMessage('Echec de modification de la photo de profile')
+      }
       console.error(err);
     })
 
@@ -106,6 +125,7 @@ const Settings = () => {
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setIsErrorPass(false);
+    setIsErrorPassword(false);
     switch (name) {
       case "oldPassword":
         setOldPassword(value);
@@ -126,24 +146,33 @@ const Settings = () => {
     if (confirmNewPassword != newPassword || !newPassword || !confirmNewPassword) {
       setIsErrorPass(true)
     } else {
-      const apiParams : UserRequest = {
-        ...user,
-        password: newPassword,
+      const apiParams : PasswordRequest = {
+        oldPassword: oldPassword,
+        newPassword: newPassword,
       }
       console.log(apiParams)
       const userApi = new UserControllerApi({...state.environment, accessToken: token});
       const userId: number = user.id ? user.id : 0;
-      userApi.update2(apiParams, userId)
+      userApi.modifyPassword(apiParams, userId)
       .then((response) => {
-      localStorage.setItem(USER_LOCAL_STORAGE_KEY, JSON.stringify(apiParams))
-      console.log(response.data)
+        localStorage.setItem(USER_LOCAL_STORAGE_KEY, JSON.stringify(response.data))
+      }).catch((err) => {
+        setIsErrorPassword(true)
+        if (err.status === 403){
+          setIsErrorPasswordMessage('Probleme de token')
+        } else { 
+          if(err.response && err.response.data) {
+            setIsErrorPasswordMessage(err.response.data.message)            
+          } else {
+            setIsErrorPasswordMessage('Echec de changement du mot de passe')
+        }}
       });
     }
 
   }
 
   return (
-    <>
+    <DefaultLayout>
       <div className="mx-auto max-w-270">
         
         <Breadcrumb pageName="Settings" />
@@ -484,7 +513,7 @@ const Settings = () => {
                       </div>
                     </div>
                   </div>
-                  { isPersonalError && <p className='text-danger'>Erreur : { }</p> }
+                  { isPersonalError && <p className='text-danger'>Erreur : { isPersonalErrorMessage }</p> }
                   <div className="flex justify-end gap-4.5">
                     {/* <button
                       className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
@@ -563,7 +592,7 @@ const Settings = () => {
                       {/* <p>(max, 800 X 800px)</p> */}
                     </div> }
                   </div>
-                  { isErrorProfile && <p className='text-danger'>Erreur lors de la modification de la photo de profile</p> }
+                  { isErrorProfile && <p className='text-danger'>Erreur: { isProfileErrorMessage }</p> }
                   <div className="flex justify-end gap-4.5">
                     <button
                       className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-70"
@@ -678,7 +707,7 @@ const Settings = () => {
                         className="mb-3 block text-sm font-medium text-black dark:text-white"
                         htmlFor="confirmNewPassword"
                       >
-                        Retaper le Nouveau Mot de Passe 
+                        Retaper 
                       </label>
                       <div className="relative">
                         <span className="absolute left-4.5 top-4">
@@ -718,7 +747,9 @@ const Settings = () => {
                         {isErrorPass && <p className='text-danger mt-1'>Ceci ne correspond pas au nouveau mot de passe</p>}
                       </div>
                     </div>
-                    {isErrorPass && <div className="text-danger mt-1">{  }</div>}
+                  </div>
+                  <div className="text-end pr-2 pb-2">
+                    {isErrorPassword && <div className="text-danger -mt-3">{ isErrorPasswordMessage }</div>}
                   </div>
                   <div className="flex justify-end gap-4.5">
                     <button
@@ -735,7 +766,7 @@ const Settings = () => {
           </div>
         </div>
       </div>
-    </>
+    </DefaultLayout>
   );
 };
 
