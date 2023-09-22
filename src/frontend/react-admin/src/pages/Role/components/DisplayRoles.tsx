@@ -1,21 +1,21 @@
 import { connect, useDispatch, useSelector } from 'react-redux';
-import { BureauControllerApi, BureauResponse } from '../../../generated';
+import { RoleControllerApi, RoleResponse } from '../../../generated';
 import { ReduxProps } from '../../../redux/configureStore';
 import { useCallback, useEffect, useState } from 'react';
 import { MODAL_MODE } from '../../../constants/APP_CONSTANTS';
 import { Link } from 'react-router-dom';
 import { EditIcon, NewIcon, NextIcon, PreviousIcon, TrashIcon } from '../../../constants/Icon';
 
-import CreateOrUpdateBureauModal from './CreateOrUpdateBureauModal';
+import CreateOrUpdateRoleModal from './CreateOrUpdateRoleModal';
 
 import { TOKEN_LOCAL_STORAGE_KEY } from '../../../constants/LOCAL_STORAGE';
 import { DeleteItemModal } from '../../../constants/DeleteItemModal';
 import { GridIndicator } from '../../../constants/GridIndicator';
 
-import './DisplayBureaux.css'
+import './DisplayRoles.css'
 
-interface DisplayBureauxProps {
-  bureaux: BureauResponse[],
+interface DisplayRolesProps {
+  roles: RoleResponse[],
   isLoading: boolean,
 
   setShowSuccessNotif: (value: boolean) => void,
@@ -31,27 +31,22 @@ interface DisplayBureauxProps {
   setDangerNotifDescription: (value: string | null) => void,
 }
 
-import {
-  deleteBureau,
-  setBureau,
-  setBureaux
-} from '../../../redux/Actions/BureauAction'
 import { DangerNotification } from '../../../services/Notification.service';
 import ReactPaginate from 'react-paginate';
 
-const DisplayBureaux: React.FC<DisplayBureauxProps> = (props) => {
+const DisplayRoles: React.FC<DisplayRolesProps> = (props) => {
   const state = useSelector((state: ReduxProps) => state);
-  const [listeBureaux, setListeBureaux] = useState<BureauResponse[]>(props.bureaux);
-  const [bureauS, setBureauS] = useState<BureauResponse | null>(props.bureaux[0]);
-  const [selectedBureau, setSelectedBureau] = useState<BureauResponse>({});
+  const [listeRoles, setListeRoles] = useState<RoleResponse[]>(props.roles);
+  const [roleS, setRoleS] = useState<RoleResponse | null>(props.roles[0]);
+  const [selectedRole, setSelectedRole] = useState<RoleResponse>({});
   // Pagination
   const [currentPage, setCurrentPage] = useState(0);
-  const bureauxPerPage = 10;
+  const rolesPerPage = 10;
 
-  const offset = currentPage * bureauxPerPage;
-  const currentBureaux = listeBureaux.slice(offset, offset + bureauxPerPage);
+  const offset = currentPage * rolesPerPage;
+  const currentRoles = listeRoles.slice(offset, offset + rolesPerPage);
 
-  const pageCount = Math.ceil(listeBureaux.length / bureauxPerPage);
+  const pageCount = Math.ceil(listeRoles.length / rolesPerPage);
 
   const handlePageClick = (data: { selected: any; }) => {
     const selected = data.selected;
@@ -72,17 +67,15 @@ const DisplayBureaux: React.FC<DisplayBureauxProps> = (props) => {
 
   const onReady = useCallback(() => {
     const token: string = localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY)!;
-    const bureauxApi = new BureauControllerApi({ ...state.environment, accessToken: token });
+    const rolesApi = new RoleControllerApi({ ...state.environment, accessToken: token });
 
     setShowIndicator(true)
 
-    bureauxApi.index4()
+    rolesApi.index3()
       .then((response) => {
         if (response && response.data) {
           if (response.status === 200) {
-            setListeBureaux(response.data);
-
-            dispatch(setBureaux(listeBureaux));
+            setListeRoles(response.data);
           }
         }
       })
@@ -95,7 +88,7 @@ const DisplayBureaux: React.FC<DisplayBureauxProps> = (props) => {
           if (error.response && error.response.status === 403) {
             setIsErrorDescription('Probleme de token. Votre token n\'est plus valide et vous allez etre deconnecter');
           } else {
-            setIsErrorDescription('Probleme lors de la recuperation des bureaux')
+            setIsErrorDescription('Probleme lors de la recuperation des roles')
         } }
         
         // Handle Warning Notif 
@@ -116,29 +109,28 @@ const DisplayBureaux: React.FC<DisplayBureauxProps> = (props) => {
     setShowDeleteModal(false);
   }, []);
 
-  //Create Bureau
+  //Create Role
   const handleNewItem = () => {
-    setBureauS(null);
+    setRoleS(null);
     setShowCreateOrUpdateModal(true);
     setModalMode(MODAL_MODE.create)
-    setModalTitle("Créer un nouveau bureau")
+    setModalTitle("Créer un nouveau role")
   }
 
   const handleCloseCreateOrUpdateModal = () => {
     setShowCreateOrUpdateModal(false)
   }
-  // Update Bureau
-  const handleEdit = (bureauSelected: BureauResponse) => {
-    setBureauS(bureauSelected);
+  // Update Role
+  const handleEdit = (roleSelected: RoleResponse) => {
+    setRoleS(roleSelected);
     setModalMode(MODAL_MODE.update)
-    setModalTitle("Modifier le bureau")
+    setModalTitle("Modifier le role")
     setShowCreateOrUpdateModal(true);
-    dispatch(setBureau(bureauSelected))
   };
 
-  // Delete Bureau
-  const handleDelete = (bureau: BureauResponse) => {
-    setSelectedBureau(bureau);
+  // Delete Role
+  const handleDelete = (role: RoleResponse) => {
+    setSelectedRole(role);
     setShowDeleteModal(true)
   };
 
@@ -154,22 +146,21 @@ const DisplayBureaux: React.FC<DisplayBureauxProps> = (props) => {
     setShowDeleteModal(false)
 
     const token: string = localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY)!;
-    const bureauxApi = new BureauControllerApi({ ...state.environment, accessToken: token });
+    const rolesApi = new RoleControllerApi({ ...state.environment, accessToken: token });
 
     setShowIndicator(true)
 
-    bureauxApi.delete4(selectedBureau.id!)
+    rolesApi.delete3(selectedRole.id!)
       .then((response) => {
         if (response) {
           if (response.status === 204) {
             console.log('response :', response)
             setShowDeleteModal(false)
             props.setSuccessNotifMessage("Succes")
-            props.setSuccessNotifDescription('Ce bureau a ete supprime avec success')
+            props.setSuccessNotifDescription('Ce role a ete supprime avec success')
             props.setShowSuccessNotif(true)
           }
         }
-        dispatch(deleteBureau(selectedBureau!))
       })
       .catch((error) => {
         setIsError(true);
@@ -179,7 +170,7 @@ const DisplayBureaux: React.FC<DisplayBureauxProps> = (props) => {
           if (error.response && error.response.status === 403) {
             setIsErrorDescription('Probleme de token. Votre token n\'est plus valide et vous allez etre deconnecter');
           } else {
-            setIsErrorDescription('Probleme lors de la suppression du bureau')
+            setIsErrorDescription('Probleme lors de la suppression du role')
         } }
       })
       .finally(() => {
@@ -216,12 +207,12 @@ const DisplayBureaux: React.FC<DisplayBureauxProps> = (props) => {
         </Link>
       </div>
 
-      {showCreateOrUpdateModal && <CreateOrUpdateBureauModal
+      {showCreateOrUpdateModal && <CreateOrUpdateRoleModal
         mode={modalMode}
         title={modalTitle}
         onClose={handleCloseCreateOrUpdateModal}
         refresh={onReady}
-        item={modalMode !== MODAL_MODE.create ? bureauS : null}
+        item={modalMode !== MODAL_MODE.create ? roleS : null}
         setShowSuccessNotif={props.setShowSuccessNotif}
         setSuccessNotifMessage={props.setSuccessNotifMessage}
         setSuccessNotifDescription={props.setSuccessNotifDescription}
@@ -231,7 +222,7 @@ const DisplayBureaux: React.FC<DisplayBureauxProps> = (props) => {
       />}
       {showDeleteModal && <DeleteItemModal
         isVisible={true}
-        itemName={'Bureau d\'id ' + selectedBureau}
+        itemName={'Role d\'id ' + selectedRole}
         onClose={handleCloseDeleteModal}
         refresh={onReady}
         onConfirm={handleConfirmDeletingModal}
@@ -242,14 +233,11 @@ const DisplayBureaux: React.FC<DisplayBureauxProps> = (props) => {
           <table className="w-full table-auto">
             <thead>
               <tr className="bg-gray-2 text-left dark:bg-meta-4 border-b">
-                <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
-                  Batiment
+                <th className="min-w-[200px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
+                  Nom
                 </th>
-                <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                  Etage
-                </th>
-                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
-                  Numero de Porte
+                <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
+                  Description
                 </th>
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Actions
@@ -258,31 +246,28 @@ const DisplayBureaux: React.FC<DisplayBureauxProps> = (props) => {
             </thead>
             <tbody>
               {showIndicator && <GridIndicator />}
-              {listeBureaux.length === 0 ? (
+              {listeRoles.length === 0 ? (
                 <tr className='border-b'>
-                  <td colSpan={4} className='text-center p-2'>Aucun bureau pour le moment</td>
+                  <td colSpan={4} className='text-center p-2'>Aucun role pour le moment</td>
                 </tr>
               ) : (
-                currentBureaux!.map((bur) => (
-                  <tr key={bur.id} className='border-b'>
+                currentRoles!.map((item) => (
+                  <tr key={item.id} className='border-b'>
                     <td className="my-2 mx-4 pl-9 xl:pl-10">
-                      <p className="text-black dark:text-white">{bur.batiment}</p>
+                      <p className="text-black dark:text-white">{item.nom}</p>
                     </td>
                     <td className="py-2 px-4">
-                      <p className="text-black dark:text-white">{bur.etage}</p>
-                    </td>
-                    <td className="py-2 px-4">
-                      <p className="text-black dark:text-white">{bur.porte}</p>
+                      <p className="text-black dark:text-white">{item.description}</p>
                     </td>
                     <td className="py-2 px-5">
                       <div className="flex items-center space-x-4">
-                        <button className="hover:text-primary" title='Supprimer' onClick={() => handleDelete(bur)}>
+                        <button className="hover:text-primary" title='Supprimer' onClick={() => handleDelete(item)}>
                           <TrashIcon size={17} />
                         </button>
                         <button
                           className="hover:text-primary"
                           title="Modifier"
-                          onClick={() => handleEdit(bur)}
+                          onClick={() => handleEdit(item)}
                         >
                           <EditIcon size={17} />
                         </button>
@@ -320,4 +305,4 @@ function mapStateToProps(state: ReduxProps): ReduxProps {
     access_token: state.access_token,
   };
 }
-export default connect(mapStateToProps)(DisplayBureaux)
+export default connect(mapStateToProps)(DisplayRoles)

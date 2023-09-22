@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import Logo from '../images/logo/logo-icon.svg';
-import LogoDark from '../images/logo/logo-dark.svg'
+import LogoDark from '../images/logo/logo-dark.svg';
+import Logo from '../images/logo/logo.svg'
 import DarkModeSwitcher from './DarkModeSwitcher';
 import DropdownMessage from './DropdownMessage';
 import DropdownNotification from './DropdownNotification';
@@ -32,7 +32,7 @@ const Header = (props: {
                 ></span>
                 <span
                   className={`relative top-0 left-0 my-1 block h-0.5 w-0 rounded-sm bg-black delay-150 duration-200 ease-in-out dark:bg-white ${
-                    !props.sidebarOpen && 'delay-400 !w-full'
+                    !props.sidebarOpen && 'delay-300 !w-full'
                   }`}
                 ></span>
                 <span
@@ -48,7 +48,7 @@ const Header = (props: {
                   }`}
                 ></span>
                 <span
-                  className={`delay-400 absolute left-0 top-2.5 block h-0.5 w-full rounded-sm bg-black duration-200 ease-in-out dark:bg-white ${
+                  className={`delay-500 absolute left-0 top-2.5 block h-0.5 w-full rounded-sm bg-black duration-200 ease-in-out dark:bg-white ${
                     !props.sidebarOpen && '!h-0 !delay-200'
                   }`}
                 ></span>
@@ -58,8 +58,8 @@ const Header = (props: {
           {/* <!-- Hamburger Toggle BTN --> */}
 
           <Link className={`block flex-shrink-0 lg:hidden w-1/3`} to="/">
-            <img className="hidden dark:block" src={Logo} alt="Logo" />
-            <img className="dark:hidden text w-35" src={LogoDark} alt="Logo" />
+            <img className="hidden dark:block w-50" src={Logo} alt="Logo" />
+            <img className="dark:hidden text w-50" src={LogoDark} alt="Logo" />
           </Link>
         </div>
 

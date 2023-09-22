@@ -5,7 +5,7 @@ const initialState = {
   bureaux: [],
 };
 
-const BureauxReducer = (state = initialState, action : any) => {
+const BureauxReducers = (state = initialState, action : any) => {
   switch (action.type) {
     case SET_BUREAUX:
       return { ...state, bureaux: action.payload };
@@ -35,4 +35,4 @@ const BureauxReducer = (state = initialState, action : any) => {
   }
 };
 
-export default BureauxReducer;
+export default BureauxReducers;

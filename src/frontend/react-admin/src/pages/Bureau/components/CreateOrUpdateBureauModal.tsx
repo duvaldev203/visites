@@ -28,7 +28,6 @@ interface ModalProps {
 const CreateOrUpdateBureauModal: React.FC<ModalProps> = (props) => {
   const dispatch = useDispatch();
 
-  console.log(props.item)
   const [formData, setFormData] = useState({
     batiment: props.item?.batiment ? props.item.batiment : '',
     etage: props.item?.etage ? props.item.etage : '',
