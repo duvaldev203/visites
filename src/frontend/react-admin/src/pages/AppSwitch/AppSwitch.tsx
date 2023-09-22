@@ -15,6 +15,7 @@ import Chart from "../Chart";
 import Alerts from "../UiElements/Alerts";
 import Buttons from "../UiElements/Buttons";
 import Profile from "../Profile";
+import Role from "../Role/Role";
 
 interface AppSwitchProps {
     isLoggedIn: boolean;
@@ -45,6 +46,7 @@ const AppSwitch: React.FC<AppSwitchProps> = (props) => {
 
           {/* Site Components */}
           <Route path="/bureau" element={<Bureau />} />
+          <Route path="/role" element={<Role />} />
           
           <Route path="*" element={<NotFound />}/>
         </Routes>
