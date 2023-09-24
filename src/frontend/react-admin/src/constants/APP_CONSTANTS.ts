@@ -1,4 +1,5 @@
 export const SEXE: {name: string, value: string}[] = [
+    {name: "Choisir..", value: "null"},
     {name: "Masculin", value: "masculin"},
     {name: "Féminin", value: "féminin"},
 ]

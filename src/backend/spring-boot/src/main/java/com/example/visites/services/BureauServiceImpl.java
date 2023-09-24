@@ -41,7 +41,7 @@ public class BureauServiceImpl implements BureauService {
     public ResponseEntity<BureauResponse> show(Long id) {
     	Bureau bureau = bureauRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Le Bureau", "d'Id", id));
-		return new ResponseEntity<>(modelMapper.map(bureau, BureauResponse.class), HttpStatus.FOUND);
+		return new ResponseEntity<>(modelMapper.map(bureau, BureauResponse.class), HttpStatus.OK);
     }
 	
 	@Override
@@ -90,7 +90,7 @@ public class BureauServiceImpl implements BureauService {
 			throw new APIException("Le bureau que vous cherchez n'existe pas !!!");
 		List<BureauResponse> resp = bureaux.stream().map(el->modelMapper.map(el, BureauResponse.class))
 				.collect(Collectors.toList());
-		return new ResponseEntity<>(resp, HttpStatus.MULTIPLE_CHOICES);
+		return new ResponseEntity<>(resp, HttpStatus.OK);
 	}
 
 }

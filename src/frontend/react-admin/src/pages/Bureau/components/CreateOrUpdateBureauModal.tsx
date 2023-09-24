@@ -55,7 +55,7 @@ const CreateOrUpdateBureauModal: React.FC<ModalProps> = (props) => {
         event.preventDefault()
         if (props.mode === MODAL_MODE.create) {
           handleCreate
-        } else if (props.mode === MODAL_MODE.update){
+        } else if (props.mode === MODAL_MODE.update) {
           handleUpdate
         }
       }
@@ -180,7 +180,7 @@ const CreateOrUpdateBureauModal: React.FC<ModalProps> = (props) => {
       className="authentication-modal"
       onClick={props.onClose}
     >
-      <div className="modal-container relative items-center justify-center mx-auto  top-modal-animation" onClick={(event) => event.stopPropagation()}>
+      <div className="modal-container relative items-center justify-center mx-auto top-modal-animation lg:left-[10%] lg:top-[8%]" onClick={(event) => event.stopPropagation()}>
         <div className="modal-content bg-white rounded-sm border border-stroke shadow-default dark:border-strokedark dark:bg-boxdark">
           <button onClick={props.onClose} className="flex">
             <svg aria-hidden="true" className="close-icon" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -190,14 +190,16 @@ const CreateOrUpdateBureauModal: React.FC<ModalProps> = (props) => {
           </button>
           <div className="modal-body">
 
-            <div className="border-b border-stroke pb-2 px-6.5 -mt-5 dark:border-strokedark">
+            <div className="border-b border-stroke pb-2 px-6.5 -mt-10 dark:border-strokedark">
               <h2 className=" text-size-[1.25rem] font-medium text-black dark:text-white">
                 {props.title}
               </h2>
             </div>
             <form /*onSubmit={handleSubmit}*/ className="pt-1">
               <div className="form-group">
-                <label htmlFor="batiment" className="form-label form-class mb-2.5 flex text-black dark:text-white">Batiment<p className="text-danger">*</p></label>
+                <label htmlFor="batiment" className="form-label form-class mb-2.5 flex text-black dark:text-white">
+                  Batiment <span className="text-meta-1">*</span>
+                </label>
                 <input
                   type="text"
                   name="batiment"
@@ -210,7 +212,9 @@ const CreateOrUpdateBureauModal: React.FC<ModalProps> = (props) => {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="etage" className="form-label form-class mb-2.5 flex text-black dark:text-white">Etage<p className="text-danger">*</p></label>
+                <label htmlFor="etage" className="form-label form-class mb-2.5 flex text-black dark:text-white">
+                  Etage <span className="text-meta-1">*</span>
+                </label>
                 <input
                   type="text"
                   id="etage"
@@ -223,7 +227,9 @@ const CreateOrUpdateBureauModal: React.FC<ModalProps> = (props) => {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="porte" className="form-label form-class mb-2.5 flex text-black dark:text-white">Porte<p className="text-danger">*</p></label>
+                <label htmlFor="porte" className="form-label form-class mb-2.5 flex text-black dark:text-white">
+                  Porte <span className="text-meta-1">*</span>
+                </label>
                 <input
                   type="text"
                   id="porte"

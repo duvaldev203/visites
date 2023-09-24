@@ -1,5 +1,6 @@
 package com.example.visites.exceptions;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.example.visites.shared.APIResponse;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -89,5 +90,21 @@ public class GlobalExceptionHandler {
 		APIResponse res = new APIResponse(timestamp, e.getMessage(), false);
 
 		return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(TokenExpiredException.class)
+	public ResponseEntity<APIResponse> myTokenExpiredException(TokenExpiredException e) {
+		Timestamp timestamp = new Timestamp(new Date().getTime());
+		APIResponse res = new APIResponse(timestamp, e.getMessage(), false);
+
+		return new ResponseEntity<>(res, HttpStatus.UNAUTHORIZED);
+	}
+
+	@ExceptionHandler(NullPointerException.class)
+	public ResponseEntity<APIResponse> myNullPointerException(NullPointerException e) {
+		Timestamp timestamp = new Timestamp(new Date().getTime());
+		APIResponse res = new APIResponse(timestamp, e.getMessage(), false);
+
+		return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }

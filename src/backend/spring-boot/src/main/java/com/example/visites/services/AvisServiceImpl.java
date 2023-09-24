@@ -37,7 +37,7 @@ public class AvisServiceImpl implements AvisService {
 	public ResponseEntity<AvisResponse> show(Long id) {
 		Avis avis = avisRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("L'Avis", "d'Id", id));
-		return new ResponseEntity<>(modelMapper.map(avis, AvisResponse.class), HttpStatus.FOUND);
+		return new ResponseEntity<>(modelMapper.map(avis, AvisResponse.class), HttpStatus.OK);
 	}
 
 	@Override

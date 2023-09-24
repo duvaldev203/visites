@@ -9,6 +9,8 @@ import com.example.visites.configs.AppConstants;
 import com.example.visites.dto.PasswordRequest;
 import com.example.visites.exceptions.APIException;
 import com.example.visites.exceptions.ResourceNotFoundException;
+import com.example.visites.models.EmailDetails;
+import com.example.visites.models.Profile;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,16 +29,21 @@ public class UserServiceImpl implements UserService {
 	
 	private final UserRepository userRepository;
 
+	private final ProfileService profileService;
 	private final PasswordEncoder passwordEncoder;
 
 	private final ModelMapper modelMapper;
 
+	private final EmailService emailService;
 
 	@Autowired
-	public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, ModelMapper modelMapper) {
+	public UserServiceImpl(UserRepository userRepository, ProfileService profileService, PasswordEncoder passwordEncoder,
+	                       ModelMapper modelMapper, EmailService emailService) {
 		this.userRepository = userRepository;
+		this.profileService = profileService;
 		this.passwordEncoder = passwordEncoder;
 		this.modelMapper = modelMapper;
+		this.emailService = emailService;
 	}
 	
 
@@ -52,12 +59,11 @@ public class UserServiceImpl implements UserService {
 	public ResponseEntity<UserResponse> show(Long id) {
 		User user = userRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("L'User", "d'Id", id));
-		return new ResponseEntity<>(modelMapper.map(user, UserResponse.class), HttpStatus.FOUND);
+		return new ResponseEntity<>(modelMapper.map(user, UserResponse.class), HttpStatus.OK);
 	}
 
 	@Override
 	public ResponseEntity<UserResponse> create(UserRequest user) {
-		System.out.println(user);
 		User newUser = modelMapper.map(user, User.class);
 		List<Role> roles = new ArrayList<>();
 		for (Role role : newUser.getRoles()) {
@@ -72,10 +78,11 @@ public class UserServiceImpl implements UserService {
 				throw new APIException("Le mot de passe doit avoir min 8 carateres et contenir au moins : " +
 						"Un chiffre , une lettre majuscule, une lettre miniscule, un caractere special, pas d'espace");
 		}
-		System.out.printf(password);
 		newUser.setPassword(passwordEncoder.encode(password));
 		newUser.setRoles(roles);
 		UserResponse saved = modelMapper.map(userRepository.save(newUser), UserResponse.class);
+		user.setPassword(password);
+		sendMailToUser(user);
 		return new ResponseEntity<>(saved, HttpStatus.CREATED);
 	}
 
@@ -107,6 +114,8 @@ public class UserServiceImpl implements UserService {
 	public ResponseEntity<?> delete(Long id) {
 		User user = userRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("L'User que vous voulez supprimer ", "d'Id", id));
+		Profile profile = user.getProfile();
+		profileService.delete(profile);
 		userRepository.delete(user);
 		return ResponseEntity.noContent().build();
 	}
@@ -116,7 +125,7 @@ public class UserServiceImpl implements UserService {
 		List<User> users = userRepository.findByNomContainingOrPrenomContainingOrUsernameContainingOrEmailContainingOrTelContaining(search, search, search, search, search);
 		List<UserResponse> resp = users.stream().map(el->modelMapper.map(el, UserResponse.class))
 				.collect(Collectors.toList());
-		return new ResponseEntity<>(resp, HttpStatus.MULTIPLE_CHOICES);
+		return new ResponseEntity<>(resp, HttpStatus.OK);
 	}
 
 	public String ramdomPassword(){
@@ -133,5 +142,15 @@ public class UserServiceImpl implements UserService {
 			throw new APIException("Le mot de passe doit avoir min 8 carateres et contenir au moins : " +
 							"Un chiffre , une lettre majuscule, une lettre minuscule, un caractere special, pas d'espace");
 		user.setPassword(passwordEncoder.encode(password));
+	}
+
+	public void sendMailToUser(UserRequest user) {
+		String message = "Bienvenu M./Mme " + user.getPrenom() + " " + user.getNom() + "\n" +
+						"Heureux de vous avoir dans notre entreprise en tant que " + user.getPoste() + "\n" +
+						"Voici vos coordonnees pour acceder a notre plateforme:\n" +
+						"Username: " + user.getEmail() + "\n" +
+						"Mot de passe: " + user.getPassword() + "\n";
+		EmailDetails email = new EmailDetails(user.getEmail(), "Accueil", message);
+		emailService.sendSimpleMail(email);
 	}
 }
