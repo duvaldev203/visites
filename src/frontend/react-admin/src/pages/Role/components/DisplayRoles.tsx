@@ -222,7 +222,7 @@ const DisplayRoles: React.FC<DisplayRolesProps> = (props) => {
       />}
       {showDeleteModal && <DeleteItemModal
         isVisible={true}
-        itemName={'Role d\'id ' + selectedRole}
+        itemName={'Role d\'id ' + selectedRole.id}
         onClose={handleCloseDeleteModal}
         refresh={onReady}
         onConfirm={handleConfirmDeletingModal}
@@ -278,6 +278,7 @@ const DisplayRoles: React.FC<DisplayRolesProps> = (props) => {
               )}
             </tbody>
           </table>
+        </div>
           <ReactPaginate
             className={`inline-flex mt-3 justify-end w-full font-bold pr-5`}
             previousLabel={<PreviousIcon size={15} class='mt-1 hover:opacity-90 hover:text-primary mr-2' /> }
@@ -291,7 +292,6 @@ const DisplayRoles: React.FC<DisplayRolesProps> = (props) => {
             activeClassName={'text-primary border-t-2 bg-gray dark:bg-graydark'}
             pageLinkClassName={'hover:opacity-90 hover:text-primary hover:bg-gray  dark:hover:bg-graydark hover:border-t-2 px-3'}
           />
-        </div>
       </div>
     </div>
   );

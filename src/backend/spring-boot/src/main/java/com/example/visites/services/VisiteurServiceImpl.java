@@ -39,7 +39,7 @@ public class VisiteurServiceImpl implements VisiteurService {
 	public ResponseEntity<VisiteurResponse> show(Long id) {
 		Visiteur visiteur = visiteurRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Le Visiteur", "d'Id", id));
-		return new ResponseEntity<>(modelMapper.map(visiteur, VisiteurResponse.class), HttpStatus.FOUND);
+		return new ResponseEntity<>(modelMapper.map(visiteur, VisiteurResponse.class), HttpStatus.OK);
 	}
 
 	@Override
@@ -72,7 +72,7 @@ public class VisiteurServiceImpl implements VisiteurService {
 		List<Visiteur> visiteurs = visiteurRepository.findByNomContainingOrPrenomContainingOrEmailContainingOrTelContaining(search, search, search, search);
 		List<VisiteurResponse> resp = visiteurs.stream().map(el->modelMapper.map(el, VisiteurResponse.class))
 				.collect(Collectors.toList());
-		return new ResponseEntity<>(resp, HttpStatus.MULTIPLE_CHOICES);
+		return new ResponseEntity<>(resp, HttpStatus.OK);
 	}
 
 }

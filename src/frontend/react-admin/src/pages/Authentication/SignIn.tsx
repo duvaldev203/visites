@@ -48,7 +48,6 @@ const SignIn: React.FC<SignInProps> = () => {
     }
   }, [isLogedIn, dispatch]);
 
-    // e.preventDefault(); // éviter le comportement par défaut du formulaire
   const handleSubmit = async (e : any) => {
     e.preventDefault();
 
@@ -59,6 +58,7 @@ const SignIn: React.FC<SignInProps> = () => {
       email: email,
       password: password,
     }
+    console.log(ApiParams)
     setIsLoading(true);
     const authApi = new AuthControllerApi(state.environment);
     authApi.login(ApiParams) // appel à la fonction login du client d'API

@@ -1,21 +1,21 @@
 import { connect, useDispatch, useSelector } from 'react-redux';
-import { BureauControllerApi, BureauResponse } from '../../../generated';
+import { UserControllerApi, UserResponse } from '../../../generated';
 import { ReduxProps } from '../../../redux/configureStore';
 import { useCallback, useEffect, useState } from 'react';
 import { MODAL_MODE } from '../../../constants/APP_CONSTANTS';
 import { Link } from 'react-router-dom';
 import { EditIcon, NewIcon, NextIcon, PreviousIcon, TrashIcon } from '../../../constants/Icon';
 
-import CreateOrUpdateBureauModal from './CreateOrUpdateBureauModal';
+import CreateOrUpdateUserModal from './CreateOrUpdateUserModal';
 
 import { TOKEN_LOCAL_STORAGE_KEY } from '../../../constants/LOCAL_STORAGE';
 import { DeleteItemModal } from '../../../constants/DeleteItemModal';
 import { GridIndicator } from '../../../constants/GridIndicator';
 
-import './DisplayBureaux.css'
+import './DisplayUsers.css'
 
-interface DisplayBureauxProps {
-  bureaux: BureauResponse[],
+interface DisplayUsersProps {
+  users: UserResponse[],
   isLoading: boolean,
 
   setShowSuccessNotif: (value: boolean) => void,
@@ -31,27 +31,22 @@ interface DisplayBureauxProps {
   setDangerNotifDescription: (value: string | null) => void,
 }
 
-import {
-  deleteBureau,
-  setBureau,
-  setBureaux
-} from '../../../redux/Actions/BureauAction'
 import { DangerNotification } from '../../../services/Notification.service';
 import ReactPaginate from 'react-paginate';
 
-const DisplayBureaux: React.FC<DisplayBureauxProps> = (props) => {
+const DisplayUsers: React.FC<DisplayUsersProps> = (props) => {
   const state = useSelector((state: ReduxProps) => state);
-  const [listeBureaux, setListeBureaux] = useState<BureauResponse[]>(props.bureaux);
-  const [bureauS, setBureauS] = useState<BureauResponse | null>(props.bureaux[0]);
-  const [selectedBureau, setSelectedBureau] = useState<BureauResponse>({});
+  const [listeUsers, setListeUsers] = useState<UserResponse[]>(props.users);
+  const [userS, setUserS] = useState<UserResponse | null>(props.users[0]);
+  const [selectedUser, setSelectedUser] = useState<UserResponse>({});
   // Pagination
   const [currentPage, setCurrentPage] = useState(0);
-  const bureauxPerPage = 10;
+  const usersPerPage = 10;
 
-  const offset = currentPage * bureauxPerPage;
-  const currentBureaux = listeBureaux.slice(offset, offset + bureauxPerPage);
+  const offset = currentPage * usersPerPage;
+  const currentUsers = listeUsers.slice(offset, offset + usersPerPage);
 
-  const pageCount = Math.ceil(listeBureaux.length / bureauxPerPage);
+  const pageCount = Math.ceil(listeUsers.length / usersPerPage);
 
   const handlePageClick = (data: { selected: any; }) => {
     const selected = data.selected;
@@ -72,32 +67,31 @@ const DisplayBureaux: React.FC<DisplayBureauxProps> = (props) => {
 
   const onReady = useCallback(() => {
     const token: string = localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY)!;
-    const bureauxApi = new BureauControllerApi({ ...state.environment, accessToken: token });
+    const usersApi = new UserControllerApi({ ...state.environment, accessToken: token });
 
     setShowIndicator(true)
 
-    bureauxApi.index4()
+    usersApi.index2()
       .then((response) => {
         if (response && response.data) {
           if (response.status === 200) {
-            setListeBureaux(response.data);
-
-            dispatch(setBureaux(listeBureaux));
+            setListeUsers(response.data);
           }
         }
       })
       .catch((error) => {
         setIsError(true);
         console.log(isError)
-        if (error?.response && error?.response?.data){
+        if (error?.response && error?.response?.data) {
           setIsErrorDescription(error?.response?.data?.message);
         } else {
           if (error.response && error.response.status === 403) {
             setIsErrorDescription('Probleme de token. Votre token n\'est plus valide et vous allez etre deconnecter');
           } else {
-            setIsErrorDescription('Probleme lors de la recuperation des bureaux')
-        } }
-        
+            setIsErrorDescription('Probleme lors de la recuperation des users')
+          }
+        }
+
         // Handle Warning Notif 
         // props.setShowWarning(true)
       })
@@ -116,29 +110,28 @@ const DisplayBureaux: React.FC<DisplayBureauxProps> = (props) => {
     setShowDeleteModal(false);
   }, []);
 
-  //Create Bureau
+  //Create User
   const handleNewItem = () => {
-    setBureauS(null);
+    setUserS(null);
     setShowCreateOrUpdateModal(true);
     setModalMode(MODAL_MODE.create)
-    setModalTitle("Créer un nouveau bureau")
+    setModalTitle("Créer un nouveau employe")
   }
 
   const handleCloseCreateOrUpdateModal = () => {
     setShowCreateOrUpdateModal(false)
   }
-  // Update Bureau
-  const handleEdit = (bureauSelected: BureauResponse) => {
-    setBureauS(bureauSelected);
+  // Update User
+  const handleEdit = (userSelected: UserResponse) => {
+    setUserS(userSelected);
     setModalMode(MODAL_MODE.update)
-    setModalTitle("Modifier le bureau")
+    setModalTitle("Modifier le user")
     setShowCreateOrUpdateModal(true);
-    dispatch(setBureau(bureauSelected))
   };
 
-  // Delete Bureau
-  const handleDelete = (bureau: BureauResponse) => {
-    setSelectedBureau(bureau);
+  // Delete User
+  const handleDelete = (user: UserResponse) => {
+    setSelectedUser(user);
     setShowDeleteModal(true)
   };
 
@@ -154,33 +147,33 @@ const DisplayBureaux: React.FC<DisplayBureauxProps> = (props) => {
     setShowDeleteModal(false)
 
     const token: string = localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY)!;
-    const bureauxApi = new BureauControllerApi({ ...state.environment, accessToken: token });
+    const usersApi = new UserControllerApi({ ...state.environment, accessToken: token });
 
     setShowIndicator(true)
 
-    bureauxApi.delete4(selectedBureau.id!)
+    usersApi.delete2(selectedUser.id!)
       .then((response) => {
         if (response) {
           if (response.status === 204) {
             console.log('response :', response)
             setShowDeleteModal(false)
             props.setSuccessNotifMessage("Succes")
-            props.setSuccessNotifDescription('Ce bureau a ete supprime avec success')
+            props.setSuccessNotifDescription('Ce user a ete supprime avec succes')
             props.setShowSuccessNotif(true)
           }
         }
-        dispatch(deleteBureau(selectedBureau!))
       })
       .catch((error) => {
         setIsError(true);
-        if (error?.response && error?.response?.data){
+        if (error?.response && error?.response?.data) {
           setIsErrorDescription(error?.response?.data?.message);
         } else {
           if (error.response && error.response.status === 403) {
             setIsErrorDescription('Probleme de token. Votre token n\'est plus valide et vous allez etre deconnecter');
           } else {
-            setIsErrorDescription('Probleme lors de la suppression du bureau')
-        } }
+            setIsErrorDescription('Probleme lors de la suppression du user')
+          }
+        }
       })
       .finally(() => {
 
@@ -201,12 +194,12 @@ const DisplayBureaux: React.FC<DisplayBureauxProps> = (props) => {
   return (
     <div>
       <div className={`absolute bg-black w-[90%]`}>
-        {isError && <DangerNotification 
+        {isError && <DangerNotification
           message={'Error'}
           description={isErrorDescription}
         />}
       </div>
-      
+
       <div className="mb-3.5 flex flex-wrap gap-1 xl:gap-3 justify-end">
         <Link onClick={handleNewItem} to="#" className={`${shared_class} hover:opacity-80`} style={{ backgroundColor: '#057a4f' }}>
           <div className={'w-5 h-5 -mr-1'}>
@@ -216,12 +209,12 @@ const DisplayBureaux: React.FC<DisplayBureauxProps> = (props) => {
         </Link>
       </div>
 
-      {showCreateOrUpdateModal && <CreateOrUpdateBureauModal
+      {showCreateOrUpdateModal && <CreateOrUpdateUserModal
         mode={modalMode}
         title={modalTitle}
         onClose={handleCloseCreateOrUpdateModal}
         refresh={onReady}
-        item={modalMode !== MODAL_MODE.create ? bureauS : null}
+        item={modalMode !== MODAL_MODE.create ? userS : null}
         setShowSuccessNotif={props.setShowSuccessNotif}
         setSuccessNotifMessage={props.setSuccessNotifMessage}
         setSuccessNotifDescription={props.setSuccessNotifDescription}
@@ -231,7 +224,7 @@ const DisplayBureaux: React.FC<DisplayBureauxProps> = (props) => {
       />}
       {showDeleteModal && <DeleteItemModal
         isVisible={true}
-        itemName={'Bureau d\'id ' + selectedBureau.id}
+        itemName={'User d\'id ' + selectedUser.id}
         onClose={handleCloseDeleteModal}
         refresh={onReady}
         onConfirm={handleConfirmDeletingModal}
@@ -242,14 +235,35 @@ const DisplayBureaux: React.FC<DisplayBureauxProps> = (props) => {
           <table className="w-full table-auto">
             <thead>
               <tr className="bg-gray-2 text-left dark:bg-meta-4 border-b">
-                <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
-                  Batiment
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  Username
                 </th>
-                <th className="min-w-[150px] py-4 px-4 font-medium text-black dark:text-white">
-                  Etage
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  Nom
                 </th>
-                <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
-                  Numero de Porte
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  Prenom
+                </th>
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  Email
+                </th>
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  Sexe
+                </th>
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  Telephone
+                </th>
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  Date de Naissance
+                </th>
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  Poste
+                </th>
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  Bureau
+                </th>
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  Roles
                 </th>
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Actions
@@ -258,31 +272,54 @@ const DisplayBureaux: React.FC<DisplayBureauxProps> = (props) => {
             </thead>
             <tbody>
               {showIndicator && <GridIndicator />}
-              {listeBureaux.length === 0 ? (
+              {listeUsers.length === 0 ? (
                 <tr className='border-b'>
-                  <td colSpan={4} className='text-center p-2'>Aucun bureau pour le moment</td>
+                  <td colSpan={4} className='text-center p-2'>Aucun user pour le moment</td>
                 </tr>
               ) : (
-                currentBureaux!.map((bur) => (
-                  <tr key={bur.id} className='border-b'>
-                    <td className="my-2 mx-4 pl-9 xl:pl-10">
-                      <p className="text-black dark:text-white">{bur.batiment}</p>
+                currentUsers!.map((item) => (
+                  <tr key={item.id} className='border-b'>
+                    <td className="py-2 px-2">
+                      <p className="text-black dark:text-white">{item.username}</p>
                     </td>
-                    <td className="py-2 px-4">
-                      <p className="text-black dark:text-white">{bur.etage}</p>
+                    <td className="py-2 px-2">
+                      <p className="text-black dark:text-white">{item.nom}</p>
                     </td>
-                    <td className="py-2 px-4">
-                      <p className="text-black dark:text-white">{bur.porte}</p>
+                    <td className="py-2 px-2">
+                      <p className="text-black dark:text-white">{item.prenom}</p>
+                    </td>
+                    <td className="py-2 px-2">
+                      <p className="text-black dark:text-white">{item.email}</p>
+                    </td>
+                    <td className="py-2 px-2">
+                      <p className="text-black dark:text-white">{item.sexe}</p>
+                    </td>
+                    <td className="py-2 px-2">
+                      <p className="text-black dark:text-white">{item.tel}</p>
+                    </td>
+                    <td className="py-2 px-2">
+                      <p className="text-black dark:text-white">{new Date(item.dateNais!).toLocaleDateString()!}</p>
+                    </td>
+                    <td className="py-2 px-2">
+                      <p className="text-black dark:text-white">{item.poste}</p>
+                    </td>
+                    <td className="py-2 px-2">{item.bureau && 
+                      <p className="text-black dark:text-white">{item.bureau.batiment + '-' + item.bureau.etage + '-' + item.bureau.porte}</p>
+                      }
+                    </td>
+                    <td className="py-2 px-2">{item.roles?.map((role) => (
+                      <p className="text-black dark:text-white">{role.nom}</p>
+                      ))}
                     </td>
                     <td className="py-2 px-5">
                       <div className="flex items-center space-x-4">
-                        <button className="hover:text-primary" title='Supprimer' onClick={() => handleDelete(bur)}>
+                        <button className="hover:text-primary" title='Supprimer' onClick={() => handleDelete(item)}>
                           <TrashIcon size={17} />
                         </button>
                         <button
                           className="hover:text-primary"
                           title="Modifier"
-                          onClick={() => handleEdit(bur)}
+                          onClick={() => handleEdit(item)}
                         >
                           <EditIcon size={17} />
                         </button>
@@ -296,8 +333,8 @@ const DisplayBureaux: React.FC<DisplayBureauxProps> = (props) => {
         </div>
           <ReactPaginate
             className={`inline-flex mt-3 justify-end w-full font-bold pr-5`}
-            previousLabel={<PreviousIcon size={15} class='mt-1 hover:opacity-90 hover:text-primary mr-2' /> }
-            nextLabel={<NextIcon size={15} class='mt-1 hover:opacity-90 hover:text-primary ml-2'/>}
+            previousLabel={<PreviousIcon size={15} class='mt-1 hover:opacity-90 hover:text-primary mr-2' />}
+            nextLabel={<NextIcon size={15} class='mt-1 hover:opacity-90 hover:text-primary ml-2' />}
             breakLabel={'...'}
             pageCount={pageCount}
             marginPagesDisplayed={5}
@@ -320,4 +357,4 @@ function mapStateToProps(state: ReduxProps): ReduxProps {
     access_token: state.access_token,
   };
 }
-export default connect(mapStateToProps)(DisplayBureaux)
+export default connect(mapStateToProps)(DisplayUsers)

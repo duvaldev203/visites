@@ -17,12 +17,13 @@ const DropdownUser = () => {
   const navigate = useNavigate();
 
   const handleLogOut = () => {
+    setTimeout(() => {
     localStorage.removeItem(USER_LOCAL_STORAGE_KEY);
     localStorage.removeItem(TOKEN_LOCAL_STORAGE_KEY);
     localStorage.removeItem(IS_LOGGED_LOCAL_STORAGE_KEY);
     dispatch(setIsLOggedAction(false));
-    // window.location.reload();
-    setTimeout(() => { navigate("/auth/signin");}, 2000)
+    // window.location.reload(); 
+    navigate("/auth/signin");}, 2000)
   };
 
   const dispatch = useDispatch();

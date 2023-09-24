@@ -38,7 +38,7 @@ public class RoleServiceImpl implements RoleService {
 		Role role = roleRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Le Role", "d'Id", id));
 		return new ResponseEntity<>(modelMapper.map(role, RoleResponse.class),
-				HttpStatus.FOUND);
+				HttpStatus.OK);
 	}
 
 	@Override
@@ -71,7 +71,7 @@ public class RoleServiceImpl implements RoleService {
 		List<Role> roles = roleRepository.findByNomContaining(name);
 		List<RoleResponse> resp = roles.stream().map(el->modelMapper.map(el, RoleResponse.class))
 				.toList();
-		return new ResponseEntity<>(resp, HttpStatus.MULTIPLE_CHOICES);
+		return new ResponseEntity<>(resp, HttpStatus.OK);
 	}
 
 

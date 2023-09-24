@@ -41,7 +41,7 @@ public class VisiteServiceImpl implements VisiteService {
 	public ResponseEntity<VisiteResponse> show(Long id) {
 		Visite visite = visiteRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("La Visite", "d'Id", id));
-		return new ResponseEntity<>(modelMapper.map(visite, VisiteResponse.class), HttpStatus.FOUND);
+		return new ResponseEntity<>(modelMapper.map(visite, VisiteResponse.class), HttpStatus.OK);
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public class VisiteServiceImpl implements VisiteService {
 		List<Visite> visites = visiteRepository.findByMotifContaining(search);
 		List<VisiteResponse> resp = visites.stream().map(el->modelMapper.map(el, VisiteResponse.class))
 				.collect(Collectors.toList());
-		return new ResponseEntity<>(resp, HttpStatus.MULTIPLE_CHOICES);
+		return new ResponseEntity<>(resp, HttpStatus.OK);
 	}
 
 	@Override
@@ -91,7 +91,7 @@ public class VisiteServiceImpl implements VisiteService {
 		visites.removeIf(v -> v.getAvis() != null);
 		List<VisiteResponse> resp = visites.stream().map(el->modelMapper.map(el, VisiteResponse.class))
 				.toList();
-		return  new ResponseEntity<>(resp, HttpStatus.MULTIPLE_CHOICES);
+		return  new ResponseEntity<>(resp, HttpStatus.OK);
 	}
 
 	@Override
@@ -99,7 +99,7 @@ public class VisiteServiceImpl implements VisiteService {
 		List<Visite> visites = visiteRepository.findByUserId(employeId);
 		List<VisiteResponse> resp = visites.stream()
 						.map(el -> modelMapper.map(el, VisiteResponse.class)).toList();
-		return new ResponseEntity<>(resp, HttpStatus.FOUND);
+		return new ResponseEntity<>(resp, HttpStatus.OK);
 	}
 
 	@Override

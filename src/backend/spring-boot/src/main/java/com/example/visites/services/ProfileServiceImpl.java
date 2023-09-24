@@ -112,7 +112,7 @@ public class ProfileServiceImpl implements ProfileService {
 		}
 	}
 
-//	private String copyImgToPath(MultipartFile image){
+	//	private String copyImgToPath(MultipartFile image){
 //		File repertoire = new File(AppConstants.DEFAULT_PATH);
 //		if (!repertoire.exists()) {
 //			boolean repertoireCree = repertoire.mkdirs();
@@ -171,6 +171,19 @@ private String copyImgToPath(MultipartFile image) {
 		e.printStackTrace();
 	}
 	return nouveauNom;
-}
+	}
+
+	@Override
+	public void delete(Profile profile) {
+		String fileName = profile.getNomImg();
+		Path filePath = Paths.get(AppConstants.DEFAULT_PATH, fileName);
+		try{
+			Files.deleteIfExists(filePath);
+			profileRepository.delete(profile);
+			System.out.println("\n Le profile a ete supprime");
+		} catch (IOException e) {
+			throw new APIException("Echec de suppression de la photo de profile");
+		}
+	}
 
 }
