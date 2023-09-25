@@ -17,6 +17,7 @@ import Buttons from "../UiElements/Buttons";
 import Profile from "../Profile";
 import Role from "../Role/Role";
 import User from "../User/User";
+import Visiteur from "../Visiteur/Visiteur";
 
 interface AppSwitchProps {
     isLoggedIn: boolean;
@@ -49,6 +50,7 @@ const AppSwitch: React.FC<AppSwitchProps> = (props) => {
           <Route path="/bureau" element={<Bureau />} />
           <Route path="/role" element={<Role />} />
           <Route path="/user" element={<User />} />
+          <Route path="/visiteur" element={<Visiteur />} />
           
           <Route path="*" element={<NotFound />}/>
         </Routes>
