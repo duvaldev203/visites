@@ -1,21 +1,19 @@
 import { useEffect, useState } from "react";
 import { MODAL_MODE, SEXE } from "../../../constants/APP_CONSTANTS";
 import { EditIcon, NewIcon } from "../../../constants/Icon";
-import { UserRequest, RoleResponse, UserResponse, BureauResponse } from "../../../generated/models";
+import { VisiteurRequest, VisiteurResponse } from "../../../generated/models";
 import { TOKEN_LOCAL_STORAGE_KEY } from "../../../constants/LOCAL_STORAGE";
-import { BureauControllerApi, RoleControllerApi, UserControllerApi } from "../../../generated";
+import { VisiteurControllerApi } from "../../../generated";
 import { useSelector } from "react-redux";
 import { ReduxProps } from "../../../redux/configureStore";
 import Indicator from "../../Authentication/components/Indicator";
-import CustomSelectBureau from "../../../components/CustomSelects/CustomSelectBureau/CustomSelectBureau";
-import CustomSelectMultiRoles from "../../../components/CustomSelects/CustomSelectRoles/CustomSelectMultiRoles";
 
 interface ModalProps {
   mode: MODAL_MODE,
   title: string,
   onClose: () => void,
   refresh?: () => void,
-  item?: UserResponse | null,
+  item?: VisiteurResponse | null,
 
   setShowSuccessNotif: (value: boolean) => void,
   setSuccessNotifMessage: (value: string) => void,
@@ -26,89 +24,23 @@ interface ModalProps {
   setWarningNotifDescription: (value: string | null) => void,
 }
 
-const CreateOrUpdateUserModal: React.FC<ModalProps> = (props) => {
+const CreateOrUpdateVisiteurModal: React.FC<ModalProps> = (props) => {
 
   const state = useSelector((state: ReduxProps) => state);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [formData, setFormData] = useState({
-    username: props.item ? props.item.username : '',
     nom: props.item ? props.item.nom : '',
     prenom: props.item ? props.item.prenom : '',
     email: props.item ? props.item.email : '',
     sexe: props.item ? props.item.sexe : '',
     tel: props.item ? props.item.tel : '',
-    poste: props.item ? props.item.poste : '',
+    profession: props.item ? props.item.profession : '',
     dateNais: new Date(props.item?.dateNais!),
-    bureau: props.item ? props.item.bureau : {},
-    roles: props.item ? props.item.roles : [],
   });
   const validDate: boolean = formData.dateNais.toString() != "Invalid Date"
-  
-  const [bureaux, setBureaux] = useState<BureauResponse[]>([]);
-  const [roles, setRoles] = useState<RoleResponse[]>([]);
 
-  const handleTypingInput = (keyword: string) => {
-    if (keyword.length > 0) {
-      const token: string = localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY)!;
-      const bureauxApi = new BureauControllerApi({
-        ...state.environment,
-        accessToken: token,
-      });
-
-      bureauxApi
-        .records4(keyword)
-        .then((response) => {
-          if (response.status === 200) {
-            setBureaux(response.data);
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-        .finally(() => { });
-    }
-  };
-
-  const handleOptionSelect = (item: BureauResponse) => {
-    setFormData((prevValues) => ({
-      ...prevValues,
-      bureau: item,
-    }));
-  };
-
-  const handleTypingRole = (keyword: string) => {
-    if (keyword.length > 0) {
-      const token: string = localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY)!;
-      const rolesApi = new RoleControllerApi({
-        ...state.environment,
-        accessToken: token,
-      });
-
-      rolesApi
-        .records3(keyword)
-        .then((response) => {
-          if (response && response.data) {
-            if (response.status === 200) {
-              setRoles(response.data);
-            }
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-        .finally(() => { });
-    }
-  };
-
-  const handleRoleSelect = (option: RoleResponse[]) => {
-    setFormData((prevValues) => ({
-      ...prevValues,
-      roles: option,
-    }));
-  };
-
-  const isEmpty = !formData.username || !formData.nom || !formData.prenom || !formData.email || !formData.sexe || !formData.tel || !formData.poste || !formData.dateNais || !formData.roles || !formData.bureau
+  const isEmpty = !formData.nom || !formData.prenom || !formData.email || !formData.sexe || !formData.tel || !formData.profession || !formData.dateNais
 
   const handleInputChange = (e: any) => {
     const { name, value } = e.target;
@@ -127,15 +59,15 @@ const CreateOrUpdateUserModal: React.FC<ModalProps> = (props) => {
     _event.preventDefault() // stopper la soumissoin par defaut du formulaire...
 
     const token: string = localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY)!;
-    const usersApi = new UserControllerApi({ ...state.environment, accessToken: token });
+    const visiteursApi = new VisiteurControllerApi({ ...state.environment, accessToken: token });
 
     setIsLoading(true)
 
-    const apiParams: UserRequest = {
+    const apiParams: VisiteurRequest = {
       ...formData
     }
 
-    usersApi.create2(apiParams)
+    visiteursApi.create(apiParams)
       .then((response) => {
         if (response && response.data) {
           if (response.status === 201) {
@@ -144,7 +76,7 @@ const CreateOrUpdateUserModal: React.FC<ModalProps> = (props) => {
 
             // notification
             props.setSuccessNotifMessage('Succes')
-            props.setSuccessNotifDescription('Un nouveau user viens d\'etre rajoute au catalogue avec succes ! ')
+            props.setSuccessNotifDescription('Un nouveau visiteur viens d\'etre rajoute au catalogue avec succes ! ')
             props.setShowSuccessNotif(true)
           }
         }
@@ -170,15 +102,15 @@ const CreateOrUpdateUserModal: React.FC<ModalProps> = (props) => {
     _event.preventDefault() // stopper la soumissoin par defaut du formulaire...
 
     const token: string = localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY)!;
-    const usersApi = new UserControllerApi({ ...state.environment, accessToken: token });
+    const visiteursApi = new VisiteurControllerApi({ ...state.environment, accessToken: token });
 
     setIsLoading(true)
 
-    const apiParams: UserRequest = {
+    const apiParams: VisiteurRequest = {
       ...formData
     }
 
-    usersApi.update2(apiParams, props.item?.id!)
+    visiteursApi.update(apiParams, props.item?.id!)
       .then((response) => {
         if (response && response.data) {
           console.log(response.data);
@@ -189,7 +121,7 @@ const CreateOrUpdateUserModal: React.FC<ModalProps> = (props) => {
 
             // notification
             props.setSuccessNotifMessage('Succes')
-            props.setSuccessNotifDescription('Cet employe a ete correctement mise a jour, veuillez consulter le catalogue !')
+            props.setSuccessNotifDescription('Ce visiteur a ete correctement mise a jour, veuillez consulter le catalogue !')
             props.setShowSuccessNotif(true)
           }
         }
@@ -262,9 +194,9 @@ const CreateOrUpdateUserModal: React.FC<ModalProps> = (props) => {
               className="modal-form"
             >
               <div>
-                {/* row 1 nom, prenom, username*/}
+                {/* row 1 nom, prenom, visiteurname*/}
                 <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
-                  <div className="w-full xl:w-1/3">
+                  <div className="w-full xl:w-1/2">
                     <label className="mb-2.5 block text-black dark:text-white">
                       Nom <span className="text-meta-1">*</span>
                     </label>
@@ -274,14 +206,14 @@ const CreateOrUpdateUserModal: React.FC<ModalProps> = (props) => {
                       onChange={handleInputChange}
                       required
                       type="text"
-                      placeholder="Entrer le nom"
+                      placeholder="Entrer le nom du visiteur"
                       className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                     />
                   </div>
 
-                  <div className="w-full xl:w-1/3">
+                  <div className="w-full xl:w-1/2">
                     <label className="mb-2.5 block text-black dark:text-white">
-                      Prenom<span className="text-meta-1">*</span>
+                      Prenom <span className="text-meta-1">*</span>
                     </label>
                     <input
                       name="prenom"
@@ -289,22 +221,7 @@ const CreateOrUpdateUserModal: React.FC<ModalProps> = (props) => {
                       onChange={handleInputChange}
                       required
                       type="text"
-                      placeholder="Entrer le prenom"
-                      className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                    />
-                  </div>
-
-                  <div className="w-full xl:w-1/2">
-                    <label className="mb-2.5 block text-black dark:text-white">
-                      Username <span className="text-meta-1">*</span>
-                    </label>
-                    <input
-                      name="username"
-                      value={formData.username}
-                      onChange={handleInputChange}
-                      required
-                      type="text"
-                      placeholder="Entrer le username de l'employe"
+                      placeholder="Entrer le prenom du visiteur"
                       className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                     />
                   </div>
@@ -354,13 +271,13 @@ const CreateOrUpdateUserModal: React.FC<ModalProps> = (props) => {
                       onChange={handleInputChange}
                       required
                       type="email"
-                      placeholder="Entrer l'adresse email"
+                      placeholder="Entrer l'adresse email du visiteur"
                       className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                     />
                   </div>
                 </div>
 
-                {/* row 3 telephone, poste*/}
+                {/* row 3 telephone, profession*/}
 
                 <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
                   <div className="w-full xl:w-1/2">
@@ -379,47 +296,18 @@ const CreateOrUpdateUserModal: React.FC<ModalProps> = (props) => {
                   </div>
                   <div className="w-full xl:w-1/2">
                     <label className="mb-2.5 block text-black dark:text-white">
-                      Poste <span className="text-meta-1">*</span>
+                      Profession <span className="text-meta-1">*</span>
                     </label>
                     <input
-                      name="poste"
-                      value={formData.poste}
+                      name="profession"
+                      value={formData.profession}
                       onChange={handleInputChange}
                       required
                       type="text"
-                      placeholder="Entrer le poste de l'employe"
+                      placeholder="Entrer la profession du visiteur"
                       className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                     />
                   </div>
-                </div>
-
-                {/* row 2 bureau, role*/}
-                <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
-                  <CustomSelectBureau
-                    required={true}
-                    inputLabel="Bureau de l'employe"
-                    inputPlaceholder="Saisir un bureau"
-                    wrapperStyle="w-full xl:w-1/2"
-                    labelStyle="mb-2.5 block text-black dark:text-white"
-                    inputStyle="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                    maxHeightList={300}
-                    matchList={bureaux}
-                    selectOptionEvent={handleOptionSelect}
-                    typingInputEvent={handleTypingInput}
-                  />
-
-                  <CustomSelectMultiRoles
-                    required={true}
-                    inputLabel="Roles de l'employe"
-                    inputPlaceholder="Saisir un role"
-                    wrapperStyle="w-full xl:w-1/2"
-                    labelStyle="mb-2.5 block text-black dark:text-white"
-                    inputStyle="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                    maxHeightList={100}
-                    selectOptionEvent={handleRoleSelect}
-                    typingInputEvent={handleTypingRole}
-                    matchList={roles}
-                  />
                 </div>
 
                 {/* row 5 create | update, annuler */}
@@ -491,4 +379,4 @@ const CreateOrUpdateUserModal: React.FC<ModalProps> = (props) => {
   );
 }
 
-export default CreateOrUpdateUserModal;
+export default CreateOrUpdateVisiteurModal;
