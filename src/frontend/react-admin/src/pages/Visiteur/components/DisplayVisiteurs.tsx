@@ -82,15 +82,16 @@ const DisplayVisiteurs: React.FC<DisplayVisiteursProps> = (props) => {
       .catch((error) => {
         setIsError(true);
         console.log(isError)
-        if (error?.response && error?.response?.data){
+        if (error?.response && error?.response?.data) {
           setIsErrorDescription(error?.response?.data?.message);
         } else {
           if (error.response && error.response.status === 403) {
             setIsErrorDescription('Probleme de token. Votre token n\'est plus valide et vous allez etre deconnecter');
           } else {
             setIsErrorDescription('Probleme lors de la recuperation des visiteurs')
-        } }
-        
+          }
+        }
+
         // Handle Warning Notif 
         // props.setShowWarning(true)
       })
@@ -164,14 +165,15 @@ const DisplayVisiteurs: React.FC<DisplayVisiteursProps> = (props) => {
       })
       .catch((error) => {
         setIsError(true);
-        if (error?.response && error?.response?.data){
+        if (error?.response && error?.response?.data) {
           setIsErrorDescription(error?.response?.data?.message);
         } else {
           if (error.response && error.response.status === 403) {
             setIsErrorDescription('Probleme de token. Votre token n\'est plus valide et vous allez etre deconnecter');
           } else {
             setIsErrorDescription('Probleme lors de la suppression du visiteur')
-        } }
+          }
+        }
       })
       .finally(() => {
 
@@ -192,12 +194,12 @@ const DisplayVisiteurs: React.FC<DisplayVisiteursProps> = (props) => {
   return (
     <div>
       <div className={`absolute bg-black w-[90%]`}>
-        {isError && <DangerNotification 
+        {isError && <DangerNotification
           message={'Error'}
           description={isErrorDescription}
         />}
       </div>
-      
+
       <div className="mb-3.5 flex flex-wrap gap-1 xl:gap-3 justify-end">
         <Link onClick={handleNewItem} to="#" className={`${shared_class} hover:opacity-80`} style={{ backgroundColor: '#057a4f' }}>
           <div className={'w-5 h-5 -mr-1'}>
@@ -233,7 +235,7 @@ const DisplayVisiteurs: React.FC<DisplayVisiteursProps> = (props) => {
           <table className="w-full table-auto">
             <thead>
               <tr className="bg-gray-2 text-left dark:bg-meta-4 border-b">
-              <th className="py-4 px-4 font-medium text-black dark:text-white">
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Nom
                 </th>
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
@@ -263,7 +265,7 @@ const DisplayVisiteurs: React.FC<DisplayVisiteursProps> = (props) => {
               {showIndicator && <GridIndicator />}
               {listeVisiteurs.length === 0 ? (
                 <tr className='border-b'>
-                  <td colSpan={4} className='text-center p-2'>Aucun visiteur pour le moment</td>
+                  <td colSpan={8} className='text-center p-2'>Aucun visiteur pour le moment</td>
                 </tr>
               ) : (
                 currentVisiteurs!.map((item) => (
@@ -309,19 +311,19 @@ const DisplayVisiteurs: React.FC<DisplayVisiteursProps> = (props) => {
             </tbody>
           </table>
         </div>
-          <ReactPaginate
-            className={`inline-flex mt-3 justify-end w-full font-bold pr-5`}
-            previousLabel={<PreviousIcon size={15} class='mt-1 hover:opacity-90 hover:text-primary mr-2' /> }
-            nextLabel={<NextIcon size={15} class='mt-1 hover:opacity-90 hover:text-primary ml-2'/>}
-            breakLabel={'...'}
-            pageCount={pageCount}
-            marginPagesDisplayed={5}
-            pageRangeDisplayed={5}
-            onPageChange={handlePageClick}
-            containerClassName={'pagination'}
-            activeClassName={'text-primary border-t-2 bg-gray dark:bg-graydark'}
-            pageLinkClassName={'hover:opacity-90 hover:text-primary hover:bg-gray  dark:hover:bg-graydark hover:border-t-2 px-3'}
-          />
+        <ReactPaginate
+          className={`inline-flex mt-3 justify-end w-full font-bold pr-5`}
+          previousLabel={<PreviousIcon size={15} class='mt-1 hover:opacity-90 hover:text-primary mr-2' />}
+          nextLabel={<NextIcon size={15} class='mt-1 hover:opacity-90 hover:text-primary ml-2' />}
+          breakLabel={'...'}
+          pageCount={pageCount}
+          marginPagesDisplayed={5}
+          pageRangeDisplayed={5}
+          onPageChange={handlePageClick}
+          containerClassName={'pagination'}
+          activeClassName={'text-primary border-t-2 bg-gray dark:bg-graydark'}
+          pageLinkClassName={'hover:opacity-90 hover:text-primary hover:bg-gray  dark:hover:bg-graydark hover:border-t-2 px-3'}
+        />
       </div>
     </div>
   );

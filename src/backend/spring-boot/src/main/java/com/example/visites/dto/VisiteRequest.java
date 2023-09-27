@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class VisiteRequest {
     private String motif;
-    private LocalTime heureDebut;
-    private LocalTime heureFin;
+    private String heureDebut;
+    private String heureFin;
     private Date dateVisite;
     private String type;
     private UserResponse user;

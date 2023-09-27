@@ -11,7 +11,6 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import { LocalTime } from './local-time';
 import { UserResponse } from './user-response';
 import { VisiteurResponse } from './visiteur-response';
 /**
@@ -28,16 +27,16 @@ export interface VisiteRequest {
     motif?: string;
     /**
      * 
-     * @type {LocalTime}
+     * @type {string}
      * @memberof VisiteRequest
      */
-    heureDebut?: LocalTime;
+    heureDebut?: string;
     /**
      * 
-     * @type {LocalTime}
+     * @type {string}
      * @memberof VisiteRequest
      */
-    heureFin?: LocalTime;
+    heureFin?: string;
     /**
      * 
      * @type {Date}

@@ -1,21 +1,21 @@
 import { connect, useDispatch, useSelector } from 'react-redux';
-import { RoleControllerApi, RoleResponse } from '../../../generated';
+import { VisiteControllerApi, VisiteResponse } from '../../../generated';
 import { ReduxProps } from '../../../redux/configureStore';
 import { useCallback, useEffect, useState } from 'react';
 import { MODAL_MODE } from '../../../constants/APP_CONSTANTS';
 import { Link } from 'react-router-dom';
 import { EditIcon, NewIcon, NextIcon, PreviousIcon, TrashIcon } from '../../../constants/Icon';
 
-import CreateOrUpdateRoleModal from './CreateOrUpdateRoleModal';
+import CreateOrUpdateVisiteModal from './CreateOrUpdateVisiteModal';
 
 import { TOKEN_LOCAL_STORAGE_KEY } from '../../../constants/LOCAL_STORAGE';
 import { DeleteItemModal } from '../../../constants/DeleteItemModal';
 import { GridIndicator } from '../../../constants/GridIndicator';
 
-import './DisplayRoles.css'
+import './DisplayVisites.css'
 
-interface DisplayRolesProps {
-  roles: RoleResponse[],
+interface DisplayVisitesProps {
+  visites: VisiteResponse[],
   isLoading: boolean,
 
   setShowSuccessNotif: (value: boolean) => void,
@@ -34,19 +34,19 @@ interface DisplayRolesProps {
 import { DangerNotification } from '../../../services/Notification.service';
 import ReactPaginate from 'react-paginate';
 
-const DisplayRoles: React.FC<DisplayRolesProps> = (props) => {
+const DisplayVisites: React.FC<DisplayVisitesProps> = (props) => {
   const state = useSelector((state: ReduxProps) => state);
-  const [listeRoles, setListeRoles] = useState<RoleResponse[]>(props.roles);
-  const [roleS, setRoleS] = useState<RoleResponse | null>(props.roles[0]);
-  const [selectedRole, setSelectedRole] = useState<RoleResponse>({});
+  const [listeVisites, setListeVisites] = useState<VisiteResponse[]>(props.visites);
+  const [visiteS, setVisiteS] = useState<VisiteResponse | null>(props.visites[0]);
+  const [selectedVisite, setSelectedVisite] = useState<VisiteResponse>({});
   // Pagination
   const [currentPage, setCurrentPage] = useState(0);
-  const rolesPerPage = 10;
+  const visitesPerPage = 10;
 
-  const offset = currentPage * rolesPerPage;
-  const currentRoles = listeRoles.slice(offset, offset + rolesPerPage);
+  const offset = currentPage * visitesPerPage;
+  const currentVisites = listeVisites.slice(offset, offset + visitesPerPage);
 
-  const pageCount = Math.ceil(listeRoles.length / rolesPerPage);
+  const pageCount = Math.ceil(listeVisites.length / visitesPerPage);
 
   const handlePageClick = (data: { selected: any; }) => {
     const selected = data.selected;
@@ -67,15 +67,15 @@ const DisplayRoles: React.FC<DisplayRolesProps> = (props) => {
 
   const onReady = useCallback(() => {
     const token: string = localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY)!;
-    const rolesApi = new RoleControllerApi({ ...state.environment, accessToken: token });
+    const visitesApi = new VisiteControllerApi({ ...state.environment, accessToken: token });
 
     setShowIndicator(true)
 
-    rolesApi.index3()
+    visitesApi.index1()
       .then((response) => {
         if (response && response.data) {
           if (response.status === 200) {
-            setListeRoles(response.data);
+            setListeVisites(response.data);
           }
         }
       })
@@ -88,7 +88,7 @@ const DisplayRoles: React.FC<DisplayRolesProps> = (props) => {
           if (error.response && error.response.status === 403) {
             setIsErrorDescription('Probleme de token. Votre token n\'est plus valide et vous allez etre deconnecter');
           } else {
-            setIsErrorDescription('Probleme lors de la recuperation des roles')
+            setIsErrorDescription('Probleme lors de la recuperation des visites')
         } }
         
         // Handle Warning Notif 
@@ -109,28 +109,28 @@ const DisplayRoles: React.FC<DisplayRolesProps> = (props) => {
     setShowDeleteModal(false);
   }, []);
 
-  //Create Role
+  //Create Visite
   const handleNewItem = () => {
-    setRoleS(null);
+    setVisiteS(null);
     setShowCreateOrUpdateModal(true);
     setModalMode(MODAL_MODE.create)
-    setModalTitle("Créer un nouveau role")
+    setModalTitle("Créer une nouvelle visite")
   }
 
   const handleCloseCreateOrUpdateModal = () => {
     setShowCreateOrUpdateModal(false)
   }
-  // Update Role
-  const handleEdit = (roleSelected: RoleResponse) => {
-    setRoleS(roleSelected);
+  // Update Visite
+  const handleEdit = (visiteSelected: VisiteResponse) => {
+    setVisiteS(visiteSelected);
     setModalMode(MODAL_MODE.update)
-    setModalTitle("Modifier le role")
+    setModalTitle("Modifier la visite")
     setShowCreateOrUpdateModal(true);
   };
 
-  // Delete Role
-  const handleDelete = (role: RoleResponse) => {
-    setSelectedRole(role);
+  // Delete Visite
+  const handleDelete = (visite: VisiteResponse) => {
+    setSelectedVisite(visite);
     setShowDeleteModal(true)
   };
 
@@ -146,18 +146,18 @@ const DisplayRoles: React.FC<DisplayRolesProps> = (props) => {
     setShowDeleteModal(false)
 
     const token: string = localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY)!;
-    const rolesApi = new RoleControllerApi({ ...state.environment, accessToken: token });
+    const visitesApi = new VisiteControllerApi({ ...state.environment, accessToken: token });
 
     setShowIndicator(true)
 
-    rolesApi.delete3(selectedRole.id!)
+    visitesApi.delete1(selectedVisite.id!)
       .then((response) => {
         if (response) {
           if (response.status === 204) {
             console.log('response :', response)
             setShowDeleteModal(false)
             props.setSuccessNotifMessage("Succes")
-            props.setSuccessNotifDescription('Ce role a ete supprime avec success')
+            props.setSuccessNotifDescription('Ce visite a ete supprime avec success')
             props.setShowSuccessNotif(true)
           }
         }
@@ -170,7 +170,7 @@ const DisplayRoles: React.FC<DisplayRolesProps> = (props) => {
           if (error.response && error.response.status === 403) {
             setIsErrorDescription('Probleme de token. Votre token n\'est plus valide et vous allez etre deconnecter');
           } else {
-            setIsErrorDescription('Probleme lors de la suppression du role')
+            setIsErrorDescription('Probleme lors de la suppression du visite')
         } }
       })
       .finally(() => {
@@ -207,12 +207,12 @@ const DisplayRoles: React.FC<DisplayRolesProps> = (props) => {
         </Link>
       </div>
 
-      {showCreateOrUpdateModal && <CreateOrUpdateRoleModal
+      {showCreateOrUpdateModal && <CreateOrUpdateVisiteModal
         mode={modalMode}
         title={modalTitle}
         onClose={handleCloseCreateOrUpdateModal}
         refresh={onReady}
-        item={modalMode !== MODAL_MODE.create ? roleS : null}
+        item={modalMode !== MODAL_MODE.create ? visiteS : null}
         setShowSuccessNotif={props.setShowSuccessNotif}
         setSuccessNotifMessage={props.setSuccessNotifMessage}
         setSuccessNotifDescription={props.setSuccessNotifDescription}
@@ -222,7 +222,7 @@ const DisplayRoles: React.FC<DisplayRolesProps> = (props) => {
       />}
       {showDeleteModal && <DeleteItemModal
         isVisible={true}
-        itemName={'Role d\'id ' + selectedRole.id}
+        itemName={'Visite d\'id ' + selectedVisite.id}
         onClose={handleCloseDeleteModal}
         refresh={onReady}
         onConfirm={handleConfirmDeletingModal}
@@ -233,11 +233,23 @@ const DisplayRoles: React.FC<DisplayRolesProps> = (props) => {
           <table className="w-full table-auto">
             <thead>
               <tr className="bg-gray-2 text-left dark:bg-meta-4 border-b">
-                <th className="min-w-[200px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
-                  Nom
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  Visiteur
                 </th>
-                <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
-                  Description
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  Employe
+                </th>
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  Motif
+                </th>
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  Date de Visite
+                </th>
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  Heure de Fin
+                </th>
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  Heure de Debut
                 </th>
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Actions
@@ -246,18 +258,30 @@ const DisplayRoles: React.FC<DisplayRolesProps> = (props) => {
             </thead>
             <tbody>
               {showIndicator && <GridIndicator />}
-              {listeRoles.length === 0 ? (
-                <tr className='border-b'>
-                  <td colSpan={3} className='text-center p-2'>Aucun role pour le moment</td>
+              {listeVisites.length === 0 ? (
+                <tr className='border-b w-full'>
+                  <td colSpan={8} className='text-center py-2'>Aucune visite pour le moment</td>
                 </tr>
               ) : (
-                currentRoles!.map((item) => (
+                currentVisites!.map((item) => (
                   <tr key={item.id} className='border-b'>
-                    <td className="my-2 mx-4 pl-9 xl:pl-10">
-                      <p className="text-black dark:text-white">{item.nom}</p>
+                    <td className="py-2 px-2">
+                      <p className="text-black dark:text-white">{item.visiteur?.nom + " " + item.visiteur?.prenom}</p>
                     </td>
-                    <td className="py-2 px-4">
-                      <p className="text-black dark:text-white">{item.description}</p>
+                    <td className="py-2 px-2">
+                      <p className="text-black dark:text-white">{item.user?.nom + " " + item.user?.prenom}</p>
+                    </td>
+                    <td className="my-2 px-2">
+                      <p className="text-black dark:text-white">{item.motif}</p>
+                    </td>
+                    <td className="py-2 px-2">
+                      <p className="text-black dark:text-white">{new Date(item.dateVisite!).toLocaleDateString()!}</p>
+                    </td>
+                    <td className="my-2 px-2">
+                      <p className="text-black dark:text-white">{item.heureDebut!}</p>
+                    </td>
+                    <td className="py-2 px-2">
+                      <p className="text-black dark:text-white">{item.heureFin!}</p>
                     </td>
                     <td className="py-2 px-5">
                       <div className="flex items-center space-x-4">
@@ -305,4 +329,4 @@ function mapStateToProps(state: ReduxProps): ReduxProps {
     access_token: state.access_token,
   };
 }
-export default connect(mapStateToProps)(DisplayRoles)
+export default connect(mapStateToProps)(DisplayVisites)

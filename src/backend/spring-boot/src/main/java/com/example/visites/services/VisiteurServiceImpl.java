@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.example.visites.exceptions.ResourceNotFoundException;
+import com.example.visites.models.EmailDetails;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,10 +22,13 @@ public class VisiteurServiceImpl implements VisiteurService {
 	private final VisiteurRepository visiteurRepository;
 	private final ModelMapper modelMapper;
 
+	private final EmailService emailService;
+
 	@Autowired
-	public VisiteurServiceImpl(VisiteurRepository visiteurRepository, ModelMapper modelMapper) {
+	public VisiteurServiceImpl(VisiteurRepository visiteurRepository, ModelMapper modelMapper, EmailService emailService) {
 		this.visiteurRepository = visiteurRepository;
 		this.modelMapper = modelMapper;
+		this.emailService = emailService;
 	}
 
 	@Override
@@ -46,6 +50,7 @@ public class VisiteurServiceImpl implements VisiteurService {
 	public ResponseEntity<VisiteurResponse> create(VisiteurRequest visiteur) {
 		Visiteur newVisiteur = modelMapper.map(visiteur, Visiteur.class);
 		VisiteurResponse saved = modelMapper.map(visiteurRepository.save(newVisiteur), VisiteurResponse.class);
+		sendMailToVisitor(visiteur);
 		return new ResponseEntity<>(saved, HttpStatus.CREATED);
 	}
 
@@ -75,4 +80,10 @@ public class VisiteurServiceImpl implements VisiteurService {
 		return new ResponseEntity<>(resp, HttpStatus.OK);
 	}
 
+	public void sendMailToVisitor(VisiteurRequest visiteur) {
+		String message = "Bienvenu M./Mme " + visiteur.getPrenom() + " " + visiteur.getNom() + "\n" +
+						"Heureux de vous avoir dans notre entreprise en tant que visiteur \n";
+		EmailDetails email = new EmailDetails(visiteur.getEmail(), "Accueil", message);
+		emailService.sendSimpleMail(email);
+	}
 }

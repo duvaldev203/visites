@@ -3,8 +3,8 @@ package com.example.visites.models;
 import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Date;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -53,7 +53,7 @@ public class Visite implements Serializable {
     @Column(name = "date_visite")
 //    @NotBlank(message = "dateVisite : Ce champ ne doit pas etre vide")
     @NotNull(message = "dateVisite : Ce champ est obligatoire")
-    private LocalDate dateVisite;
+    private Date dateVisite;
 
     @Column(name = "type")
     @NotNull(message = "type : Ce champ est obligatoire")
@@ -82,7 +82,7 @@ public class Visite implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Visite(Long id, String motif, LocalTime heureDebut, LocalTime heureFin, LocalDate dateVisite,
+	public Visite(Long id, String motif, LocalTime heureDebut, LocalTime heureFin, Date dateVisite,
 			String type) {
 		super();
 		this.id = id;
