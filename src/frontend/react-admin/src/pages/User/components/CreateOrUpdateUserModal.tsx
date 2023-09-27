@@ -319,7 +319,7 @@ const CreateOrUpdateUserModal: React.FC<ModalProps> = (props) => {
                     <div className="relative">
                       <input
                         name="dateNais"
-                        value={validDate && formData.dateNais instanceof Date ? formData.dateNais.toISOString().substring(0, 10) : formData.dateNais}
+                        value={validDate ? formData.dateNais instanceof Date ? formData.dateNais.toISOString().substring(0, 10) : formData.dateNais : ''}
                         onChange={handleInputChange}
                         type="date"
                         className="custom-input-date custom-input-date-1 w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
@@ -393,7 +393,7 @@ const CreateOrUpdateUserModal: React.FC<ModalProps> = (props) => {
                   </div>
                 </div>
 
-                {/* row 2 bureau, role*/}
+                {/* row 4 bureau, role*/}
                 <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
                   <CustomSelectBureau
                     required={true}

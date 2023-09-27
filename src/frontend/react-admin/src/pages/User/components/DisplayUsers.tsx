@@ -274,7 +274,7 @@ const DisplayUsers: React.FC<DisplayUsersProps> = (props) => {
               {showIndicator && <GridIndicator />}
               {listeUsers.length === 0 ? (
                 <tr className='border-b'>
-                  <td colSpan={4} className='text-center p-2'>Aucun user pour le moment</td>
+                  <td colSpan={11} className='text-center p-2'>Aucun user pour le moment</td>
                 </tr>
               ) : (
                 currentUsers!.map((item) => (

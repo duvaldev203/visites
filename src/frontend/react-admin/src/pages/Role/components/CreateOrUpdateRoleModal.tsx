@@ -186,7 +186,7 @@ const CreateOrUpdateRoleModal: React.FC<ModalProps> = (props) => {
                   id="description"
                   value={description}
                   onChange={handleDescriptionChange}
-                  placeholder="Entler la description du role"
+                  placeholder="Entrer la description du role"
                   rows={2}
                   className={`form-input form-class w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary dark:disabled:bg-black dark:text-white ${props.mode === MODAL_MODE.view ? 'disabled-input' : ''}`}
                 />

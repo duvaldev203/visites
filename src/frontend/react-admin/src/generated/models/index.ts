@@ -2,7 +2,6 @@ export * from './avis-request';
 export * from './avis-response';
 export * from './bureau-request';
 export * from './bureau-response';
-export * from './local-time';
 export * from './password-request';
 export * from './profile-id-body';
 export * from './profile-response';
