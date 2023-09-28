@@ -128,7 +128,7 @@ export const AvisControllerApiAxiosParamCreator = function (configuration?: Conf
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        index5: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        index4: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/avis/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -310,8 +310,8 @@ export const AvisControllerApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async index5(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<Array<AvisResponse>>>> {
-            const localVarAxiosArgs = await AvisControllerApiAxiosParamCreator(configuration).index5(options);
+        async index4(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<Array<AvisResponse>>>> {
+            const localVarAxiosArgs = await AvisControllerApiAxiosParamCreator(configuration).index4(options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -376,8 +376,8 @@ export const AvisControllerApiFactory = function (configuration?: Configuration,
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async index5(options?: AxiosRequestConfig): Promise<AxiosResponse<Array<AvisResponse>>> {
-            return AvisControllerApiFp(configuration).index5(options).then((request) => request(axios, basePath));
+        async index4(options?: AxiosRequestConfig): Promise<AxiosResponse<Array<AvisResponse>>> {
+            return AvisControllerApiFp(configuration).index4(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -434,8 +434,8 @@ export class AvisControllerApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof AvisControllerApi
      */
-    public async index5(options?: AxiosRequestConfig) : Promise<AxiosResponse<Array<AvisResponse>>> {
-        return AvisControllerApiFp(this.configuration).index5(options).then((request) => request(this.axios, this.basePath));
+    public async index4(options?: AxiosRequestConfig) : Promise<AxiosResponse<Array<AvisResponse>>> {
+        return AvisControllerApiFp(this.configuration).index4(options).then((request) => request(this.axios, this.basePath));
     }
     /**
      * 

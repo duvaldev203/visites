@@ -2,20 +2,20 @@ import { connect, useDispatch, useSelector } from 'react-redux';
 import { VisiteControllerApi, VisiteResponse } from '../../../generated';
 import { ReduxProps } from '../../../redux/configureStore';
 import { useCallback, useEffect, useState } from 'react';
-import { MODAL_MODE } from '../../../constants/APP_CONSTANTS';
+import { MODAL_MODE, STATUS_RDV } from '../../../constants/APP_CONSTANTS';
 import { Link } from 'react-router-dom';
 import { EditIcon, NewIcon, NextIcon, PreviousIcon, TrashIcon } from '../../../constants/Icon';
 
-import CreateOrUpdateVisiteModal from './CreateOrUpdateVisiteModal';
+import CreateOrUpdateRDVModal from './CreateOrUpdateRendez-vousModal';
 
 import { TOKEN_LOCAL_STORAGE_KEY } from '../../../constants/LOCAL_STORAGE';
 import { DeleteItemModal } from '../../../constants/DeleteItemModal';
 import { GridIndicator } from '../../../constants/GridIndicator';
 
-import './DisplayVisites.css'
+import './DisplayRendez-vous.css'
 
-interface DisplayVisitesProps {
-  visites: VisiteResponse[],
+interface DisplayRDVProps {
+  rdvs: VisiteResponse[],
   isLoading: boolean,
 
   setShowSuccessNotif: (value: boolean) => void,
@@ -34,25 +34,24 @@ interface DisplayVisitesProps {
 import { DangerNotification } from '../../../services/Notification.service';
 import ReactPaginate from 'react-paginate';
 
-const DisplayVisites: React.FC<DisplayVisitesProps> = (props) => {
+const DisplayRDV: React.FC<DisplayRDVProps> = (props) => {
   const state = useSelector((state: ReduxProps) => state);
-  const [listeVisites, setListeVisites] = useState<VisiteResponse[]>(props.visites);
-  const [visiteS, setVisiteS] = useState<VisiteResponse | null>(props.visites[0]);
-  const [selectedVisite, setSelectedVisite] = useState<VisiteResponse>({});
+  const [listeRDVs, setListeRDVs] = useState<VisiteResponse[]>(props.rdvs);
+  const [rdvS, setRDVS] = useState<VisiteResponse | null>(props.rdvs[0]);
+  const [selectedRDV, setSelectedRDV] = useState<VisiteResponse>({});
   // Pagination
   const [currentPage, setCurrentPage] = useState(0);
-  const visitesPerPage = 10;
+  const rdvsPerPage = 10;
 
-  const offset = currentPage * visitesPerPage;
-  const currentVisites = listeVisites.slice(offset, offset + visitesPerPage);
+  const offset = currentPage * rdvsPerPage;
+  const currentRDVs = listeRDVs.slice(offset, offset + rdvsPerPage);
 
-  const pageCount = Math.ceil(listeVisites.length / visitesPerPage);
+  const pageCount = Math.ceil(listeRDVs.length / rdvsPerPage);
 
   const handlePageClick = (data: { selected: any; }) => {
     const selected = data.selected;
     setCurrentPage(selected);
   };
-  // End Pagination
 
   const [showCreateOrUpdateModal, setShowCreateOrUpdateModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -67,15 +66,15 @@ const DisplayVisites: React.FC<DisplayVisitesProps> = (props) => {
 
   const onReady = useCallback(() => {
     const token: string = localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY)!;
-    const visitesApi = new VisiteControllerApi({ ...state.environment, accessToken: token });
+    const rdvsApi = new VisiteControllerApi({ ...state.environment, accessToken: token });
 
     setShowIndicator(true)
 
-    visitesApi.indexVisite()
+    rdvsApi.indexRDV()
       .then((response) => {
         if (response && response.data) {
           if (response.status === 200) {
-            setListeVisites(response.data);
+            setListeRDVs(response.data);
           }
         }
       })
@@ -88,7 +87,7 @@ const DisplayVisites: React.FC<DisplayVisitesProps> = (props) => {
           if (error.response && error.response.status === 403) {
             setIsErrorDescription('Probleme de token. Votre token n\'est plus valide et vous allez etre deconnecter');
           } else {
-            setIsErrorDescription('Probleme lors de la recuperation des visites')
+            setIsErrorDescription('Probleme lors de la recuperation des rendez-vous')
         } }
         
         // Handle Warning Notif 
@@ -109,28 +108,28 @@ const DisplayVisites: React.FC<DisplayVisitesProps> = (props) => {
     setShowDeleteModal(false);
   }, []);
 
-  //Create Visite
+  //Create RDV
   const handleNewItem = () => {
-    setVisiteS(null);
+    setRDVS(null);
     setShowCreateOrUpdateModal(true);
     setModalMode(MODAL_MODE.create)
-    setModalTitle("Créer une nouvelle visite")
+    setModalTitle("Créer un nouveau rendez-vous")
   }
 
   const handleCloseCreateOrUpdateModal = () => {
     setShowCreateOrUpdateModal(false)
   }
-  // Update Visite
-  const handleEdit = (visiteSelected: VisiteResponse) => {
-    setVisiteS(visiteSelected);
+  // Update RDV
+  const handleEdit = (rdvSelected: VisiteResponse) => {
+    setRDVS(rdvSelected);
     setModalMode(MODAL_MODE.update)
-    setModalTitle("Modifier la visite")
+    setModalTitle("Modifier le rendez-vous")
     setShowCreateOrUpdateModal(true);
   };
 
-  // Delete Visite
-  const handleDelete = (visite: VisiteResponse) => {
-    setSelectedVisite(visite);
+  // Delete RDV
+  const handleDelete = (rdv: VisiteResponse) => {
+    setSelectedRDV(rdv);
     setShowDeleteModal(true)
   };
 
@@ -146,18 +145,18 @@ const DisplayVisites: React.FC<DisplayVisitesProps> = (props) => {
     setShowDeleteModal(false)
 
     const token: string = localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY)!;
-    const visitesApi = new VisiteControllerApi({ ...state.environment, accessToken: token });
+    const rdvsApi = new VisiteControllerApi({ ...state.environment, accessToken: token });
 
     setShowIndicator(true)
 
-    visitesApi.delete1(selectedVisite.id!)
+    rdvsApi.delete1(selectedRDV.id!)
       .then((response) => {
         if (response) {
           if (response.status === 204) {
             console.log('response :', response)
             setShowDeleteModal(false)
             props.setSuccessNotifMessage("Succes")
-            props.setSuccessNotifDescription('Cette visite a ete supprime avec success')
+            props.setSuccessNotifDescription('Ce rendez-vous a ete supprime avec success')
             props.setShowSuccessNotif(true)
           }
         }
@@ -170,7 +169,7 @@ const DisplayVisites: React.FC<DisplayVisitesProps> = (props) => {
           if (error.response && error.response.status === 403) {
             setIsErrorDescription('Probleme de token. Votre token n\'est plus valide et vous allez etre deconnecter');
           } else {
-            setIsErrorDescription('Probleme lors de la suppression de la visite')
+            setIsErrorDescription('Probleme lors de la suppression du rendez-vous')
         } }
       })
       .finally(() => {
@@ -188,6 +187,15 @@ const DisplayVisites: React.FC<DisplayVisitesProps> = (props) => {
   }
 
   const shared_class: string = 'rounded-md inline-flex items-center justify-center gap-2.5 py-2 sm:py-2  px-1 text-center font-medium text-white hover:bg-opacity-90 sm:px-2 md:px-3 lg:px-3 xl:px-3'
+  const setStyle = (item: string): string => {
+    if (item == STATUS_RDV.draft) {
+      return "flex rounded-full bg-success bg-opacity-10 py-1 px-3 text-sm font-medium text-success w-24";
+    }
+    if (item == STATUS_RDV.pendind) {
+      return "flex rounded-full bg-warning bg-opacity-10 py-1 px-3 text-sm font-medium text-warning w-20"
+    }
+    return "flex rounded-full bg-danger bg-opacity-10 py-1 px-3 text-sm font-medium text-danger w-20"
+  }
 
   return (
     <div>
@@ -207,12 +215,12 @@ const DisplayVisites: React.FC<DisplayVisitesProps> = (props) => {
         </Link>
       </div>
 
-      {showCreateOrUpdateModal && <CreateOrUpdateVisiteModal
+      {showCreateOrUpdateModal && <CreateOrUpdateRDVModal
         mode={modalMode}
         title={modalTitle}
         onClose={handleCloseCreateOrUpdateModal}
         refresh={onReady}
-        item={modalMode !== MODAL_MODE.create ? visiteS : null}
+        item={modalMode !== MODAL_MODE.create ? rdvS : null}
         setShowSuccessNotif={props.setShowSuccessNotif}
         setSuccessNotifMessage={props.setSuccessNotifMessage}
         setSuccessNotifDescription={props.setSuccessNotifDescription}
@@ -222,7 +230,7 @@ const DisplayVisites: React.FC<DisplayVisitesProps> = (props) => {
       />}
       {showDeleteModal && <DeleteItemModal
         isVisible={true}
-        itemName={'Visite d\'id ' + selectedVisite.id}
+        itemName={'Rendez-vous d\'id ' + selectedRDV.id}
         onClose={handleCloseDeleteModal}
         refresh={onReady}
         onConfirm={handleConfirmDeletingModal}
@@ -233,6 +241,9 @@ const DisplayVisites: React.FC<DisplayVisitesProps> = (props) => {
           <table className="w-full table-auto">
             <thead>
               <tr className="bg-gray-2 text-left dark:bg-meta-4 border-b">
+                <th className="py-4 px-5 font-medium text-black dark:text-white">
+                  status
+                </th>
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Visiteur
                 </th>
@@ -246,10 +257,10 @@ const DisplayVisites: React.FC<DisplayVisitesProps> = (props) => {
                   Date de Visite
                 </th>
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
-                  Heure de Fin
+                  Heure de debut
                 </th>
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
-                  Heure de Debut
+                  Heure de Fin
                 </th>
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Actions
@@ -258,13 +269,17 @@ const DisplayVisites: React.FC<DisplayVisitesProps> = (props) => {
             </thead>
             <tbody>
               {showIndicator && <GridIndicator />}
-              {listeVisites.length === 0 ? (
+              {listeRDVs.length === 0 ? (
                 <tr className='border-b w-full'>
-                  <td colSpan={8} className='text-center py-2'>Aucune visite pour le moment</td>
+                  <td colSpan={8} className='text-center py-2'>Aucun Rendez-vous pour le moment</td>
                 </tr>
               ) : (
-                currentVisites!.map((item) => (
+                currentRDVs!.map((item) => (
                   <tr key={item.id} className='border-b'>
+                    <td className="py-2">
+                      {/* <p className="text-black dark:text-white">{setStatus(item)}</p> */}
+                      <p className={`${setStyle(item.status!)} justify-center`}>{item.status}</p>
+                    </td>
                     <td className="py-2 px-2">
                       <p className="text-black dark:text-white">{item.visiteur?.nom + " " + item.visiteur?.prenom}</p>
                     </td>
@@ -329,4 +344,4 @@ function mapStateToProps(state: ReduxProps): ReduxProps {
     access_token: state.access_token,
   };
 }
-export default connect(mapStateToProps)(DisplayVisites)
+export default connect(mapStateToProps)(DisplayRDV)

@@ -26,7 +26,7 @@ interface ModalProps {
   setWarningNotifDescription: (value: string | null) => void,
 }
 
-const CreateOrUpdateVisiteModal: React.FC<ModalProps> = (props) => {
+const CreateOrUpdateRDVModal: React.FC<ModalProps> = (props) => {
 
   const state = useSelector((state: ReduxProps) => state);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -41,9 +41,8 @@ const CreateOrUpdateVisiteModal: React.FC<ModalProps> = (props) => {
     dateVisite: new Date(props.item?.dateVisite!),
     heureDebut: props.item?.heureDebut!,
     heureFin: props.item?.heureFin!,
-    type: TYPE_VISITE.ordinaire,
+    type: TYPE_VISITE.rendez_vous,
   });
-  // const isDate: boolean = formData.dateVisite 
   const validDate: boolean = formData.dateVisite!.toString() != "Invalid Date"
   if (!validDate) {
     setFormData({
@@ -115,11 +114,6 @@ const CreateOrUpdateVisiteModal: React.FC<ModalProps> = (props) => {
   };
 
   const handleVisiteurSelect = (item: VisiteurResponse) => {
-    if (formData.dateVisite! < new Date()){
-      setFormData({
-        ...formData,
-      })
-    }
     setFormData((prevValues) => ({
       ...prevValues,
       visiteur: item,
@@ -143,7 +137,7 @@ const CreateOrUpdateVisiteModal: React.FC<ModalProps> = (props) => {
     _event.preventDefault() // stopper la soumissoin par defaut du formulaire...
 
     const token: string = localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY)!;
-    const visitesApi = new VisiteControllerApi({ ...state.environment, accessToken: token });
+    const rdvsApi = new VisiteControllerApi({ ...state.environment, accessToken: token });
 
     setIsLoading(true)
 
@@ -152,7 +146,7 @@ const CreateOrUpdateVisiteModal: React.FC<ModalProps> = (props) => {
     }
     console.log(apiParams)
 
-    visitesApi.create1(apiParams)
+    rdvsApi.create1(apiParams)
       .then((response) => {
         if (response && response.data) {
           if (response.status === 201) {
@@ -161,7 +155,7 @@ const CreateOrUpdateVisiteModal: React.FC<ModalProps> = (props) => {
 
             // notification
             props.setSuccessNotifMessage('Succes')
-            props.setSuccessNotifDescription('Une nouvelle visite viens d\'etre rajoute au catalogue avec succes ! ')
+            props.setSuccessNotifDescription('Un nouveau Rende-vous viens d\'etre rajoute au catalogue avec succes ! ')
             props.setShowSuccessNotif(true)
           }
         }
@@ -183,7 +177,7 @@ const CreateOrUpdateVisiteModal: React.FC<ModalProps> = (props) => {
     _event.preventDefault() // stopper la soumissoin par defaut du formulaire...
 
     const token: string = localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY)!;
-    const visitesApi = new VisiteControllerApi({ ...state.environment, accessToken: token });
+    const rdvsApi = new VisiteControllerApi({ ...state.environment, accessToken: token });
 
     setIsLoading(true)
 
@@ -191,7 +185,7 @@ const CreateOrUpdateVisiteModal: React.FC<ModalProps> = (props) => {
       ...formData
     }
 
-    visitesApi.update1(apiParams, props.item?.id!)
+    rdvsApi.update1(apiParams, props.item?.id!)
       .then((response) => {
         if (response && response.data) {
           console.log(response.data);
@@ -202,7 +196,7 @@ const CreateOrUpdateVisiteModal: React.FC<ModalProps> = (props) => {
 
             // notification
             props.setSuccessNotifMessage('Succes')
-            props.setSuccessNotifDescription('Cette visite a ete correctement mise a jour, veuillez consulter le catalogue !')
+            props.setSuccessNotifDescription('Ce Rende-vous a ete correctement mise a jour, veuillez consulter le catalogue !')
             props.setShowSuccessNotif(true)
           }
         }
@@ -268,7 +262,7 @@ const CreateOrUpdateVisiteModal: React.FC<ModalProps> = (props) => {
                     name="motif"
                     value={formData.motif}
                     onChange={handleInputChange}
-                    placeholder="Entrer le motif de la visite"
+                    placeholder="Entrer le motif du Rendez-vous"
                     rows={2}
                     className={`form-input form-class w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary dark:disabled:bg-black dark:text-white ${props.mode === MODAL_MODE.view ? 'disabled-input' : ''}`}
                   />
@@ -278,16 +272,15 @@ const CreateOrUpdateVisiteModal: React.FC<ModalProps> = (props) => {
                 <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
                   <div className="w-full xl:w-1/2">
                     <label className="mb-2.5 block text-black dark:text-white">
-                      Date de Visite <span className="text-meta-1">*</span>
+                      Date de Rende-vous <span className="text-meta-1">*</span>
                     </label>
                     <input
                       name="dateVisite"
                       value={validDate ? formData.dateVisite instanceof Date ? formData.dateVisite.toISOString().substring(0, 10) : formData.dateVisite : defaultDate}
                       onChange={handleInputChange}
                       required
-                      disabled={ props.mode === MODAL_MODE.create }
                       type="date"
-                      className={` ${props.mode === MODAL_MODE.create && 'disable-input'} w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary`}
+                      className={`w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary`}
                     />  
                   </div>
 
@@ -297,13 +290,11 @@ const CreateOrUpdateVisiteModal: React.FC<ModalProps> = (props) => {
                     </label>
                     <input
                       name="heureDebut"
-                      value={props.mode == MODAL_MODE.create ? defaultHours : formData.heureDebut!}
+                      value={formData.heureDebut!}
                       onChange={handleInputChange}
                       required
                       type="time"
-                      disabled={props.mode === MODAL_MODE.create}
-                      placeholder="Entrer l'heure de debut de la visite"
-                      className={`${props.mode === MODAL_MODE.create ? 'disabled-input' : ''} w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary`}
+                      className={`w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary`}
                     />
                   </div>
                   <div className="w-full xl:w-1/2">
@@ -316,7 +307,6 @@ const CreateOrUpdateVisiteModal: React.FC<ModalProps> = (props) => {
                       onChange={handleInputChange}
                       required
                       type="time"
-                      placeholder="Entrer l'heure de fin de la visite"
                       className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                     />
                   </div>
@@ -378,4 +368,4 @@ const CreateOrUpdateVisiteModal: React.FC<ModalProps> = (props) => {
   )
 }
 
-export default CreateOrUpdateVisiteModal;
+export default CreateOrUpdateRDVModal;

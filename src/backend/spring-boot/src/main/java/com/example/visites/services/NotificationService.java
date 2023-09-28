@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class NotificationService {
 	public void notifyUsers() {
 		List<Visite> visites = visiteRepository.findByDateVisiteAndType(LocalDate.now(), "rendez-vous");
 		for (Visite visite : visites) {
-			long hours = ChronoUnit.HOURS.between(LocalDateTime.now(), LocalDateTime.of(visite.getDateVisite(), visite.getHeureDebut()));
+			long hours = ChronoUnit.HOURS.between(LocalDateTime.now(), LocalDateTime.of(visite.getDateVisite().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), visite.getHeureDebut()));
 			if (hours <= 24) {
 				// Envoyer un e-mail au visiteur
 				notifyVisitor(visite, hours);
@@ -49,7 +50,7 @@ public class NotificationService {
 		content += "Ceci est un rappel pour votre rendez-vous prévu le " + visite.getDateVisite().toString();
 		content += " à " + visite.getHeureDebut().toString() + ".<br><br>";
 		content += "Il vous reste " + hours + " heures avant votre rendez-vous.<br><br>";
-		content += "Cordialement,<br>L'équipe de Visites.";
+		content += "Cordialement,\nL'équipe de Visites.";
 		EmailDetails mail = new EmailDetails(userDetails.getUsername(), subject, content);
 		emailService.sendSimpleMail(mail);
 	}
