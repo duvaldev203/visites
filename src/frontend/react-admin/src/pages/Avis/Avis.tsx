@@ -3,11 +3,11 @@ import { useSelector } from 'react-redux';
 
 import DefaultLayout from '../../layout/DefaultLayout';
 import Breadcrumb from '../../components/Breadcrumb';
-import DisplayRoles from './components/DisplayRoles';
-import { RoleResponse } from '../../generated/models';
+import DisplayAvis from './components/DisplayAvis';
+import { AvisResponse } from '../../generated/models';
 import { ReduxProps } from '../../redux/configureStore';
 import { TOKEN_LOCAL_STORAGE_KEY } from '../../constants/LOCAL_STORAGE';
-import { RoleControllerApi } from '../../generated';
+import { AvisControllerApi } from '../../generated';
 
 import { 
   SuccessNotification,
@@ -16,10 +16,10 @@ import {
  } from '../../services/Notification.service';
 
 
-const Role = () => {
+const Avis = () => {
 
   const state = useSelector((state: ReduxProps) => state);
-  const [roles, setRoles] = useState<RoleResponse[]>([]);
+  const [aviss, setAviss] = useState<AvisResponse[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [showSuccessNotif, setShowSuccessNotif] = useState<boolean>(false);
@@ -37,14 +37,14 @@ const Role = () => {
 
   useEffect(() => {  
     const apiParams: string = localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY)!;
-    const rolesApi = new RoleControllerApi({...state.environment, accessToken: apiParams});
+    const avissApi = new AvisControllerApi({...state.environment, accessToken: apiParams});
 
     setIsLoading(true)
     
-    rolesApi.index2()
+    avissApi.index4()
     .then((response) => {  
       if(response && response.data){        
-        if(response.status === 200){ setRoles(response.data) }
+        if(response.status === 200){ setAviss(response.data) }
       }
     })
     .catch((error) => {
@@ -62,9 +62,9 @@ const Role = () => {
         {showDangerNotif && <DangerNotification message={dangerNotifMessage} description={dangerNotifDescription}  />}
         {showWarning && <WarningNotification message={warningNotifMessage} description={warningNotifDescription}  />}
 
-        <Breadcrumb pageName="Roles" />
-        <DisplayRoles  
-          roles={roles} 
+        <Breadcrumb pageName="Avis" />
+        <DisplayAvis
+          aviss={aviss} 
           isLoading={isLoading}
           setShowSuccessNotif={setShowSuccessNotif}
           setSuccessNotifMessage={setSuccessNotifMessage}
@@ -82,4 +82,4 @@ const Role = () => {
   );
 };
 
-export default Role;
+export default Avis;

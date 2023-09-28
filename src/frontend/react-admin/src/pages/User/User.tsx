@@ -41,7 +41,7 @@ const User = () => {
 
     setIsLoading(true)
     
-    usersApi.index2()
+    usersApi.index1()
     .then((response) => {  
       if(response && response.data){        
         if(response.status === 200){ setUsers(response.data) }

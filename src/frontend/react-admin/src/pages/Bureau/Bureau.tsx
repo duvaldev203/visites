@@ -41,7 +41,7 @@ const Bureau = () => {
 
     setIsLoading(true)
 
-    bureauxApi.index4()
+    bureauxApi.index3()
       .then((response) => {
         if (response && response.data) {
           if (response.status === 200) { setBureaux(response.data) }
