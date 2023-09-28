@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import com.example.visites.exceptions.APIException;
 import com.example.visites.exceptions.ResourceNotFoundException;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -16,14 +17,18 @@ import com.example.visites.dto.AvisResponse;
 import com.example.visites.models.Avis;
 import com.example.visites.repositories.AvisRepository;
 
-import lombok.AllArgsConstructor;
-
 @Service
-@AllArgsConstructor
 public class AvisServiceImpl implements AvisService {
-	
+
 	private final AvisRepository avisRepository;
+
 	private final ModelMapper modelMapper;
+
+	@Autowired
+	public AvisServiceImpl(AvisRepository avisRepository, ModelMapper modelMapper) {
+		this.avisRepository = avisRepository;
+		this.modelMapper = modelMapper;
+	}
 
 	@Override
 	public ResponseEntity<List<AvisResponse>> index() {
@@ -42,21 +47,22 @@ public class AvisServiceImpl implements AvisService {
 
 	@Override
 	public ResponseEntity<AvisResponse> create(AvisRequest avis) {
-		Avis avisEntite = modelMapper.map(avis, Avis.class);
-		Optional<Avis> opt = avisRepository.findByVisiteId(avisEntite.getVisite().getId());
+		System.out.println(avis);
+		Avis newAvis = modelMapper.map(avis, Avis.class);
+		Optional<Avis> opt = avisRepository.findByVisiteId(newAvis.getVisite().getId());
 		if (opt.isPresent())
 			throw new APIException("La visite que vous avez selectione est associe a un avis !!!");
-		AvisResponse saved = modelMapper.map(avisRepository.save(avisEntite), AvisResponse.class);
+		AvisResponse saved = modelMapper.map(avisRepository.save(newAvis), AvisResponse.class);
 		return new ResponseEntity<>(saved, HttpStatus.CREATED);
 	}
 
 	@Override
 	public ResponseEntity<AvisResponse> update(AvisRequest avis, Long id) {
-		avisRepository.findById(id)
+		Avis optAvis = avisRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("L'Avis que vous voulez modifier ", "d'Id", id));
 		Avis oldAvis = modelMapper.map(avis, Avis.class);
 		Optional<Avis> opt = avisRepository.findByVisiteId(avis.getVisite().getId());
-		if (opt.isPresent())
+		if (opt.isPresent() && opt.get().equals(optAvis.getVisite()))
 			throw new APIException("La visite que vous avez selectione est associe a un avis !!!");
 		oldAvis.setId(id);
 		AvisResponse updated = modelMapper.map(avisRepository.save(oldAvis), AvisResponse.class);

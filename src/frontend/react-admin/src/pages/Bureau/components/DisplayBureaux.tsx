@@ -76,7 +76,7 @@ const DisplayBureaux: React.FC<DisplayBureauxProps> = (props) => {
 
     setShowIndicator(true)
 
-    bureauxApi.index4()
+    bureauxApi.index3()
       .then((response) => {
         if (response && response.data) {
           if (response.status === 200) {

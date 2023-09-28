@@ -1,21 +1,21 @@
 import { connect, useDispatch, useSelector } from 'react-redux';
-import { RoleControllerApi, RoleResponse } from '../../../generated';
+import { AvisControllerApi, AvisResponse } from '../../../generated';
 import { ReduxProps } from '../../../redux/configureStore';
 import { useCallback, useEffect, useState } from 'react';
 import { MODAL_MODE } from '../../../constants/APP_CONSTANTS';
 import { Link } from 'react-router-dom';
 import { EditIcon, NewIcon, NextIcon, PreviousIcon, TrashIcon } from '../../../constants/Icon';
 
-import CreateOrUpdateRoleModal from './CreateOrUpdateRoleModal';
+import CreateOrUpdateAvisModal from './CreateOrUpdateAvisModal';
 
 import { TOKEN_LOCAL_STORAGE_KEY } from '../../../constants/LOCAL_STORAGE';
 import { DeleteItemModal } from '../../../constants/DeleteItemModal';
 import { GridIndicator } from '../../../constants/GridIndicator';
 
-import './DisplayRoles.css'
+import './DisplayAvis.css'
 
-interface DisplayRolesProps {
-  roles: RoleResponse[],
+interface DisplayAvisProps {
+  aviss: AvisResponse[],
   isLoading: boolean,
 
   setShowSuccessNotif: (value: boolean) => void,
@@ -34,25 +34,24 @@ interface DisplayRolesProps {
 import { DangerNotification } from '../../../services/Notification.service';
 import ReactPaginate from 'react-paginate';
 
-const DisplayRoles: React.FC<DisplayRolesProps> = (props) => {
+const DisplayAvis: React.FC<DisplayAvisProps> = (props) => {
   const state = useSelector((state: ReduxProps) => state);
-  const [listeRoles, setListeRoles] = useState<RoleResponse[]>(props.roles);
-  const [roleS, setRoleS] = useState<RoleResponse | null>(props.roles[0]);
-  const [selectedRole, setSelectedRole] = useState<RoleResponse>({});
+  const [listeAviss, setListeAviss] = useState<AvisResponse[]>(props.aviss);
+  const [avisS, setAvisS] = useState<AvisResponse | null>(props.aviss[0]);
+  const [selectedAvis, setSelectedAvis] = useState<AvisResponse>({});
   // Pagination
   const [currentPage, setCurrentPage] = useState(0);
-  const rolesPerPage = 10;
+  const avissPerPage = 10;
 
-  const offset = currentPage * rolesPerPage;
-  const currentRoles = listeRoles.slice(offset, offset + rolesPerPage);
+  const offset = currentPage * avissPerPage;
+  const currentAviss = listeAviss.slice(offset, offset + avissPerPage);
 
-  const pageCount = Math.ceil(listeRoles.length / rolesPerPage);
+  const pageCount = Math.ceil(listeAviss.length / avissPerPage);
 
   const handlePageClick = (data: { selected: any; }) => {
     const selected = data.selected;
     setCurrentPage(selected);
   };
-  // End Pagination
 
   const [showCreateOrUpdateModal, setShowCreateOrUpdateModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -67,15 +66,15 @@ const DisplayRoles: React.FC<DisplayRolesProps> = (props) => {
 
   const onReady = useCallback(() => {
     const token: string = localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY)!;
-    const rolesApi = new RoleControllerApi({ ...state.environment, accessToken: token });
+    const avissApi = new AvisControllerApi({ ...state.environment, accessToken: token });
 
     setShowIndicator(true)
 
-    rolesApi.index2()
+    avissApi.index4()
       .then((response) => {
         if (response && response.data) {
           if (response.status === 200) {
-            setListeRoles(response.data);
+            setListeAviss(response.data);
           }
         }
       })
@@ -88,7 +87,7 @@ const DisplayRoles: React.FC<DisplayRolesProps> = (props) => {
           if (error.response && error.response.status === 403) {
             setIsErrorDescription('Probleme de token. Votre token n\'est plus valide et vous allez etre deconnecter');
           } else {
-            setIsErrorDescription('Probleme lors de la recuperation des roles')
+            setIsErrorDescription('Probleme lors de la recuperation des avis')
         } }
         
         // Handle Warning Notif 
@@ -109,28 +108,28 @@ const DisplayRoles: React.FC<DisplayRolesProps> = (props) => {
     setShowDeleteModal(false);
   }, []);
 
-  //Create Role
+  //Create Avis
   const handleNewItem = () => {
-    setRoleS(null);
+    setAvisS(null);
     setShowCreateOrUpdateModal(true);
     setModalMode(MODAL_MODE.create)
-    setModalTitle("Créer un nouveau role")
+    setModalTitle("Créer un nouvel avis")
   }
 
   const handleCloseCreateOrUpdateModal = () => {
     setShowCreateOrUpdateModal(false)
   }
-  // Update Role
-  const handleEdit = (roleSelected: RoleResponse) => {
-    setRoleS(roleSelected);
+  // Update Avis
+  const handleEdit = (avisSelected: AvisResponse) => {
+    setAvisS(avisSelected);
     setModalMode(MODAL_MODE.update)
-    setModalTitle("Modifier le role")
+    setModalTitle("Modifier un avis")
     setShowCreateOrUpdateModal(true);
   };
 
-  // Delete Role
-  const handleDelete = (role: RoleResponse) => {
-    setSelectedRole(role);
+  // Delete Avis
+  const handleDelete = (avis: AvisResponse) => {
+    setSelectedAvis(avis);
     setShowDeleteModal(true)
   };
 
@@ -146,18 +145,18 @@ const DisplayRoles: React.FC<DisplayRolesProps> = (props) => {
     setShowDeleteModal(false)
 
     const token: string = localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY)!;
-    const rolesApi = new RoleControllerApi({ ...state.environment, accessToken: token });
+    const avissApi = new AvisControllerApi({ ...state.environment, accessToken: token });
 
     setShowIndicator(true)
 
-    rolesApi.delete3(selectedRole.id!)
+    avissApi.delete5(selectedAvis.id!)
       .then((response) => {
         if (response) {
           if (response.status === 204) {
             console.log('response :', response)
             setShowDeleteModal(false)
             props.setSuccessNotifMessage("Succes")
-            props.setSuccessNotifDescription('Ce role a ete supprime avec success')
+            props.setSuccessNotifDescription('Cet avis a ete supprime avec success')
             props.setShowSuccessNotif(true)
           }
         }
@@ -170,7 +169,7 @@ const DisplayRoles: React.FC<DisplayRolesProps> = (props) => {
           if (error.response && error.response.status === 403) {
             setIsErrorDescription('Probleme de token. Votre token n\'est plus valide et vous allez etre deconnecter');
           } else {
-            setIsErrorDescription('Probleme lors de la suppression du role')
+            setIsErrorDescription('Probleme lors de la suppression de l\'avis')
         } }
       })
       .finally(() => {
@@ -207,12 +206,12 @@ const DisplayRoles: React.FC<DisplayRolesProps> = (props) => {
         </Link>
       </div>
 
-      {showCreateOrUpdateModal && <CreateOrUpdateRoleModal
+      {showCreateOrUpdateModal && <CreateOrUpdateAvisModal
         mode={modalMode}
         title={modalTitle}
         onClose={handleCloseCreateOrUpdateModal}
         refresh={onReady}
-        item={modalMode !== MODAL_MODE.create ? roleS : null}
+        item={modalMode !== MODAL_MODE.create ? avisS : null}
         setShowSuccessNotif={props.setShowSuccessNotif}
         setSuccessNotifMessage={props.setSuccessNotifMessage}
         setSuccessNotifDescription={props.setSuccessNotifDescription}
@@ -222,7 +221,7 @@ const DisplayRoles: React.FC<DisplayRolesProps> = (props) => {
       />}
       {showDeleteModal && <DeleteItemModal
         isVisible={true}
-        itemName={'Role d\'id ' + selectedRole.id}
+        itemName={'Avis d\'id ' + selectedAvis.id}
         onClose={handleCloseDeleteModal}
         refresh={onReady}
         onConfirm={handleConfirmDeletingModal}
@@ -233,11 +232,17 @@ const DisplayRoles: React.FC<DisplayRolesProps> = (props) => {
           <table className="w-full table-auto">
             <thead>
               <tr className="bg-gray-2 text-left dark:bg-meta-4 border-b">
-                <th className="min-w-[200px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
-                  Nom
+                <th className="py-4 px-5 font-medium text-black dark:text-white">
+                  Libelle
                 </th>
-                <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
-                  Description
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  Visite
+                </th>
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  Employe
+                </th>
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  Visiteur
                 </th>
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Actions
@@ -246,18 +251,24 @@ const DisplayRoles: React.FC<DisplayRolesProps> = (props) => {
             </thead>
             <tbody>
               {showIndicator && <GridIndicator />}
-              {listeRoles.length === 0 ? (
-                <tr className='border-b'>
-                  <td colSpan={3} className='text-center p-2'>Aucun role pour le moment</td>
+              {listeAviss.length === 0 ? (
+                <tr className='border-b w-full'>
+                  <td colSpan={8} className='text-center py-2'>Aucun Avis pour le moment</td>
                 </tr>
               ) : (
-                currentRoles!.map((item) => (
+                currentAviss!.map((item) => (
                   <tr key={item.id} className='border-b'>
-                    <td className="my-2 mx-4 pl-9 xl:pl-10">
-                      <p className="text-black dark:text-white">{item.nom}</p>
+                    <td className="py-2 px-2">
+                      <p className="text-black dark:text-white">{item.libelle}</p>
                     </td>
-                    <td className="py-2 px-4">
-                      <p className="text-black dark:text-white">{item.description}</p>
+                    <td className="py-2 px-2">
+                      <p className="text-black dark:text-white">{item.visite?.motif}</p>
+                    </td>
+                    <td className="my-2 px-2">
+                      <p className="text-black dark:text-white">{item.visite?.user?.nom + " " + item.visite?.user?.prenom}</p>
+                    </td>
+                    <td className="py-2 px-2">
+                      <p className="text-black dark:text-white">{item.visite?.visiteur?.nom + " " + item.visite?.visiteur?.nom}</p>
                     </td>
                     <td className="py-2 px-5">
                       <div className="flex items-center space-x-4">
@@ -305,4 +316,4 @@ function mapStateToProps(state: ReduxProps): ReduxProps {
     access_token: state.access_token,
   };
 }
-export default connect(mapStateToProps)(DisplayRoles)
+export default connect(mapStateToProps)(DisplayAvis)
