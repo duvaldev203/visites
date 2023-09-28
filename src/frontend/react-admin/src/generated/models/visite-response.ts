@@ -57,6 +57,12 @@ export interface VisiteResponse {
     type?: string;
     /**
      * 
+     * @type {string}
+     * @memberof VisiteResponse
+     */
+    status?: string;
+    /**
+     * 
      * @type {UserResponse}
      * @memberof VisiteResponse
      */

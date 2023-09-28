@@ -7,9 +7,11 @@ import com.example.visites.dto.VisiteResponse;
 import org.springframework.http.ResponseEntity;
 
 public interface VisiteService {
-	
-	ResponseEntity<List<VisiteResponse>> index();
-	
+
+	ResponseEntity<List<VisiteResponse>> indexVisites();
+
+	ResponseEntity<List<VisiteResponse>> indexRDV();
+
 	ResponseEntity<VisiteResponse> show(Long id);
 	
 	ResponseEntity<VisiteResponse> create(VisiteRequest visite);

@@ -18,6 +18,7 @@ public class VisiteResponse {
     private String heureFin;
     private Date dateVisite;
     private String type;
+    private String status;
     private UserResponse user;
     private VisiteurResponse visiteur;
     private Timestamp createdAt;

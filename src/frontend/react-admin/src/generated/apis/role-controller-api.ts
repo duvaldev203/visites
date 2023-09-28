@@ -128,7 +128,7 @@ export const RoleControllerApiAxiosParamCreator = function (configuration?: Conf
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        index3: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        index2: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/roles/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -358,8 +358,8 @@ export const RoleControllerApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async index3(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<Array<RoleResponse>>>> {
-            const localVarAxiosArgs = await RoleControllerApiAxiosParamCreator(configuration).index3(options);
+        async index2(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<Array<RoleResponse>>>> {
+            const localVarAxiosArgs = await RoleControllerApiAxiosParamCreator(configuration).index2(options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -437,8 +437,8 @@ export const RoleControllerApiFactory = function (configuration?: Configuration,
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async index3(options?: AxiosRequestConfig): Promise<AxiosResponse<Array<RoleResponse>>> {
-            return RoleControllerApiFp(configuration).index3(options).then((request) => request(axios, basePath));
+        async index2(options?: AxiosRequestConfig): Promise<AxiosResponse<Array<RoleResponse>>> {
+            return RoleControllerApiFp(configuration).index2(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -504,8 +504,8 @@ export class RoleControllerApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof RoleControllerApi
      */
-    public async index3(options?: AxiosRequestConfig) : Promise<AxiosResponse<Array<RoleResponse>>> {
-        return RoleControllerApiFp(this.configuration).index3(options).then((request) => request(this.axios, this.basePath));
+    public async index2(options?: AxiosRequestConfig) : Promise<AxiosResponse<Array<RoleResponse>>> {
+        return RoleControllerApiFp(this.configuration).index2(options).then((request) => request(this.axios, this.basePath));
     }
     /**
      * 

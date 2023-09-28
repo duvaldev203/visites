@@ -235,7 +235,7 @@ export const UserControllerApiAxiosParamCreator = function (configuration?: Conf
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        index2: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        index1: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/users/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -600,8 +600,8 @@ export const UserControllerApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async index2(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<Array<UserResponse>>>> {
-            const localVarAxiosArgs = await UserControllerApiAxiosParamCreator(configuration).index2(options);
+        async index1(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<Array<UserResponse>>>> {
+            const localVarAxiosArgs = await UserControllerApiAxiosParamCreator(configuration).index1(options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -725,8 +725,8 @@ export const UserControllerApiFactory = function (configuration?: Configuration,
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async index2(options?: AxiosRequestConfig): Promise<AxiosResponse<Array<UserResponse>>> {
-            return UserControllerApiFp(configuration).index2(options).then((request) => request(axios, basePath));
+        async index1(options?: AxiosRequestConfig): Promise<AxiosResponse<Array<UserResponse>>> {
+            return UserControllerApiFp(configuration).index1(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -832,8 +832,8 @@ export class UserControllerApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UserControllerApi
      */
-    public async index2(options?: AxiosRequestConfig) : Promise<AxiosResponse<Array<UserResponse>>> {
-        return UserControllerApiFp(this.configuration).index2(options).then((request) => request(this.axios, this.basePath));
+    public async index1(options?: AxiosRequestConfig) : Promise<AxiosResponse<Array<UserResponse>>> {
+        return UserControllerApiFp(this.configuration).index1(options).then((request) => request(this.axios, this.basePath));
     }
     /**
      * 

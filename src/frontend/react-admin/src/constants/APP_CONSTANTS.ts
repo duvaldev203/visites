@@ -17,3 +17,13 @@ export enum TYPE_VISITE {
     rendez_vous = "rendez-vous"
 }
 
+export enum STATUS_RDV {
+    draft = "En Attente",
+    pendind = "En Cours",
+    passed = "Passe"
+}
+
+export interface Time {
+    hour: number,
+    min: number, 
+}

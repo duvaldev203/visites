@@ -33,8 +33,14 @@ public class VisiteController {
 	
 	@GetMapping("/")
 	@PreAuthorize("hasAnyAuthority('ADMIN', 'RECEP')")
-	public ResponseEntity<List<VisiteResponse>> index(){
-		return visiteService.index();
+	public ResponseEntity<List<VisiteResponse>> indexVisite(){
+		return visiteService.indexVisites();
+	}
+
+	@GetMapping("/rendez_vous")
+	@PreAuthorize("hasAnyAuthority('ADMIN', 'RECEP')")
+	public ResponseEntity<List<VisiteResponse>> indexRDV(){
+		return visiteService.indexRDV();
 	}
 
 	@GetMapping("/{id}")

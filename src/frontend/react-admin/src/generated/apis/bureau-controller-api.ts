@@ -128,7 +128,7 @@ export const BureauControllerApiAxiosParamCreator = function (configuration?: Co
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        index4: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        index3: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/bureaux/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -358,8 +358,8 @@ export const BureauControllerApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async index4(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<Array<BureauResponse>>>> {
-            const localVarAxiosArgs = await BureauControllerApiAxiosParamCreator(configuration).index4(options);
+        async index3(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<Array<BureauResponse>>>> {
+            const localVarAxiosArgs = await BureauControllerApiAxiosParamCreator(configuration).index3(options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -437,8 +437,8 @@ export const BureauControllerApiFactory = function (configuration?: Configuratio
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async index4(options?: AxiosRequestConfig): Promise<AxiosResponse<Array<BureauResponse>>> {
-            return BureauControllerApiFp(configuration).index4(options).then((request) => request(axios, basePath));
+        async index3(options?: AxiosRequestConfig): Promise<AxiosResponse<Array<BureauResponse>>> {
+            return BureauControllerApiFp(configuration).index3(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -504,8 +504,8 @@ export class BureauControllerApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof BureauControllerApi
      */
-    public async index4(options?: AxiosRequestConfig) : Promise<AxiosResponse<Array<BureauResponse>>> {
-        return BureauControllerApiFp(this.configuration).index4(options).then((request) => request(this.axios, this.basePath));
+    public async index3(options?: AxiosRequestConfig) : Promise<AxiosResponse<Array<BureauResponse>>> {
+        return BureauControllerApiFp(this.configuration).index3(options).then((request) => request(this.axios, this.basePath));
     }
     /**
      * 

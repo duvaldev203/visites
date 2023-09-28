@@ -14,4 +14,8 @@ public class AppConstants {
     public static final String DEFAULT_PATH = "pictures";
 
     public static final String DEFAULT_IMAGE = "pictures/default.png";
+
+    /* Default values of visit attibuts */
+    public static final String[] type = {"ordinaire", "rendez-vous"};
+    public static final String[] status = {"En Attente", "En cours", "Passe"};
 }

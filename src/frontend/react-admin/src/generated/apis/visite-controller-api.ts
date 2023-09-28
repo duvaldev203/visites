@@ -230,7 +230,49 @@ export const VisiteControllerApiAxiosParamCreator = function (configuration?: Co
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        index1: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        indexRDV: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/visites/rendez_vous`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions :AxiosRequestConfig = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            if (configuration && configuration.accessToken) {
+                const accessToken = typeof configuration.accessToken === 'function'
+                    ? await configuration.accessToken()
+                    : await configuration.accessToken;
+                localVarHeaderParameter["Authorization"] = "Bearer " + accessToken;
+            }
+
+            const query = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                query.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.params) {
+                query.set(key, options.params[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(query)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        indexVisite: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/visites/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -534,8 +576,20 @@ export const VisiteControllerApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async index1(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<Array<VisiteResponse>>>> {
-            const localVarAxiosArgs = await VisiteControllerApiAxiosParamCreator(configuration).index1(options);
+        async indexRDV(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<Array<VisiteResponse>>>> {
+            const localVarAxiosArgs = await VisiteControllerApiAxiosParamCreator(configuration).indexRDV(options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async indexVisite(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<Array<VisiteResponse>>>> {
+            const localVarAxiosArgs = await VisiteControllerApiAxiosParamCreator(configuration).indexVisite(options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -644,8 +698,16 @@ export const VisiteControllerApiFactory = function (configuration?: Configuratio
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async index1(options?: AxiosRequestConfig): Promise<AxiosResponse<Array<VisiteResponse>>> {
-            return VisiteControllerApiFp(configuration).index1(options).then((request) => request(axios, basePath));
+        async indexRDV(options?: AxiosRequestConfig): Promise<AxiosResponse<Array<VisiteResponse>>> {
+            return VisiteControllerApiFp(configuration).indexRDV(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async indexVisite(options?: AxiosRequestConfig): Promise<AxiosResponse<Array<VisiteResponse>>> {
+            return VisiteControllerApiFp(configuration).indexVisite(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -740,8 +802,17 @@ export class VisiteControllerApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof VisiteControllerApi
      */
-    public async index1(options?: AxiosRequestConfig) : Promise<AxiosResponse<Array<VisiteResponse>>> {
-        return VisiteControllerApiFp(this.configuration).index1(options).then((request) => request(this.axios, this.basePath));
+    public async indexRDV(options?: AxiosRequestConfig) : Promise<AxiosResponse<Array<VisiteResponse>>> {
+        return VisiteControllerApiFp(this.configuration).indexRDV(options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof VisiteControllerApi
+     */
+    public async indexVisite(options?: AxiosRequestConfig) : Promise<AxiosResponse<Array<VisiteResponse>>> {
+        return VisiteControllerApiFp(this.configuration).indexVisite(options).then((request) => request(this.axios, this.basePath));
     }
     /**
      * 

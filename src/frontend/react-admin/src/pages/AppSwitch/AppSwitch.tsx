@@ -19,6 +19,7 @@ import Role from "../Role/Role";
 import User from "../User/User";
 import Visiteur from "../Visiteur/Visiteur";
 import Visites from "../Visite/Visite";
+import RDV from "../Rendez-vous/Rendez-vous";
 
 interface AppSwitchProps {
     isLoggedIn: boolean;
@@ -54,6 +55,7 @@ const AppSwitch: React.FC<AppSwitchProps> = (props) => {
           <Route path="/user" element={<User />} />
           <Route path="/visiteur" element={<Visiteur />} />
           <Route path="/visites" element={<Visites />} />
+          <Route path="/rendez_vous" element={<RDV />} />
           
           <Route path="*" element={<NotFound />}/>
         </Routes>
