@@ -22,7 +22,6 @@ import com.example.visites.services.AvisServiceImpl;
 
 @RestController
 @RequestMapping("/avis")
-@PreAuthorize("hasAnyAuthority('ADMIN', 'RECEP')")
 public class AvisController {
 
 	private final AvisService avisService;
@@ -48,6 +47,7 @@ public class AvisController {
 	}
 
 	@PutMapping("/{id}")
+	@PreAuthorize("hasAnyAuthority('ADMIN', 'RECEP')")
 	public ResponseEntity<AvisResponse> update(@PathVariable Long id, @Valid @RequestBody AvisRequest avis) {
 		return avisService.update(avis, id);
 	}

@@ -86,7 +86,7 @@ const DisplayVisites: React.FC<DisplayVisitesProps> = (props) => {
           setIsErrorDescription(error?.response?.data?.message);
         } else {
           if (error.response && error.response.status === 403) {
-            setIsErrorDescription('Probleme de token. Votre token n\'est plus valide et vous allez etre deconnecter');
+            setIsErrorDescription('Vous n\'etes pas autorises');
           } else {
             setIsErrorDescription('Probleme lors de la recuperation des visites')
         } }
@@ -168,7 +168,7 @@ const DisplayVisites: React.FC<DisplayVisitesProps> = (props) => {
           setIsErrorDescription(error?.response?.data?.message);
         } else {
           if (error.response && error.response.status === 403) {
-            setIsErrorDescription('Probleme de token. Votre token n\'est plus valide et vous allez etre deconnecter');
+            setIsErrorDescription('Vous n\'etes pas autorises');
           } else {
             setIsErrorDescription('Probleme lors de la suppression de la visite')
         } }

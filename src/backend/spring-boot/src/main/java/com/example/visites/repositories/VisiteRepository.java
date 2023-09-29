@@ -1,7 +1,6 @@
 package com.example.visites.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.example.visites.models.Visite;
@@ -19,4 +18,6 @@ public interface VisiteRepository extends JpaRepository<Visite, Long> {
 	List<Visite> findByType(String type);
 
 	List<Visite> findByDateVisiteAndType(LocalDate now, String s);
+
+    List<Visite> findByUserIdOrType(Long employeId, String string);
 }

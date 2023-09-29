@@ -127,7 +127,7 @@ public class VisiteServiceImpl implements VisiteService {
 
 	@Override
 	public ResponseEntity<List<VisiteResponse>> getVisiteByEmployeId(Long employeId) {
-		List<Visite> visites = visiteRepository.findByUserId(employeId);
+		List<Visite> visites = visiteRepository.findByUserIdOrType(employeId, AppConstants.type[0]);
 		List<VisiteResponse> resp = visites.stream()
 						.map(el -> modelMapper.map(el, VisiteResponse.class)).toList();
 		return new ResponseEntity<>(resp, HttpStatus.OK);
