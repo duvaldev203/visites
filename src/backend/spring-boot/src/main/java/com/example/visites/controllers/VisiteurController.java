@@ -22,7 +22,6 @@ import com.example.visites.services.VisiteurServiceImpl;
 
 @RestController
 @RequestMapping("/visiteurs")
-@PreAuthorize("hasAuthority('ADMIN')")
 public class VisiteurController {
 
 	private final VisiteurService visiteurService;
@@ -33,32 +32,38 @@ public class VisiteurController {
 	}
 	
 	@GetMapping("/")
+	@PreAuthorize("hasAnyAuthority('ADMIN', 'RECEP')")
 	public ResponseEntity<List<VisiteurResponse>> index(){
 		return visiteurService.index();
 	}
 	
 	@GetMapping("/{id}")
+	@PreAuthorize("hasAnyAuthority('ADMIN', 'RECEP')")
 	public ResponseEntity<VisiteurResponse> show(@PathVariable Long id) {
 		return visiteurService.show(id);
 	}
 
 	@PostMapping("/")
+	@PreAuthorize("hasAnyAuthority('ADMIN', 'RECEP')")
 	public ResponseEntity<VisiteurResponse> create(@Valid @RequestBody VisiteurRequest visiteur) {
 		return visiteurService.create(visiteur);
 	}
 
 	@PutMapping("/{id}")
+	@PreAuthorize("hasAnyAuthority('ADMIN', 'RECEP')")
 	public ResponseEntity<VisiteurResponse> update(@PathVariable Long id, @Valid @RequestBody VisiteurRequest visiteur) {
 		return visiteurService.update(visiteur, id);
 	}
 	
 
 	@DeleteMapping("/{id}")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public ResponseEntity<?> delete(@PathVariable Long id) {
 		return visiteurService.delete(id);
 	}
 
 	@GetMapping("/records/{search}")
+	@PreAuthorize("hasAnyAuthority('ADMIN', 'RECEP')")
 	public ResponseEntity<List<VisiteurResponse>> records(@PathVariable String search){
 		return visiteurService.records(search);
 	}

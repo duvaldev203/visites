@@ -1,21 +1,21 @@
 import { connect, useDispatch, useSelector } from 'react-redux';
-import { AvisControllerApi, AvisResponse } from '../../../generated';
+import { VisiteControllerApi, VisiteResponse } from '../../../generated';
 import { ReduxProps } from '../../../redux/configureStore';
 import { useCallback, useEffect, useState } from 'react';
-import { MODAL_MODE } from '../../../constants/APP_CONSTANTS';
+import { MODAL_MODE, currentUser } from '../../../constants/APP_CONSTANTS';
 import { Link } from 'react-router-dom';
 import { EditIcon, NewIcon, NextIcon, PreviousIcon, TrashIcon } from '../../../constants/Icon';
 
-import CreateOrUpdateAvisModal from './CreateOrUpdateAvisModal';
+import CreateOrUpdateVisiteModal from './CreateOrUpdateVisiteModal';
 
 import { TOKEN_LOCAL_STORAGE_KEY } from '../../../constants/LOCAL_STORAGE';
 import { DeleteItemModal } from '../../../constants/DeleteItemModal';
 import { GridIndicator } from '../../../constants/GridIndicator';
 
-import './DisplayAvis.css'
+import './DisplayVisites.css'
 
-interface DisplayAvisProps {
-  aviss: AvisResponse[],
+interface DisplayVisitesProps {
+  visites: VisiteResponse[],
   isLoading: boolean,
 
   setShowSuccessNotif: (value: boolean) => void,
@@ -34,24 +34,25 @@ interface DisplayAvisProps {
 import { DangerNotification } from '../../../services/Notification.service';
 import ReactPaginate from 'react-paginate';
 
-const DisplayAvis: React.FC<DisplayAvisProps> = (props) => {
+const DisplayVisitesUser: React.FC<DisplayVisitesProps> = (props) => {
   const state = useSelector((state: ReduxProps) => state);
-  const [listeAviss, setListeAviss] = useState<AvisResponse[]>(props.aviss);
-  const [avisS, setAvisS] = useState<AvisResponse | null>(props.aviss[0]);
-  const [selectedAvis, setSelectedAvis] = useState<AvisResponse>({});
+  const [listeVisites, setListeVisites] = useState<VisiteResponse[]>(props.visites);
+  const [visiteS, setVisiteS] = useState<VisiteResponse | null>(props.visites[0]);
+  const [selectedVisite, setSelectedVisite] = useState<VisiteResponse>({});
   // Pagination
   const [currentPage, setCurrentPage] = useState(0);
-  const avissPerPage = 10;
+  const visitesPerPage = 10;
 
-  const offset = currentPage * avissPerPage;
-  const currentAviss = listeAviss.slice(offset, offset + avissPerPage);
+  const offset = currentPage * visitesPerPage;
+  const currentVisites = listeVisites.slice(offset, offset + visitesPerPage);
 
-  const pageCount = Math.ceil(listeAviss.length / avissPerPage);
+  const pageCount = Math.ceil(listeVisites.length / visitesPerPage);
 
   const handlePageClick = (data: { selected: any; }) => {
     const selected = data.selected;
     setCurrentPage(selected);
   };
+  // End Pagination
 
   const [showCreateOrUpdateModal, setShowCreateOrUpdateModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -66,15 +67,15 @@ const DisplayAvis: React.FC<DisplayAvisProps> = (props) => {
 
   const onReady = useCallback(() => {
     const token: string = localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY)!;
-    const avissApi = new AvisControllerApi({ ...state.environment, accessToken: token });
+    const visitesApi = new VisiteControllerApi({ ...state.environment, accessToken: token });
 
     setShowIndicator(true)
 
-    avissApi.index4()
+    visitesApi.getVisiteByEmployeId(currentUser.id!)
       .then((response) => {
         if (response && response.data) {
           if (response.status === 200) {
-            setListeAviss(response.data);
+            setListeVisites(response.data);
           }
         }
       })
@@ -87,7 +88,7 @@ const DisplayAvis: React.FC<DisplayAvisProps> = (props) => {
           if (error.response && error.response.status === 403) {
             setIsErrorDescription('Vous n\'avez pas le d\'effectuer cette requete');
           } else {
-            setIsErrorDescription('Probleme lors de la recuperation des avis')
+            setIsErrorDescription('Probleme lors de la recuperation des visites')
         } }
         
         // Handle Warning Notif 
@@ -108,28 +109,28 @@ const DisplayAvis: React.FC<DisplayAvisProps> = (props) => {
     setShowDeleteModal(false);
   }, []);
 
-  //Create Avis
+  //Create Visite
   const handleNewItem = () => {
-    setAvisS(null);
+    setVisiteS(null);
     setShowCreateOrUpdateModal(true);
     setModalMode(MODAL_MODE.create)
-    setModalTitle("Créer un nouvel avis")
+    setModalTitle("Créer une nouvelle visite")
   }
 
   const handleCloseCreateOrUpdateModal = () => {
     setShowCreateOrUpdateModal(false)
   }
-  // Update Avis
-  const handleEdit = (avisSelected: AvisResponse) => {
-    setAvisS(avisSelected);
+  // Update Visite
+  const handleEdit = (visiteSelected: VisiteResponse) => {
+    setVisiteS(visiteSelected);
     setModalMode(MODAL_MODE.update)
-    setModalTitle("Modifier un avis")
+    setModalTitle("Modifier la visite")
     setShowCreateOrUpdateModal(true);
   };
 
-  // Delete Avis
-  const handleDelete = (avis: AvisResponse) => {
-    setSelectedAvis(avis);
+  // Delete Visite
+  const handleDelete = (visite: VisiteResponse) => {
+    setSelectedVisite(visite);
     setShowDeleteModal(true)
   };
 
@@ -145,18 +146,18 @@ const DisplayAvis: React.FC<DisplayAvisProps> = (props) => {
     setShowDeleteModal(false)
 
     const token: string = localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY)!;
-    const avissApi = new AvisControllerApi({ ...state.environment, accessToken: token });
+    const visitesApi = new VisiteControllerApi({ ...state.environment, accessToken: token });
 
     setShowIndicator(true)
 
-    avissApi.delete5(selectedAvis.id!)
+    visitesApi.delete1(selectedVisite.id!)
       .then((response) => {
         if (response) {
           if (response.status === 204) {
             console.log('response :', response)
             setShowDeleteModal(false)
             props.setSuccessNotifMessage("Succes")
-            props.setSuccessNotifDescription('Cet avis a ete supprime avec success')
+            props.setSuccessNotifDescription('Cette visite a ete supprime avec success')
             props.setShowSuccessNotif(true)
           }
         }
@@ -169,7 +170,7 @@ const DisplayAvis: React.FC<DisplayAvisProps> = (props) => {
           if (error.response && error.response.status === 403) {
             setIsErrorDescription('Vous n\'avez pas le d\'effectuer cette requete');
           } else {
-            setIsErrorDescription('Probleme lors de la suppression de l\'avis')
+            setIsErrorDescription('Probleme lors de la suppression de la visite')
         } }
       })
       .finally(() => {
@@ -206,12 +207,12 @@ const DisplayAvis: React.FC<DisplayAvisProps> = (props) => {
         </Link>
       </div>
 
-      {showCreateOrUpdateModal && <CreateOrUpdateAvisModal
+      {showCreateOrUpdateModal && <CreateOrUpdateVisiteModal
         mode={modalMode}
         title={modalTitle}
         onClose={handleCloseCreateOrUpdateModal}
         refresh={onReady}
-        item={modalMode !== MODAL_MODE.create ? avisS : null}
+        item={modalMode !== MODAL_MODE.create ? visiteS : null}
         setShowSuccessNotif={props.setShowSuccessNotif}
         setSuccessNotifMessage={props.setSuccessNotifMessage}
         setSuccessNotifDescription={props.setSuccessNotifDescription}
@@ -221,7 +222,7 @@ const DisplayAvis: React.FC<DisplayAvisProps> = (props) => {
       />}
       {showDeleteModal && <DeleteItemModal
         isVisible={true}
-        itemName={'Avis d\'id ' + selectedAvis.id}
+        itemName={'Visite d\'id ' + selectedVisite.id}
         onClose={handleCloseDeleteModal}
         refresh={onReady}
         onConfirm={handleConfirmDeletingModal}
@@ -232,17 +233,23 @@ const DisplayAvis: React.FC<DisplayAvisProps> = (props) => {
           <table className="w-full table-auto">
             <thead>
               <tr className="bg-gray-2 text-left dark:bg-meta-4 border-b">
-                <th className="py-4 px-5 font-medium text-black dark:text-white">
-                  Libelle
-                </th>
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
-                  Visite
+                  Visiteur
                 </th>
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Employe
                 </th>
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
-                  Visiteur
+                  Motif
+                </th>
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  Date de Visite
+                </th>
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  Heure de Fin
+                </th>
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  Heure de Debut
                 </th>
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Actions
@@ -251,24 +258,30 @@ const DisplayAvis: React.FC<DisplayAvisProps> = (props) => {
             </thead>
             <tbody>
               {showIndicator && <GridIndicator />}
-              {listeAviss.length === 0 ? (
+              {listeVisites.length === 0 ? (
                 <tr className='border-b w-full'>
-                  <td colSpan={8} className='text-center py-2'>Aucun Avis pour le moment</td>
+                  <td colSpan={8} className='text-center py-2'>Aucune visite pour le moment</td>
                 </tr>
               ) : (
-                currentAviss!.map((item) => (
+                currentVisites!.map((item) => (
                   <tr key={item.id} className='border-b'>
                     <td className="py-2 px-2">
-                      <p className="text-black dark:text-white">{item.libelle}</p>
+                      <p className="text-black dark:text-white">{item.visiteur?.nom + " " + item.visiteur?.prenom}</p>
                     </td>
                     <td className="py-2 px-2">
-                      <p className="text-black dark:text-white">{item.visite?.motif}</p>
+                      <p className="text-black dark:text-white">{item.user?.nom + " " + item.user?.prenom}</p>
                     </td>
                     <td className="my-2 px-2">
-                      <p className="text-black dark:text-white">{item.visite?.user?.nom + " " + item.visite?.user?.prenom}</p>
+                      <p className="text-black dark:text-white">{item.motif}</p>
                     </td>
                     <td className="py-2 px-2">
-                      <p className="text-black dark:text-white">{item.visite?.visiteur?.nom + " " + item.visite?.visiteur?.nom}</p>
+                      <p className="text-black dark:text-white">{new Date(item.dateVisite!).toLocaleDateString()!}</p>
+                    </td>
+                    <td className="my-2 px-2">
+                      <p className="text-black dark:text-white">{item.heureDebut!}</p>
+                    </td>
+                    <td className="py-2 px-2">
+                      <p className="text-black dark:text-white">{item.heureFin!}</p>
                     </td>
                     <td className="py-2 px-5">
                       <div className="flex items-center space-x-4">
@@ -316,4 +329,4 @@ function mapStateToProps(state: ReduxProps): ReduxProps {
     access_token: state.access_token,
   };
 }
-export default connect(mapStateToProps)(DisplayAvis)
+export default connect(mapStateToProps)(DisplayVisitesUser)

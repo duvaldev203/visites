@@ -1,3 +1,12 @@
+import { UserResponse } from "../generated";
+import { USER_LOCAL_STORAGE_KEY } from "./LOCAL_STORAGE";
+
+export enum ROLE {
+    admin = "ADMIN",
+    user = "USERS",
+    recep = "RECEP"
+}
+
 export const SEXE: { name: string, value: string }[] = [
     { name: "Choisir..", value: "null" },
     { name: "Masculin", value: "masculin" },
@@ -27,3 +36,14 @@ export interface Time {
     hour: number,
     min: number, 
 }
+
+export const listeRoles = (current: UserResponse): string[] => {
+  let liste: string[] = [];
+  const roles = current.roles;
+  roles!.forEach(role => {
+    liste.push(role.nom!);
+  });
+  return liste;
+} 
+
+export const currentUser : UserResponse = JSON.parse(localStorage.getItem(USER_LOCAL_STORAGE_KEY) || '{}');

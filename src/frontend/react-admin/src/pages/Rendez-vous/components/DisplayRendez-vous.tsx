@@ -85,7 +85,7 @@ const DisplayRDV: React.FC<DisplayRDVProps> = (props) => {
           setIsErrorDescription(error?.response?.data?.message);
         } else {
           if (error.response && error.response.status === 403) {
-            setIsErrorDescription('Probleme de token. Votre token n\'est plus valide et vous allez etre deconnecter');
+            setIsErrorDescription('Vous n\'avez pas le d\'effectuer cette requete');
           } else {
             setIsErrorDescription('Probleme lors de la recuperation des rendez-vous')
         } }
@@ -167,7 +167,7 @@ const DisplayRDV: React.FC<DisplayRDVProps> = (props) => {
           setIsErrorDescription(error?.response?.data?.message);
         } else {
           if (error.response && error.response.status === 403) {
-            setIsErrorDescription('Probleme de token. Votre token n\'est plus valide et vous allez etre deconnecter');
+            setIsErrorDescription('Vous n\'avez pas le d\'effectuer cette requete');
           } else {
             setIsErrorDescription('Probleme lors de la suppression du rendez-vous')
         } }

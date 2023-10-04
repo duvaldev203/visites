@@ -14,6 +14,8 @@ import {
   DangerNotification,
   WarningNotification,
  } from '../../services/Notification.service';
+import { ROLE, currentUser, listeRoles } from '../../constants/APP_CONSTANTS';
+import DisplayVisitesUser from './components/DisplayVisitesUser';
 
 
 const Visite = () => {
@@ -63,6 +65,23 @@ const Visite = () => {
         {showWarning && <WarningNotification message={warningNotifMessage} description={warningNotifDescription}  />}
 
         <Breadcrumb pageName="Visites" />
+        {!listeRoles(currentUser).includes(ROLE.admin) ?
+        <DisplayVisitesUser
+        visites={visites} 
+        isLoading={isLoading}
+        setShowSuccessNotif={setShowSuccessNotif}
+        setSuccessNotifMessage={setSuccessNotifMessage}
+        setSuccessNotifDescription={setSuccessNotifDescription}
+
+        setShowDangerNotif={setShowDangerNotif}
+        setDangerNotifMessage={setDangerNotifMessage}
+        setDangerNotifDescription={setDangerNotifDescription}
+
+        setShowWarning={setShowWarning}
+        setWarningMessage={setWarningMessage}
+        setWarningNotifDescription={setWarningNotifDescription}
+        />
+        :
         <DisplayVisites  
           visites={visites} 
           isLoading={isLoading}
@@ -77,7 +96,7 @@ const Visite = () => {
           setShowWarning={setShowWarning}
           setWarningMessage={setWarningMessage}
           setWarningNotifDescription={setWarningNotifDescription}
-          />
+          />}
     </DefaultLayout>
   );
 };

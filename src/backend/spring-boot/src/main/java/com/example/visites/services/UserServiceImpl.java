@@ -88,10 +88,12 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public ResponseEntity<UserResponse> update(UserRequest user, Long id) {
-		userRepository.findById(id)
+		User tmp = userRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("L'User que vous voulez modifier ", "d'Id", id));
 		User oldUser = modelMapper.map(user, User.class);
 		oldUser.setId(id);
+		oldUser.setProfile(tmp.getProfile());
+		oldUser.setPassword(tmp.getPassword());
 		UserResponse updated = modelMapper.map(userRepository.save(oldUser), UserResponse.class);
 		return new ResponseEntity<>(updated, HttpStatus.ACCEPTED);
 	}

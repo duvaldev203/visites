@@ -44,7 +44,7 @@ public class VisiteController {
 	}
 
 	@GetMapping("/{id}")
-	@PreAuthorize("hasAnyAuthority('ADMIN', 'RECEP', 'USER')")
+	@PreAuthorize("hasAnyAuthority('ADMIN', 'RECEP')")
 	public ResponseEntity<VisiteResponse> show(@PathVariable Long id) {
 		return visiteService.show(id);
 	}
@@ -68,6 +68,7 @@ public class VisiteController {
 	}
 
 	@GetMapping("/records/{search}")
+	@PreAuthorize("hasAnyAuthority('ADMIN', 'RECEP')")
 	public  ResponseEntity<List<VisiteResponse>> records(@PathVariable String search){
 		return visiteService.records(search);
 	}
