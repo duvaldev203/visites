@@ -27,4 +27,6 @@ public interface VisiteService {
 	ResponseEntity<List<VisiteResponse>> getVisiteByEmployeId(Long employeId);
 
 	ResponseEntity<VisiteResponse> createOrdinary(VisiteRequest visite);
+
+	ResponseEntity<List<Integer>> getTotalVisites();
 }

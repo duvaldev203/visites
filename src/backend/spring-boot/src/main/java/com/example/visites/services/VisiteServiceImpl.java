@@ -1,6 +1,7 @@
 package com.example.visites.services;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -219,5 +220,15 @@ public class VisiteServiceImpl implements VisiteService {
 						"Entre les heures : " + rdv.getHeureDebut() + " et " + rdv.getHeureFin() + "\n";
 		EmailDetails visitorEmail = new EmailDetails(rdv.getVisiteur().getEmail(), "Programmation de rendez-vous", visitorMessage);
 		emailService.sendSimpleMail(visitorEmail);
+	}
+
+	@Override
+	public ResponseEntity<List<Integer>> getTotalVisites() {
+		long totalVisites = visiteRepository.findByType(AppConstants.type[0]).stream().count();
+		long totalRDV = visiteRepository.findByType(AppConstants.type[1]).stream().count();
+		List<Integer> total = new ArrayList<>();
+		total.add(Integer.parseInt(totalVisites + ""));
+		total.add(Integer.parseInt(totalRDV + ""));
+		return new ResponseEntity<>(total, HttpStatus.OK);
 	}
 }

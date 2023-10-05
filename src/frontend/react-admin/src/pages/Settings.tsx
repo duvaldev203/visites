@@ -15,10 +15,10 @@ import { SEXE } from '../constants/APP_CONSTANTS';
 import DefaultLayout from '../layout/DefaultLayout';
 
 const Settings = () => {
-  const user : UserResponse = JSON.parse(localStorage.getItem(USER_LOCAL_STORAGE_KEY) || '{}');
+  const user: UserResponse = JSON.parse(localStorage.getItem(USER_LOCAL_STORAGE_KEY) || '{}');
   const token: string = localStorage.getItem(TOKEN_LOCAL_STORAGE_KEY)!;
 
-  const state = useSelector((state:ReduxProps) => state);
+  const state = useSelector((state: ReduxProps) => state);
   // const dispatch = useDispatch();
 
   const [formValues, setFormValues] = useState({
@@ -42,7 +42,7 @@ const Settings = () => {
   const [isErrorProfile, setIsErrorProfile] = useState(false);
   const [isProfileErrorMessage, setIsProfileErrorMessage] = useState('');
 
-  const [isErrorPass, setIsErrorPass] = useState(false);  
+  const [isErrorPass, setIsErrorPass] = useState(false);
   const [isErrorPassword, setIsErrorPassword] = useState(false);
   const [isErrorPasswordMessage, setIsErrorPasswordMessage] = useState('');
 
@@ -57,7 +57,7 @@ const Settings = () => {
     }));
   };
 
-  const handleModifyPersonalInformation = (e : any) => {
+  const handleModifyPersonalInformation = (e: any) => {
     e.preventDefault();
     const apiParams: UserRequest = {
       ...user,
@@ -68,27 +68,27 @@ const Settings = () => {
       sexe: formValues.sexe,
       dateNais: new Date(formValues.dateNais),
     }
-    const userApi = new UserControllerApi({...state.environment, accessToken: token});
+    const userApi = new UserControllerApi({ ...state.environment, accessToken: token });
     const userId: number = user.id ? user.id : 0;
     userApi.update2(apiParams, userId)
-    .then((response) => {
-      localStorage.setItem(USER_LOCAL_STORAGE_KEY, JSON.stringify(apiParams))
-      console.log(response.data)
-    })
-    .catch((err) => {
-      setIsPersonalError(true);
-      if ( err.status === 43 ) {
-        setIsPersonalErrorMessage('Probleme de token');
-      } else {
-        setIsPersonalErrorMessage('Echec de modification de vos informations personnelles');
-      }
-      console.error("erreur : ", err);
-    });
+      .then((response) => {
+        localStorage.setItem(USER_LOCAL_STORAGE_KEY, JSON.stringify(apiParams))
+        console.log(response.data)
+      })
+      .catch((err) => {
+        setIsPersonalError(true);
+        if (err.status === 43) {
+          setIsPersonalErrorMessage('Probleme de token');
+        } else {
+          setIsPersonalErrorMessage('Echec de modification de vos informations personnelles');
+        }
+        console.error("erreur : ", err);
+      });
   }
 
   //Composante de modification de la photo de profile
   const [uploaded, setUploaded] = useState(false);
-  const handleProfileChange = (e : any) => {
+  const handleProfileChange = (e: any) => {
     setUploaded(true);
     setFile(URL.createObjectURL(e.target.files[0]));
     const imgData = new FormData();
@@ -96,28 +96,28 @@ const Settings = () => {
     setImage(file);
     imgData.append('image', file);
   }
-  const handleModifyProfile = (e : any) => {
+  const handleModifyProfile = (e: any) => {
     e.preventDefault();
     const profileId: number = user.profile?.id!;
-    const profileApi = new UserControllerApi({...state.environment, accessToken: token});
+    const profileApi = new UserControllerApi({ ...state.environment, accessToken: token });
     profileApi.changeProfileForm(profileId, image)
-    .then((response) => {
-      console.log(response.data);
-      const newUser: UserResponse = {
-        ...user,
-        profile: response.data,
-      }
-      localStorage.setItem(USER_LOCAL_STORAGE_KEY, JSON.stringify(newUser));
-    })
-    .catch((err) => {
-      setIsErrorProfile(true);
-      if( err.status === 403 ) {
-        setIsProfileErrorMessage('Votre Token est incorrect');
-      } else {
-        setIsProfileErrorMessage('Echec de modification de la photo de profile')
-      }
-      console.error(err);
-    })
+      .then((response) => {
+        console.log(response.data);
+        const newUser: UserResponse = {
+          ...user,
+          profile: response.data,
+        }
+        localStorage.setItem(USER_LOCAL_STORAGE_KEY, JSON.stringify(newUser));
+      })
+      .catch((err) => {
+        setIsErrorProfile(true);
+        if (err.status === 403) {
+          setIsProfileErrorMessage('Votre Token est incorrect');
+        } else {
+          setIsProfileErrorMessage('Echec de modification de la photo de profile')
+        }
+        console.error(err);
+      })
 
   }
 
@@ -140,33 +140,34 @@ const Settings = () => {
         break;
     }
   };
-  
-  const handleModifyPassword = (e: { preventDefault: () => void; }) =>{
+
+  const handleModifyPassword = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     if (confirmNewPassword != newPassword || !newPassword || !confirmNewPassword) {
       setIsErrorPass(true)
     } else {
-      const apiParams : PasswordRequest = {
+      const apiParams: PasswordRequest = {
         oldPassword: oldPassword,
         newPassword: newPassword,
       }
       console.log(apiParams)
-      const userApi = new UserControllerApi({...state.environment, accessToken: token});
+      const userApi = new UserControllerApi({ ...state.environment, accessToken: token });
       const userId: number = user.id ? user.id : 0;
       userApi.modifyPassword(apiParams, userId)
-      .then((response) => {
-        localStorage.setItem(USER_LOCAL_STORAGE_KEY, JSON.stringify(response.data))
-      }).catch((err) => {
-        setIsErrorPassword(true)
-        if (err.status === 403){
-          setIsErrorPasswordMessage('Probleme de token')
-        } else { 
-          if(err.response && err.response.data) {
-            setIsErrorPasswordMessage(err.response.data.message)            
+        .then((response) => {
+          localStorage.setItem(USER_LOCAL_STORAGE_KEY, JSON.stringify(response.data))
+        }).catch((err) => {
+          setIsErrorPassword(true)
+          if (err.status === 403) {
+            setIsErrorPasswordMessage('Probleme de token')
           } else {
-            setIsErrorPasswordMessage('Echec de changement du mot de passe')
-        }}
-      });
+            if (err.response && err.response.data) {
+              setIsErrorPasswordMessage(err.response.data.message)
+            } else {
+              setIsErrorPasswordMessage('Echec de changement du mot de passe')
+            }
+          }
+        });
     }
 
   }
@@ -174,7 +175,7 @@ const Settings = () => {
   return (
     <DefaultLayout>
       <div className="mx-auto max-w-270">
-        
+
         <Breadcrumb pageName="Settings" />
 
         <div className="grid grid-cols-5 gap-8">
@@ -182,7 +183,7 @@ const Settings = () => {
             <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
               <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
                 <h3 className="font-medium text-black dark:text-white">
-                  Informations Personnelles
+                  Modifiez vos Informations Personnelles
                 </h3>
               </div>
               <div className="p-7">
@@ -376,7 +377,7 @@ const Settings = () => {
                       className="mb-3 block text-sm font-medium text-black dark:text-white"
                       htmlFor="email"
                     >
-                      Adresse Email 
+                      Adresse Email
                     </label>
                     <div className="relative">
                       <span className="absolute left-4.5 top-4">
@@ -472,7 +473,7 @@ const Settings = () => {
                         className="mb-3 block text-sm font-medium text-black dark:text-white"
                         htmlFor="dateNais"
                       >
-                        Date de Naissance 
+                        Date de Naissance
                       </label>
                       <div className="relative">
                         <span className="absolute left-4.5 top-4">
@@ -513,7 +514,7 @@ const Settings = () => {
                       </div>
                     </div>
                   </div>
-                  { isPersonalError && <p className='text-danger'>Erreur : { isPersonalErrorMessage }</p> }
+                  {isPersonalError && <p className='text-danger'>Erreur : {isPersonalErrorMessage}</p>}
                   <div className="flex justify-end gap-4.5">
                     {/* <button
                       className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
@@ -533,14 +534,14 @@ const Settings = () => {
               </div>
             </div>
           </div>
-          <div className="col-span-5 xl:col-span-2">
-            <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-              <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
+          <div className="col-span-5 xl:col-span-2 border-danger">
+            <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark xl:h-full">
+              <div className="border-b border-stroke py-4 px-7 dark:border-strokedar">
                 <h3 className="font-medium text-black dark:text-white">
-                  Votre Photo de Profile
+                  Modifiez votre Photo de Profile
                 </h3>
               </div>
-              <div className="p-7">
+              <div className="p-7 xl:mt-[10%]">
                 <form action="#" encType='multipart/form-data' onSubmit={handleModifyProfile}>
                   <div
                     id="FileUpload"
@@ -552,9 +553,9 @@ const Settings = () => {
                       onChange={handleProfileChange}
                       className="absolute inset-0 z-50 m-0 h-full w-full cursor-pointer p-0 opacity-0 outline-none"
                     />
-                    { uploaded && <div className="flex flex-col items-center justify-center space-y-1">
+                    {uploaded && <div className="flex flex-col items-center justify-center space-y-1">
                       <img className='m-0 p-0' src={file} alt="New Profile" />
-                    </div> }
+                    </div>}
                     {!uploaded && <div className="flex flex-col items-center justify-center space-y-3">
                       <span className="flex h-10 w-10 items-center justify-center rounded-full border border-stroke bg-white dark:border-strokedark dark:bg-boxdark">
                         <svg
@@ -585,14 +586,14 @@ const Settings = () => {
                         </svg>
                       </span>
                       <p>
-                        <span className="text-primary text-center justify-center">Cliquer pour ajouter </span> <br/><center>ou</center>
-                        Porter et deposer 
+                        <span className="text-primary text-center justify-center">Cliquer pour ajouter </span> <br /><center>ou</center>
+                        Porter et deposer
                       </p>
                       <p className="mt-1.5">PNG, JPEG, JPG or GIF</p>
                       {/* <p>(max, 800 X 800px)</p> */}
-                    </div> }
+                    </div>}
                   </div>
-                  { isErrorProfile && <p className='text-danger'>Erreur: { isProfileErrorMessage }</p> }
+                  {isErrorProfile && <p className='text-danger'>Erreur: {isProfileErrorMessage}</p>}
                   <div className="flex justify-end gap-4.5">
                     <button
                       className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-70"
@@ -604,20 +605,22 @@ const Settings = () => {
                 </form>
               </div>
             </div>
-            <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark mt-5">
+          </div>
+          <div className="col-span-5">
+            <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
               <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
                 <h3 className="font-medium text-black dark:text-white">
-                  Modifier votre Mot de Passe 
+                  Modifiez votre Mot de Passe
                 </h3>
               </div>
               <div className="p-7">
                 <form action="#">
-                <div className="mb-5.5">
+                  <div className="mb-5.5">
                     <label
                       className="mb-3 block text-sm font-medium text-black dark:text-white"
                       htmlFor="oldPassword"
                     >
-                      Entrer Votre Mot de Passe 
+                      Entrer votre ancien Mot de Passe
                     </label>
                     <div className="relative">
                       <span className="absolute left-4.5 top-4">
@@ -707,7 +710,7 @@ const Settings = () => {
                         className="mb-3 block text-sm font-medium text-black dark:text-white"
                         htmlFor="confirmNewPassword"
                       >
-                        Retaper 
+                        Retaper le nouveau Mot de Passe 
                       </label>
                       <div className="relative">
                         <span className="absolute left-4.5 top-4">
@@ -749,7 +752,7 @@ const Settings = () => {
                     </div>
                   </div>
                   <div className="text-end pr-2 pb-2">
-                    {isErrorPassword && <div className="text-danger -mt-3">{ isErrorPasswordMessage }</div>}
+                    {isErrorPassword && <div className="text-danger -mt-3">{isErrorPasswordMessage}</div>}
                   </div>
                   <div className="flex justify-end gap-4.5">
                     <button

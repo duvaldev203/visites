@@ -33,6 +33,7 @@ interface DisplayUsersProps {
 
 import { DangerNotification } from '../../../services/Notification.service';
 import ReactPaginate from 'react-paginate';
+import { BASE_PATH } from '../../../generated/base';
 
 const DisplayUsers: React.FC<DisplayUsersProps> = (props) => {
   const state = useSelector((state: ReduxProps) => state);
@@ -236,6 +237,9 @@ const DisplayUsers: React.FC<DisplayUsersProps> = (props) => {
             <thead>
               <tr className="bg-gray-2 text-left dark:bg-meta-4 border-b">
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
+                  Profile
+                </th>
+                <th className="py-4 px-4 font-medium text-black dark:text-white">
                   Username
                 </th>
                 <th className="py-4 px-4 font-medium text-black dark:text-white">
@@ -279,6 +283,9 @@ const DisplayUsers: React.FC<DisplayUsersProps> = (props) => {
               ) : (
                 currentUsers!.map((item) => (
                   <tr key={item.id} className='border-b'>
+                    <td className="py-2 px-2">
+                      <img className='h-12 rounded-full justify-center text-center' src={BASE_PATH + '/users/profile/' + item.profile?.id} alt="User Profile" />
+                    </td>
                     <td className="py-2 px-2">
                       <p className="text-black dark:text-white">{item.username}</p>
                     </td>

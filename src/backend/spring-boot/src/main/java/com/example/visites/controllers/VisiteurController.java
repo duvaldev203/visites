@@ -67,5 +67,10 @@ public class VisiteurController {
 	public ResponseEntity<List<VisiteurResponse>> records(@PathVariable String search){
 		return visiteurService.records(search);
 	}
+
+	@GetMapping("/countAll")
+	public ResponseEntity<Integer> getTotalVisiteurs(){
+		return visiteurService.getTotalVisiteur();
+	}
 	
 }
