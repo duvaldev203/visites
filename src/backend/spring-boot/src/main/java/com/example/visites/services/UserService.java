@@ -1,6 +1,7 @@
 package com.example.visites.services;
 
 import java.util.List;
+import java.util.Map;
 
 import com.example.visites.dto.PasswordRequest;
 import com.example.visites.dto.UserRequest;
@@ -22,4 +23,6 @@ public interface UserService {
 	ResponseEntity<List<UserResponse>> records(String search);
 
 	ResponseEntity<UserResponse> modifyPassword(Long id, PasswordRequest request);
+
+	ResponseEntity<Integer> getTotalUsers();
 }

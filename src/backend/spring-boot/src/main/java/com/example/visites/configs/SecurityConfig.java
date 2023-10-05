@@ -29,9 +29,6 @@ public class SecurityConfig {
 	@Autowired
 	private UserDetailsServiceImpl userDetailsServiceImpl;
 
-	//@Autowired
-	//private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http

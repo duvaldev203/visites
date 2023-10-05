@@ -1,6 +1,8 @@
 package com.example.visites.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.example.visites.dto.PasswordRequest;
 import com.example.visites.dto.ProfileResponse;
@@ -83,5 +85,9 @@ public class UserController {
 	public ResponseEntity<ProfileResponse> changeProfile(@PathVariable Long id, @RequestParam("image") MultipartFile image){
 		return profileService.changeProfileImage(id, image);
 	}
-	
+
+	@GetMapping("/countAll")
+	public ResponseEntity<Integer> getTotalUsers(){
+		return userService.getTotalUsers();
+	}
 }

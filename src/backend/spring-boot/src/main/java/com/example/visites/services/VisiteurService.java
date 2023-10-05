@@ -19,4 +19,6 @@ public interface VisiteurService {
 	ResponseEntity<?> delete(Long id);
 
     ResponseEntity<List<VisiteurResponse>> records(String search);
+
+	ResponseEntity<Integer> getTotalVisiteur();
 }

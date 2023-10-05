@@ -86,4 +86,11 @@ public class VisiteurServiceImpl implements VisiteurService {
 		EmailDetails email = new EmailDetails(visiteur.getEmail(), "Accueil", message);
 		emailService.sendSimpleMail(email);
 	}
+
+	@Override
+	public ResponseEntity<Integer> getTotalVisiteur() {
+		long total = visiteurRepository.count();
+		return new ResponseEntity<>(Integer.parseInt(total + ""), HttpStatus.OK);
+	}
+
 }

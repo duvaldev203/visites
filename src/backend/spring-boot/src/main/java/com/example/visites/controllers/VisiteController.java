@@ -90,4 +90,8 @@ public class VisiteController {
 		return visiteService.createOrdinary(visite);
 	}
 
+	@GetMapping("/countAll")
+	public ResponseEntity<List<Integer>> getTotalVisites(){
+		return visiteService.getTotalVisites();
+	}
 }

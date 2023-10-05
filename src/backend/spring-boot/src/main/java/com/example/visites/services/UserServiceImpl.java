@@ -1,8 +1,6 @@
 package com.example.visites.services;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.example.visites.configs.AppConstants;
@@ -11,6 +9,8 @@ import com.example.visites.exceptions.APIException;
 import com.example.visites.exceptions.ResourceNotFoundException;
 import com.example.visites.models.EmailDetails;
 import com.example.visites.models.Profile;
+import com.example.visites.repositories.VisiteRepository;
+import com.example.visites.repositories.VisiteurRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,7 +26,7 @@ import com.example.visites.repositories.UserRepository;
 
 @Service
 public class UserServiceImpl implements UserService {
-	
+
 	private final UserRepository userRepository;
 
 	private final ProfileService profileService;
@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
 	private final EmailService emailService;
 
 	@Autowired
-	public UserServiceImpl(UserRepository userRepository, ProfileService profileService, PasswordEncoder passwordEncoder,
+	public UserServiceImpl(UserRepository userRepository, VisiteurRepository visiteurRepository, VisiteRepository visiteRepository, ProfileService profileService, PasswordEncoder passwordEncoder,
 	                       ModelMapper modelMapper, EmailService emailService) {
 		this.userRepository = userRepository;
 		this.profileService = profileService;
@@ -111,7 +111,6 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
-
 	@Override
 	public ResponseEntity<?> delete(Long id) {
 		User user = userRepository.findById(id)
@@ -155,4 +154,11 @@ public class UserServiceImpl implements UserService {
 		EmailDetails email = new EmailDetails(user.getEmail(), "Accueil", message);
 		emailService.sendSimpleMail(email);
 	}
+
+	@Override
+	public ResponseEntity<Integer> getTotalUsers() {
+		long totalUsers = userRepository.count();
+		return new ResponseEntity<>(Integer.parseInt(totalUsers + ""), HttpStatus.OK);
+	}
+
 }

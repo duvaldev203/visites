@@ -128,6 +128,48 @@ export const VisiteurControllerApiAxiosParamCreator = function (configuration?: 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        getTotalVisiteurs: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/visiteurs/countAll`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions :AxiosRequestConfig = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearerAuth required
+            // http bearer authentication required
+            if (configuration && configuration.accessToken) {
+                const accessToken = typeof configuration.accessToken === 'function'
+                    ? await configuration.accessToken()
+                    : await configuration.accessToken;
+                localVarHeaderParameter["Authorization"] = "Bearer " + accessToken;
+            }
+
+            const query = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                query.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.params) {
+                query.set(key, options.params[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(query)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         index: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/visiteurs/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -358,6 +400,18 @@ export const VisiteurControllerApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        async getTotalVisiteurs(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<number>>> {
+            const localVarAxiosArgs = await VisiteurControllerApiAxiosParamCreator(configuration).getTotalVisiteurs(options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         async index(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<Array<VisiteurResponse>>>> {
             const localVarAxiosArgs = await VisiteurControllerApiAxiosParamCreator(configuration).index(options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
@@ -437,6 +491,14 @@ export const VisiteurControllerApiFactory = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        async getTotalVisiteurs(options?: AxiosRequestConfig): Promise<AxiosResponse<number>> {
+            return VisiteurControllerApiFp(configuration).getTotalVisiteurs(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         async index(options?: AxiosRequestConfig): Promise<AxiosResponse<Array<VisiteurResponse>>> {
             return VisiteurControllerApiFp(configuration).index(options).then((request) => request(axios, basePath));
         },
@@ -497,6 +559,15 @@ export class VisiteurControllerApi extends BaseAPI {
      */
     public async create(body: VisiteurRequest, options?: AxiosRequestConfig) : Promise<AxiosResponse<VisiteurResponse>> {
         return VisiteurControllerApiFp(this.configuration).create(body, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof VisiteurControllerApi
+     */
+    public async getTotalVisiteurs(options?: AxiosRequestConfig) : Promise<AxiosResponse<number>> {
+        return VisiteurControllerApiFp(this.configuration).getTotalVisiteurs(options).then((request) => request(this.axios, this.basePath));
     }
     /**
      * 
